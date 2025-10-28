@@ -1,99 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top View Login</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top View — Dashboard</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+    /* Simple clean light theme */
+    :root{
+      --accent:#0070f3;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --bg:#f6f7fb;
+      --radius:12px;
     }
-
-    body {
-      height: 100vh;
-      background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    *{box-sizing:border-box}
+    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;padding:0;margin:0;background:var(--bg);color:#0f172a}
+    .hero{
+      height:100vh;
+      background-image: url('https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?auto=format&fit=crop&w=1600&q=80');
+      background-size:cover;background-position:center;position:relative;display:flex;align-items:center;justify-content:center;
     }
-
-    .overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.4);
-      top: 0;
-      left: 0;
+    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+    .card{position:relative;z-index:2;background:rgba(255,255,255,0.95);backdrop-filter: blur(4px);padding:28px;border-radius:var(--radius);width:100%;max-width:420px;box-shadow:0 6px 24px rgba(16,24,40,0.08)}
+    h1{margin:0 0 8px;font-size:20px}
+    p.sub{margin:0 0 18px;color:var(--muted);font-size:13px}
+    input{width:100%;padding:12px;border:1px solid #e6e9ef;border-radius:8px;margin:8px 0;font-size:15px}
+    button.primary{width:100%;padding:12px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
+    .small{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+    /* App layout */
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:260px;background:linear-gradient(180deg,#ffffff,#fbfcff);border-right:1px solid #e6e9ef;padding:18px}
+    .logo{font-weight:700;color:var(--accent);font-size:18px;margin-bottom:18px}
+    .nav a{display:block;padding:10px 12px;border-radius:8px;color:#0f172a;text-decoration:none;margin-bottom:6px}
+    .nav a.active{background:#f1f6ff;color:var(--accent)}
+    .main{flex:1;padding:22px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+    .stat{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 4px 18px rgba(16,24,40,0.04)}
+    table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden}
+    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #f1f3f7;font-size:14px}
+    th{background:#fafbff;color:var(--muted);font-weight:600}
+    .btn{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef;background:white;cursor:pointer}
+    .actions{display:flex;gap:8px}
+    /* responsive */
+    @media (max-width:900px){
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .sidebar{display:none}
     }
-
-    .login-box {
-      position: relative;
-      z-index: 2;
-      background-color: rgba(255, 255, 255, 0.9);
-      padding: 40px 30px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-
-    h2 {
-      margin-bottom: 25px;
-      color: #333;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #0070f3;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #005bb5;
-    }
-
-    p {
-      margin-top: 20px;
-      color: #333;
-      font-weight: 500;
-    }
-
-    @media (max-width: 480px) {
-      .login-box {
-        padding: 25px 20px;
-      }
+    @media (max-width:600px){
+      .grid{grid-template-columns:1fr}
+      .card{max-width:340px;padding:20px}
+      .hero{padding:20px}
     }
   </style>
 </head>
 <body>
-  <div class="overlay"></div>
-  <div class="login-box">
-    <h2>Welcome to Top View</h2>
-    <form>
-      <input type="text" placeholder="Username" required>
-      <input type="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-    <p>Top View — Real Estate & Interior design</p>
+  <!-- LOGIN HERO -->
+  <div id="root">
+    <!-- content injected by script -->
   </div>
+
+  <script>
+  // ---- App (vanilla React-like using simple DOM for portability) ----
+  // We use plain JS to avoid build step. Data persisted to localStorage.
+  (function(){
+    // Helpers
+    const el = (tag, attrs={}, ...children) => {
+      const node = document.createElement(tag);
+      for(const k in attrs){
+        if(k==='class') node.className = attrs[k];
+        else if(k==='html') node.innerHTML = attrs[k];
+        else node.setAttribute(k, attrs[k]);
+      }
+      children.forEach(c => {
+        if(typeof c === 'string') node.appendChild(document.createTextNode(c));
+        else if(c) node.appendChild(c);
+      });
+      return node;
+    };
+    // Local storage keys
+    const LS = {DATA:'topview_data', AUTH:'topview_auth'};
+    // Default data
+    const defaultData = {
+      users:[
+        {id:1,username:'m.fouad',name:'Mohamed Fouad',role:'Manager',salary:10000},
+        {id:2,username:'m.salah',name:'Mohamed Salah',role:'Supervisor',salary:6000},
+        {id:3,username:'ibrahim',name:'Ibrahim',role:'Employee',salary:3000}
+      ],
+      projects:[
+        {id:101,name:'Apartment 12B Fitout',client:'Mr. Hassan',status:'In Progress',budget:45000,engineer:'Mohamed Salah'}
+      ],
+      transactions:[
+        {id:9001,type:'Expense',category:'Materials',amount:12000,date:'2025-10-20',note:'Tiles+adhesives',projectId:101}
+      ],
+      attendance:[] // {userId, date, in, out}
+    };
+    // load/save
+    const load = ()=> {
+      try {
+        const s = localStorage.getItem(LS.DATA);
+        return s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultData));
+      } catch(e){ return JSON.parse(JSON.stringify(defaultData)); }
+    };
+    const save = (d)=> localStorage.setItem(LS.DATA, JSON.stringify(d));
+    const authSave = obj => localStorage.setItem(LS.AUTH, JSON.stringify(obj));
+    const authLoad = ()=> {
+      try { return JSON.parse(localStorage.getItem(LS.AUTH) || 'null') } catch(e){ return null }
+    };
+
+    let DATA = load();
+    // initial admin password mapping (not secure, just demo)
+    const PASSWORDS = {'m.fouad':'TopView123','m.salah':'pass123','ibrahim':'pass123'};
+
+    // Root
+    const root = document.getElementById('root');
+
+    function showLogin(){
+      root.innerHTML = '';
+      const hero = el('div',{class:'hero'});
+      const overlay = el('div',{class:'overlay'});
+      const card = el('div',{class:'card'});
+      const title = el('h1',{},'Welcome to Top View');
+      const subtitle = el('p',{class:'sub'},'Top View — Real Estate & Fit-out Solutions');
+      const formUser = el('input',{type:'text',placeholder:'Username',id:'login_user'});
+      const formPass = el('input',{type:'password',placeholder:'Password',id:'login_pass'});
+      const btn = el('button',{class:'primary'},'Login');
+      btn.onclick = function(e){
+        const u = formUser.value.trim();
+        const p = formPass.value;
+        if(!u || !p){ alert('Enter username and password'); return; }
+        if(PASSWORDS[u] && PASSWORDS[u] === p){
+          const user = DATA.users.find(x=>x.username===u);
+          authSave({username:u,userId:user.id});
+          renderApp();
+        } else {
+          alert('Credentials incorrect (demo). Try username m.fouad / password TopView123');
+        }
+      };
+      card.appendChild(title);
+      card.appendChild(subtitle);
+      card.appendChild(formUser);
+      card.appendChild(formPass);
+      card.appendChild(btn);
+      card.appendChild(el('p',{class:'small'},'Demo login — Manager: m.fouad / TopView123'));
+      hero.appendChild(overlay);
+      hero.appendChild(card);
+      root.appendChild(hero);
+    }
+
+    function renderApp(){
+      // check auth
+      const auth = authLoad();
+      if(!auth){ showLogin(); return; }
+      const currentUser = DATA.users.find(u=>u.id===auth.userId) || DATA.users[0];
+
+      // layout
+      root.innerHTML = '';
+      const appWrap = el('div',{class:'app'});
+      const sidebar = el('div',{class:'sidebar'});
+      sidebar.appendChild(el('div',{class:'logo'},'Top View'));
+      const nav = el('div',{class:'nav'});
+      const pages = ['Dashboard','Employees','Projects','Finance','Attendance','Settings'];
+      let active = 'Dashboard';
+      pages.forEach(pg=>{
+        const a = el('a',{href:'#',class: pg===active ? 'active' : ''},pg);
+        a.onclick = (ev)=>{
+          ev.preventDefault();
+          active = pg;
+          renderMain();
+        };
+        nav.appendChild(a);
+      });
+      // quick user box
+      const userBox = el('div',{style:'margin-top:18px;border-top:1px solid #f1f3f7;padding-top:12px'});
+      userBox.appendChild(el('div',{style:'font-weight:600'}, currentUser.name ));
+      userBox.appendChild(el('div',{style:'color:var(--muted);font-size:13px'}, currentUser.role));
+      userBox.appendChild(el('div',{style:'margin-top:8px'}, el('button',{class:'btn',onclick:logout},'Logout')));
+      sidebar.appendChild(nav);
+      sidebar.appendChild(userBox);
+
+      const main = el('div',{class:'main'});
+      function renderMain(){
+        main.innerHTML = '';
+        // update nav active style
+        [...sidebar.querySelectorAll('.nav a')].forEach(a=> a.classList.remove('active'));
+        const link = [...sidebar.querySelectorAll('.nav a')].find(a=>a.textContent===active);
+        if(link) link.classList.add('active');
+
+        if(active==='Dashboard'){
+          const grid = el('div',{class:'grid'});
+          const income = DATA.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+t.amount,0);
+          const expense = DATA.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+t.amount,0);
+          const profit = income - expense;
+          grid.appendChild(cardStat('Income','AED '+income.toLocaleString()));
+          grid.appendChild(cardStat('Expense','AED '+expense.toLocaleString()));
+          grid.appendChild(cardStat('Profit','AED '+profit.toLocaleString()));
+          main.appendChild(grid);
+
+          // recent projects
+          const box = el('div',{},el('h3',{},'Active Projects'));
+          const tbl = renderProjectsTable();
+          main.appendChild(box);
+          main.appendChild(tbl);
+        }
+
+        if(active==='Employees'){
+          main.appendChild(el('h2',{},'Employees'));
+          const btnAdd = el('button',{class:'btn',onclick:()=>openAddEmployee()},'Add Employee');
+          main.appendChild(btnAdd);
+          main.appendChild(renderEmployeesTable());
+        }
+
+        if(active==='Projects'){
+          main.appendChild(el('h2',{},'Projects'));
+          const btnP = el('button',{class:'btn',onclick:()=>openAddProject()},'New Project');
+          main.appendChild(btnP);
+          main.appendChild(renderProjectsTable(true));
+        }
+
+        if(active==='Finance'){
+          main.appendChild(el('h2',{},'Finance'));
+          const btnF = el('button',{class:'btn',onclick:()=>openAddTransaction()},'Add Transaction');
+          main.appendChild(btnF);
+          main.appendChild(renderTransactionsTable());
+        }
+
+        if(active==='Attendance'){
+          main.appendChild(el('h2',{},'Attendance'));
+          main.appendChild(renderAttendance());
+        }
+
+        if(active==='Settings'){
+          main.appendChild(el('h2',{},'Settings'));
+          main.appendChild(el('p',{},'System: Top View — demo settings'));
+        }
+      }
+      function logout(){ localStorage.removeItem(LS.AUTH); showLogin(); }
+
+      appWrap.appendChild(sidebar);
+      appWrap.appendChild(main);
+      root.appendChild(appWrap);
+      renderMain();
+    }
+
+    // components and helpers
+    function cardStat(title,val){
+      const c = el('div',{class:'stat'});
+      c.appendChild(el('div',{style:'color:var(--muted);font-size:13px'},title));
+      c.appendChild(el('div',{style:'margin-top:8px;font-weight:700;font-size:18px'},val));
+      return c;
+    }
+
+    function renderEmployeesTable(){
+      const tblWrap = el('div',{style:'margin-top:12px'});
+      const table = el('table');
+      const thead = el('thead',{}, el('tr',{}, el('th',{},'ID'), el('th',{},'Name'), el('th',{},'Role'), el('th',{},'Salary'), el('th',{},'Action')));
+      table.appendChild(thead);
+      const tbody = el('tbody');
+      DATA.users.forEach(u=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},u.id));
+        tr.appendChild(el('td',{},u.name));
+        tr.appendChild(el('td',{},u.role));
+        tr.appendChild(el('td',{},'AED '+u.salary));
+        const actions = el('td',{}, el('div',{class:'actions'}));
+        const del = el('button',{class:'btn',onclick:()=>{ if(confirm('Delete user?')){ DATA.users = DATA.users.filter(x=>x.id!==u.id); save(DATA); renderApp(); } }},'Delete');
+        actions.firstChild.appendChild(del);
+        tr.appendChild(actions);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      tblWrap.appendChild(table);
+      return tblWrap;
+    }
+
+    function openAddEmployee(){
+      const name = prompt('Name (e.g. Ahmed Ali)');
+      if(!name) return;
+      const username = prompt('Username (unique, e.g. a.ali)');
+      if(!username) return;
+      const role = prompt('Role (Manager / Supervisor / Employee)', 'Employee');
+      const salary = Number(prompt('Salary (AED)', '3000')||3000);
+      const id = Date.now();
+      DATA.users.push({id,username,name,role,salary});
+      // set default password for demo:
+      PASSWORDS[username] = 'pass123';
+      save(DATA);
+      alert('Added. Default password: pass123');
+      renderApp();
+    }
+
+    function renderProjectsTable(withActions=false){
+      const wrap = el('div',{style:'margin-top:12px'});
+      const table = el('table');
+      table.appendChild(el('thead',{},el('tr',{},el('th',{},'ID'),el('th',{},'Name'),el('th',{},'Client'),el('th',{},'Status'),el('th',{},'Budget'))));
+      const tb = el('tbody');
+      DATA.projects.forEach(p=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},p.id));
+        tr.appendChild(el('td',{},p.name));
+        tr.appendChild(el('td',{},p.client));
+        tr.appendChild(el('td',{},p.status));
+        tr.appendChild(el('td',{},'AED '+p.budget));
+        tb.appendChild(tr);
+      });
+      table.appendChild(tb);
+      wrap.appendChild(table);
+      return wrap;
+    }
+
+    function openAddProject(){
+      const name = prompt('Project name');
+      if(!name) return;
+      const client = prompt('Client name');
+      const budget = Number(prompt('Budget (AED)','10000')||10000);
+      const id = Date.now();
+      DATA.projects.push({id,name,client,status:'Planned',budget,engineer:''});
+      save(DATA); renderApp();
+    }
+
+    function renderTransactionsTable(){
+      const wrap = el('div',{style:'margin-top:12px'});
+      const table = el('table');
+      table.appendChild(el('thead',{},el('tr',{},el('th',{},'ID'),el('th',{},'Type'),el('th',{},'Category'),el('th',{},'Amount'),el('th',{},'Date'))));
+      const tb = el('tbody');
+      DATA.transactions.forEach(t=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},t.id));
+        tr.appendChild(el('td',{},t.type));
+        tr.appendChild(el('td',{},t.category));
+        tr.appendChild(el('td',{},'AED '+t.amount));
+        tr.appendChild(el('td',{},t.date));
+        tb.appendChild(tr);
+      });
+      table.appendChild(tb);
+      wrap.appendChild(table);
+      return wrap;
+    }
+
+    function openAddTransaction(){
+      const typ = prompt('Type: Expense or Income','Expense');
+      const cat = prompt('Category','Materials');
+      const amount = Number(prompt('Amount AED','1000')||1000);
+      const note = prompt('Note','');
+      const id = Date.now();
+      const d = new Date().toISOString().slice(0,10);
+      DATA.transactions.push({id,type:typ,category:cat,amount,date:d,note});
+      save(DATA); renderApp();
+    }
+
+    function renderAttendance(){
+      const wrap = el('div',{style:'margin-top:12px'});
+      const btnIn = el('button',{class:'btn',onclick:()=>recordIn()},'Record In (current user)');
+      const btnOut = el('button',{class:'btn',onclick:()=>recordOut()},'Record Out (current user)');
+      wrap.appendChild(btnIn); wrap.appendChild(el('span',{style:'display:inline-block;width:8px'})); wrap.appendChild(btnOut);
+
+      const tbl = el('table', {style:'margin-top:12px'});
+      tbl.appendChild(el('thead',{},el('tr',{},el('th',{},'User'),el('th',{},'Date'),el('th',{},'In'),el('th',{},'Out'))));
+      const tb = el('tbody');
+      DATA.attendance.slice().reverse().forEach(a=>{
+        const u = DATA.users.find(x=>x.id===a.userId);
+        const tr = el('tr');
+        tr.appendChild(el('td',{}, u ? u.name : '—'));
+        tr.appendChild(el('td',{}, a.date));
+        tr.appendChild(el('td',{}, a.in || '-'));
+        tr.appendChild(el('td',{}, a.out || '-'));
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb);
+      wrap.appendChild(tbl);
+      return wrap;
+    }
+
+    function recordIn(){
+      const auth = authLoad();
+      if(!auth) return alert('Not logged in');
+      const today = new Date().toISOString().slice(0,10);
+      DATA.attendance.push({userId:auth.userId,date:today,in:new Date().toLocaleTimeString(),out:''});
+      save(DATA);
+      alert('Check-in recorded');
+      renderApp();
+    }
+    function recordOut(){
+      const auth = authLoad();
+      if(!auth) return alert('Not logged in');
+      const today = new Date().toISOString().slice(0,10);
+      // find last record without out for this user today
+      for(let i=DATA.attendance.length-1;i>=0;i--){
+        const a = DATA.attendance[i];
+        if(a.userId===auth.userId && a.date===today && !a.out){
+          a.out = new Date().toLocaleTimeString();
+          save(DATA);
+          alert('Check-out recorded');
+          renderApp();
+          return;
+        }
+      }
+      alert('No check-in found for today');
+    }
+
+    // initial render: if logged in go to app, else login
+    if(authLoad()) renderApp(); else showLogin();
+
+  })();
+  </script>
 </body>
 </html>
