@@ -4,87 +4,88 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Top View — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Simple clean light theme */
     :root{
-      --accent:#0070f3;
+      --accent:#1f78ff;
       --muted:#6b7280;
-      --card:#ffffff;
       --bg:#f6f7fb;
+      --card:#ffffff;
       --radius:12px;
+      --glass: rgba(255,255,255,0.85);
     }
     *{box-sizing:border-box}
-    body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;padding:0;margin:0;background:var(--bg);color:#0f172a}
+    body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#0f172a}
+    a{color:inherit}
+    /* LOGIN HERO */
     .hero{
-      height:100vh;
-      background-image: url('https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?auto=format&fit=crop&w=1600&q=80');
-      background-size:cover;background-position:center;position:relative;display:flex;align-items:center;justify-content:center;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background-image: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80');
+      background-size:cover; background-position:center; position:relative;
     }
-    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45)}
-    .card{position:relative;z-index:2;background:rgba(255,255,255,0.95);backdrop-filter: blur(4px);padding:28px;border-radius:var(--radius);width:100%;max-width:420px;box-shadow:0 6px 24px rgba(16,24,40,0.08)}
-    h1{margin:0 0 8px;font-size:20px}
-    p.sub{margin:0 0 18px;color:var(--muted);font-size:13px}
-    input{width:100%;padding:12px;border:1px solid #e6e9ef;border-radius:8px;margin:8px 0;font-size:15px}
-    button.primary{width:100%;padding:12px;border-radius:8px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
-    .small{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
-    /* App layout */
-    .app{display:flex;min-height:100vh}
-    .sidebar{width:260px;background:linear-gradient(180deg,#ffffff,#fbfcff);border-right:1px solid #e6e9ef;padding:18px}
-    .logo{font-weight:700;color:var(--accent);font-size:18px;margin-bottom:18px}
-    .nav a{display:block;padding:10px 12px;border-radius:8px;color:#0f172a;text-decoration:none;margin-bottom:6px}
-    .nav a.active{background:#f1f6ff;color:var(--accent)}
-    .main{flex:1;padding:22px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
-    .stat{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 4px 18px rgba(16,24,40,0.04)}
-    table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden}
-    th,td{padding:10px 12px;text-align:left;border-bottom:1px solid #f1f3f7;font-size:14px}
-    th{background:#fafbff;color:var(--muted);font-weight:600}
-    .btn{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef;background:white;cursor:pointer}
-    .actions{display:flex;gap:8px}
+    .overlay{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.45));}
+    .login-card{
+      position:relative; z-index:2; width:100%; max-width:420px; padding:36px; border-radius:14px;
+      background:var(--glass); box-shadow:0 10px 30px rgba(2,6,23,0.12);
+    }
+    .logo{font-weight:700; color:var(--accent); font-size:20px; margin-bottom:6px}
+    .lead{color:#0b1220; font-weight:600; margin-bottom:8px}
+    .sub{color:var(--muted); font-size:13px; margin-bottom:18px}
+    input{width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6e9ef; margin:10px 0; font-size:15px}
+    .row{display:flex; gap:8px}
+    .btn{display:inline-block; padding:11px 14px; border-radius:10px; border:0; cursor:pointer}
+    .btn-primary{background:var(--accent); color:white; font-weight:700}
+    .btn-ghost{background:transparent; border:1px solid rgba(15,23,42,0.06)}
+    .small{font-size:13px; color:var(--muted); margin-top:10px; text-align:center}
+
+    /* APP LAYOUT */
+    .app{display:flex; min-height:100vh}
+    .sidebar{
+      width:260px; background:linear-gradient(180deg,#ffffff,#fbfcff); border-right:1px solid #eef2f7; padding:20px;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .sidebar .brand{font-weight:800; color:var(--accent); font-size:18px; margin-bottom:6px}
+    .nav{display:flex; flex-direction:column; gap:6px; margin-top:8px}
+    .nav button{background:transparent; border:0; text-align:left; padding:10px; border-radius:8px; cursor:pointer; font-weight:600}
+    .nav button.active{background:#f1f6ff; color:var(--accent)}
+    .user-box{margin-top:auto; padding-top:10px; border-top:1px solid #f1f3f7}
+    .main{flex:1; padding:24px}
+    .topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px}
+    .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:18px}
+    .card{background:var(--card); padding:16px; border-radius:12px; box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+    table{width:100%; border-collapse:collapse; font-size:14px}
+    th,td{padding:12px 10px; border-bottom:1px solid #f3f6fa; text-align:left}
+    th{background:#fafbff; color:var(--muted); font-weight:700; font-size:13px}
+    .actions{display:flex; gap:8px}
+    .chip{display:inline-block; padding:6px 10px; border-radius:999px; background:#eef6ff; color:var(--accent); font-weight:700; font-size:13px}
     /* responsive */
     @media (max-width:900px){
-      .grid{grid-template-columns:repeat(2,1fr)}
       .sidebar{display:none}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .topbar .right{display:none}
     }
     @media (max-width:600px){
-      .grid{grid-template-columns:1fr}
-      .card{max-width:340px;padding:20px}
-      .hero{padding:20px}
+      .stats{grid-template-columns:1fr}
+      .login-card{padding:20px; border-radius:10px}
     }
   </style>
 </head>
 <body>
-  <!-- LOGIN HERO -->
-  <div id="root">
-    <!-- content injected by script -->
-  </div>
+  <div id="root"></div>
 
   <script>
-  // ---- App (vanilla React-like using simple DOM for portability) ----
-  // We use plain JS to avoid build step. Data persisted to localStorage.
   (function(){
-    // Helpers
-    const el = (tag, attrs={}, ...children) => {
-      const node = document.createElement(tag);
-      for(const k in attrs){
-        if(k==='class') node.className = attrs[k];
-        else if(k==='html') node.innerHTML = attrs[k];
-        else node.setAttribute(k, attrs[k]);
-      }
-      children.forEach(c => {
-        if(typeof c === 'string') node.appendChild(document.createTextNode(c));
-        else if(c) node.appendChild(c);
-      });
-      return node;
-    };
-    // Local storage keys
-    const LS = {DATA:'topview_data', AUTH:'topview_auth'};
-    // Default data
+    const root = document.getElementById('root');
+    const LS='topview_v1';
+    // default demo data
     const defaultData = {
       users:[
-        {id:1,username:'m.fouad',name:'Mohamed Fouad',role:'Manager',salary:10000},
-        {id:2,username:'m.salah',name:'Mohamed Salah',role:'Supervisor',salary:6000},
-        {id:3,username:'ibrahim',name:'Ibrahim',role:'Employee',salary:3000}
+        {id:1,username:'m.fouad',name:'Mohamed Fouad',role:'Manager',salary:15000},
+        {id:2,username:'m.salah',name:'Mohamed Salah',role:'Supervisor',salary:8000},
+        {id:3,username:'ibrahim',name:'Ibrahim',role:'Worker',salary:3500}
       ],
       projects:[
         {id:101,name:'Apartment 12B Fitout',client:'Mr. Hassan',status:'In Progress',budget:45000,engineer:'Mohamed Salah'}
@@ -92,207 +93,184 @@
       transactions:[
         {id:9001,type:'Expense',category:'Materials',amount:12000,date:'2025-10-20',note:'Tiles+adhesives',projectId:101}
       ],
-      attendance:[] // {userId, date, in, out}
+      attendance:[]
     };
+    // simple password map (demo only)
+    const pw = {'m.fouad':'TopView123','m.salah':'pass123','ibrahim':'pass123'};
+
     // load/save
-    const load = ()=> {
-      try {
-        const s = localStorage.getItem(LS.DATA);
-        return s ? JSON.parse(s) : JSON.parse(JSON.stringify(defaultData));
-      } catch(e){ return JSON.parse(JSON.stringify(defaultData)); }
-    };
-    const save = (d)=> localStorage.setItem(LS.DATA, JSON.stringify(d));
-    const authSave = obj => localStorage.setItem(LS.AUTH, JSON.stringify(obj));
-    const authLoad = ()=> {
-      try { return JSON.parse(localStorage.getItem(LS.AUTH) || 'null') } catch(e){ return null }
-    };
-
+    function load(){ try{ const s=localStorage.getItem(LS); return s? JSON.parse(s): JSON.parse(JSON.stringify(defaultData)); }catch(e){ return JSON.parse(JSON.stringify(defaultData)) } }
+    function save(d){ localStorage.setItem(LS, JSON.stringify(d)); }
     let DATA = load();
-    // initial admin password mapping (not secure, just demo)
-    const PASSWORDS = {'m.fouad':'TopView123','m.salah':'pass123','ibrahim':'pass123'};
 
-    // Root
-    const root = document.getElementById('root');
+    // auth
+    function authSave(u){ localStorage.setItem(LS+'_auth', JSON.stringify(u)); }
+    function authLoad(){ try{ return JSON.parse(localStorage.getItem(LS+'_auth')) }catch(e){return null} }
+    function authClear(){ localStorage.removeItem(LS+'_auth'); }
 
+    // render helpers
+    function el(tag,attrs={},...kids){ const n=document.createElement(tag); for(const k in attrs){ if(k==='class') n.className=attrs[k]; else if(k==='html') n.innerHTML=attrs[k]; else n.setAttribute(k,attrs[k]); } kids.forEach(c=>{ if(typeof c==='string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c);}); return n; }
+
+    // -------- Login Screen --------
     function showLogin(){
-      root.innerHTML = '';
+      root.innerHTML='';
       const hero = el('div',{class:'hero'});
-      const overlay = el('div',{class:'overlay'});
-      const card = el('div',{class:'card'});
-      const title = el('h1',{},'Welcome to Top View');
-      const subtitle = el('p',{class:'sub'},'Top View — Real Estate & Fit-out Solutions');
-      const formUser = el('input',{type:'text',placeholder:'Username',id:'login_user'});
-      const formPass = el('input',{type:'password',placeholder:'Password',id:'login_pass'});
-      const btn = el('button',{class:'primary'},'Login');
-      btn.onclick = function(e){
-        const u = formUser.value.trim();
-        const p = formPass.value;
-        if(!u || !p){ alert('Enter username and password'); return; }
-        if(PASSWORDS[u] && PASSWORDS[u] === p){
-          const user = DATA.users.find(x=>x.username===u);
-          authSave({username:u,userId:user.id});
+      hero.appendChild(el('div',{class:'overlay'}));
+      const card = el('div',{class:'login-card'});
+      card.appendChild(el('div',{class:'logo'},'Top View'));
+      card.appendChild(el('div',{class:'lead'},'Welcome back'));
+      card.appendChild(el('div',{class:'sub'},'Top View — Real Estate & Fit-out Solutions'));
+      const user = el('input',{type:'text',placeholder:'Username',id:'username'});
+      const pass = el('input',{type:'password',placeholder:'Password',id:'password'});
+      const btn = el('button',{class:'btn btn-primary'},'Login');
+      btn.onclick = ()=>{
+        const u=user.value.trim(), p=pass.value;
+        if(!u||!p){ alert('Enter username and password'); return; }
+        if(pw[u] && pw[u]===p){
+          const userObj = DATA.users.find(x=>x.username===u);
+          authSave({username:u,userId:userObj.id});
           renderApp();
-        } else {
-          alert('Credentials incorrect (demo). Try username m.fouad / password TopView123');
-        }
+        } else { alert('Wrong credentials. Try m.fouad / TopView123'); }
       };
-      card.appendChild(title);
-      card.appendChild(subtitle);
-      card.appendChild(formUser);
-      card.appendChild(formPass);
+      card.appendChild(user); card.appendChild(pass);
       card.appendChild(btn);
-      card.appendChild(el('p',{class:'small'},'Demo login — Manager: m.fouad / TopView123'));
-      hero.appendChild(overlay);
+      card.appendChild(el('div',{class:'small'},'Demo accounts: m.fouad / TopView123'));
       hero.appendChild(card);
       root.appendChild(hero);
     }
 
+    // -------- App --------
     function renderApp(){
-      // check auth
       const auth = authLoad();
-      if(!auth){ showLogin(); return; }
-      const currentUser = DATA.users.find(u=>u.id===auth.userId) || DATA.users[0];
+      if(!auth) return showLogin();
+      const current = DATA.users.find(u=>u.id===auth.userId) || DATA.users[0];
 
-      // layout
-      root.innerHTML = '';
-      const appWrap = el('div',{class:'app'});
+      root.innerHTML='';
+      const app = el('div',{class:'app'});
       const sidebar = el('div',{class:'sidebar'});
-      sidebar.appendChild(el('div',{class:'logo'},'Top View'));
+      sidebar.appendChild(el('div',{class:'brand'},'Top View'));
+      sidebar.appendChild(el('div',{style:'color:var(--muted);font-size:13px'},'Interior Fit-out'));
       const nav = el('div',{class:'nav'});
       const pages = ['Dashboard','Employees','Projects','Finance','Attendance','Settings'];
       let active = 'Dashboard';
-      pages.forEach(pg=>{
-        const a = el('a',{href:'#',class: pg===active ? 'active' : ''},pg);
-        a.onclick = (ev)=>{
-          ev.preventDefault();
-          active = pg;
-          renderMain();
-        };
-        nav.appendChild(a);
+      pages.forEach(p=>{
+        const btn = el('button', {class: p===active? 'active':''}, p);
+        btn.onclick = (e)=>{ active=p; renderMain(); };
+        nav.appendChild(btn);
       });
-      // quick user box
-      const userBox = el('div',{style:'margin-top:18px;border-top:1px solid #f1f3f7;padding-top:12px'});
-      userBox.appendChild(el('div',{style:'font-weight:600'}, currentUser.name ));
-      userBox.appendChild(el('div',{style:'color:var(--muted);font-size:13px'}, currentUser.role));
-      userBox.appendChild(el('div',{style:'margin-top:8px'}, el('button',{class:'btn',onclick:logout},'Logout')));
       sidebar.appendChild(nav);
+
+      const userBox = el('div',{class:'user-box'});
+      userBox.appendChild(el('div',{style:'font-weight:700'}, current.name));
+      userBox.appendChild(el('div',{style:'color:var(--muted);font-size:13px'}, current.role));
+      const outBtn = el('button',{class:'btn'},'Logout');
+      outBtn.onclick = ()=>{ authClear(); showLogin(); };
+      userBox.appendChild(outBtn);
       sidebar.appendChild(userBox);
 
       const main = el('div',{class:'main'});
       function renderMain(){
-        main.innerHTML = '';
-        // update nav active style
-        [...sidebar.querySelectorAll('.nav a')].forEach(a=> a.classList.remove('active'));
-        const link = [...sidebar.querySelectorAll('.nav a')].find(a=>a.textContent===active);
-        if(link) link.classList.add('active');
+        main.innerHTML='';
+        // update active style
+        [...nav.children].forEach(n=> n.classList.remove('active'));
+        const activeBtn = [...nav.children].find(n=> n.textContent===active);
+        if(activeBtn) activeBtn.classList.add('active');
+
+        const topbar = el('div',{class:'topbar'});
+        topbar.appendChild(el('div',{style:'font-weight:700;font-size:18px'}, active));
+        topbar.appendChild(el('div',{class:'right'}, el('div',{style:'color:var(--muted)'},"Signed as: "+current.name)));
+        main.appendChild(topbar);
 
         if(active==='Dashboard'){
-          const grid = el('div',{class:'grid'});
-          const income = DATA.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+t.amount,0);
-          const expense = DATA.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+t.amount,0);
-          const profit = income - expense;
-          grid.appendChild(cardStat('Income','AED '+income.toLocaleString()));
-          grid.appendChild(cardStat('Expense','AED '+expense.toLocaleString()));
-          grid.appendChild(cardStat('Profit','AED '+profit.toLocaleString()));
-          main.appendChild(grid);
+          const stats = el('div',{class:'stats'});
+          const inc = DATA.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+t.amount,0);
+          const exp = DATA.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+t.amount,0);
+          const prof = inc - exp;
+          stats.appendChild(el('div',{class:'card'}, el('div',{style:'color:var(--muted);font-size:13px'},'Income'), el('div',{style:'margin-top:8px;font-weight:700;font-size:18px'},'AED '+inc)));
+          stats.appendChild(el('div',{class:'card'}, el('div',{style:'color:var(--muted);font-size:13px'},'Expense'), el('div',{style:'margin-top:8px;font-weight:700;font-size:18px'},'AED '+exp)));
+          stats.appendChild(el('div',{class:'card'}, el('div',{style:'color:var(--muted);font-size:13px'},'Profit'), el('div',{style:'margin-top:8px;font-weight:700;font-size:18px'},'AED '+prof)));
+          main.appendChild(stats);
 
-          // recent projects
-          const box = el('div',{},el('h3',{},'Active Projects'));
-          const tbl = renderProjectsTable();
-          main.appendChild(box);
-          main.appendChild(tbl);
+          main.appendChild(el('div',{style:'margin-top:10px'}, el('h3',{},'Active Projects')));
+          main.appendChild(renderProjectsTable());
         }
 
         if(active==='Employees'){
-          main.appendChild(el('h2',{},'Employees'));
-          const btnAdd = el('button',{class:'btn',onclick:()=>openAddEmployee()},'Add Employee');
-          main.appendChild(btnAdd);
+          main.appendChild(el('h3',{},'Employees'));
           main.appendChild(renderEmployeesTable());
+          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn',onclick:addEmployee}, 'Add Employee')));
         }
 
         if(active==='Projects'){
-          main.appendChild(el('h2',{},'Projects'));
-          const btnP = el('button',{class:'btn',onclick:()=>openAddProject()},'New Project');
-          main.appendChild(btnP);
+          main.appendChild(el('h3',{},'Projects'));
           main.appendChild(renderProjectsTable(true));
+          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn',onclick:addProject}, 'New Project')));
         }
 
         if(active==='Finance'){
-          main.appendChild(el('h2',{},'Finance'));
-          const btnF = el('button',{class:'btn',onclick:()=>openAddTransaction()},'Add Transaction');
-          main.appendChild(btnF);
+          main.appendChild(el('h3',{},'Finance'));
           main.appendChild(renderTransactionsTable());
+          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn',onclick:addTransaction}, 'Add Transaction')));
         }
 
         if(active==='Attendance'){
-          main.appendChild(el('h2',{},'Attendance'));
+          main.appendChild(el('h3',{},'Attendance'));
           main.appendChild(renderAttendance());
         }
 
         if(active==='Settings'){
-          main.appendChild(el('h2',{},'Settings'));
-          main.appendChild(el('p',{},'System: Top View — demo settings'));
+          main.appendChild(el('h3',{},'Settings'));
+          main.appendChild(el('div',{style:'color:var(--muted)'},"System: Top View — demo settings"));
         }
       }
-      function logout(){ localStorage.removeItem(LS.AUTH); showLogin(); }
 
-      appWrap.appendChild(sidebar);
-      appWrap.appendChild(main);
-      root.appendChild(appWrap);
+      app.appendChild(sidebar);
+      app.appendChild(main);
+      root.appendChild(app);
       renderMain();
     }
 
-    // components and helpers
-    function cardStat(title,val){
-      const c = el('div',{class:'stat'});
-      c.appendChild(el('div',{style:'color:var(--muted);font-size:13px'},title));
-      c.appendChild(el('div',{style:'margin-top:8px;font-weight:700;font-size:18px'},val));
-      return c;
-    }
-
+    // ---- render helpers: tables and CRUD ----
     function renderEmployeesTable(){
-      const tblWrap = el('div',{style:'margin-top:12px'});
+      const wrap = el('div',{class:'card'});
       const table = el('table');
-      const thead = el('thead',{}, el('tr',{}, el('th',{},'ID'), el('th',{},'Name'), el('th',{},'Role'), el('th',{},'Salary'), el('th',{},'Action')));
-      table.appendChild(thead);
-      const tbody = el('tbody');
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'ID'), el('th',{},'Name'), el('th',{},'Role'), el('th',{},'Salary'), el('th',{},'Actions'))));
+      const tb = el('tbody');
       DATA.users.forEach(u=>{
         const tr = el('tr');
         tr.appendChild(el('td',{},u.id));
         tr.appendChild(el('td',{},u.name));
         tr.appendChild(el('td',{},u.role));
         tr.appendChild(el('td',{},'AED '+u.salary));
-        const actions = el('td',{}, el('div',{class:'actions'}));
+        const act = el('td',{}, el('div',{class:'actions'}));
         const del = el('button',{class:'btn',onclick:()=>{ if(confirm('Delete user?')){ DATA.users = DATA.users.filter(x=>x.id!==u.id); save(DATA); renderApp(); } }},'Delete');
-        actions.firstChild.appendChild(del);
-        tr.appendChild(actions);
-        tbody.appendChild(tr);
+        act.firstChild.appendChild(del);
+        tr.appendChild(act);
+        tb.appendChild(tr);
       });
-      table.appendChild(tbody);
-      tblWrap.appendChild(table);
-      return tblWrap;
+      table.appendChild(tb); wrap.appendChild(table);
+      return wrap;
     }
 
-    function openAddEmployee(){
-      const name = prompt('Name (e.g. Ahmed Ali)');
+    function addEmployee(){
+      const name = prompt('Full name (e.g. Ahmed Ali)');
       if(!name) return;
-      const username = prompt('Username (unique, e.g. a.ali)');
+      const username = prompt('username (unique, e.g. a.ali)');
       if(!username) return;
-      const role = prompt('Role (Manager / Supervisor / Employee)', 'Employee');
-      const salary = Number(prompt('Salary (AED)', '3000')||3000);
+      const role = prompt('Role (Manager / Supervisor / Worker)','Worker');
+      const salary = Number(prompt('Salary AED','3000')||3000);
       const id = Date.now();
       DATA.users.push({id,username,name,role,salary});
-      // set default password for demo:
-      PASSWORDS[username] = 'pass123';
-      save(DATA);
-      alert('Added. Default password: pass123');
-      renderApp();
+      // set demo password
+      pw[username] = 'pass123';
+      save(DATA); alert('Employee added. Default password: pass123'); renderApp();
     }
 
-    function renderProjectsTable(withActions=false){
-      const wrap = el('div',{style:'margin-top:12px'});
+    // Projects
+    function renderProjectsTable(){ 
+      const wrap = el('div',{class:'card'});
       const table = el('table');
-      table.appendChild(el('thead',{},el('tr',{},el('th',{},'ID'),el('th',{},'Name'),el('th',{},'Client'),el('th',{},'Status'),el('th',{},'Budget'))));
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'ID'), el('th',{},'Name'), el('th',{},'Client'), el('th',{},'Status'), el('th',{},'Budget'))));
       const tb = el('tbody');
       DATA.projects.forEach(p=>{
         const tr = el('tr');
@@ -303,25 +281,23 @@
         tr.appendChild(el('td',{},'AED '+p.budget));
         tb.appendChild(tr);
       });
-      table.appendChild(tb);
-      wrap.appendChild(table);
+      table.appendChild(tb); wrap.appendChild(table);
       return wrap;
     }
-
-    function openAddProject(){
+    function addProject(){
       const name = prompt('Project name');
       if(!name) return;
       const client = prompt('Client name');
-      const budget = Number(prompt('Budget (AED)','10000')||10000);
-      const id = Date.now();
-      DATA.projects.push({id,name,client,status:'Planned',budget,engineer:''});
+      const budget = Number(prompt('Budget AED','10000')||10000);
+      DATA.projects.push({id:Date.now(),name,client,status:'Planned',budget,engineer:''});
       save(DATA); renderApp();
     }
 
+    // Transactions
     function renderTransactionsTable(){
-      const wrap = el('div',{style:'margin-top:12px'});
+      const wrap = el('div',{class:'card'});
       const table = el('table');
-      table.appendChild(el('thead',{},el('tr',{},el('th',{},'ID'),el('th',{},'Type'),el('th',{},'Category'),el('th',{},'Amount'),el('th',{},'Date'))));
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'ID'), el('th',{},'Type'), el('th',{},'Category'), el('th',{},'Amount'), el('th',{},'Date'))));
       const tb = el('tbody');
       DATA.transactions.forEach(t=>{
         const tr = el('tr');
@@ -332,74 +308,66 @@
         tr.appendChild(el('td',{},t.date));
         tb.appendChild(tr);
       });
-      table.appendChild(tb);
-      wrap.appendChild(table);
+      table.appendChild(tb); wrap.appendChild(table);
       return wrap;
     }
-
-    function openAddTransaction(){
-      const typ = prompt('Type: Expense or Income','Expense');
+    function addTransaction(){
+      const type = prompt('Type: Expense or Income','Expense');
       const cat = prompt('Category','Materials');
       const amount = Number(prompt('Amount AED','1000')||1000);
-      const note = prompt('Note','');
       const id = Date.now();
       const d = new Date().toISOString().slice(0,10);
-      DATA.transactions.push({id,type:typ,category:cat,amount,date:d,note});
+      DATA.transactions.push({id,type,category:cat,amount,date:d,note:''});
       save(DATA); renderApp();
     }
 
+    // Attendance
     function renderAttendance(){
-      const wrap = el('div',{style:'margin-top:12px'});
-      const btnIn = el('button',{class:'btn',onclick:()=>recordIn()},'Record In (current user)');
-      const btnOut = el('button',{class:'btn',onclick:()=>recordOut()},'Record Out (current user)');
-      wrap.appendChild(btnIn); wrap.appendChild(el('span',{style:'display:inline-block;width:8px'})); wrap.appendChild(btnOut);
-
-      const tbl = el('table', {style:'margin-top:12px'});
-      tbl.appendChild(el('thead',{},el('tr',{},el('th',{},'User'),el('th',{},'Date'),el('th',{},'In'),el('th',{},'Out'))));
+      const wrap = el('div',{class:'card'});
+      const inBtn = el('button',{class:'btn',onclick:recordIn},'Record In (me)');
+      const outBtn = el('button',{class:'btn',onclick:recordOut},'Record Out (me)');
+      wrap.appendChild(inBtn); wrap.appendChild(el('span',{style:'display:inline-block;width:8px'})); wrap.appendChild(outBtn);
+      const table = el('table', {style:'margin-top:12px'});
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'User'), el('th',{},'Date'), el('th',{},'In'), el('th',{},'Out'))));
       const tb = el('tbody');
       DATA.attendance.slice().reverse().forEach(a=>{
         const u = DATA.users.find(x=>x.id===a.userId);
         const tr = el('tr');
-        tr.appendChild(el('td',{}, u ? u.name : '—'));
+        tr.appendChild(el('td',{}, u? u.name : '—'));
         tr.appendChild(el('td',{}, a.date));
         tr.appendChild(el('td',{}, a.in || '-'));
         tr.appendChild(el('td',{}, a.out || '-'));
         tb.appendChild(tr);
       });
-      tbl.appendChild(tb);
-      wrap.appendChild(tbl);
+      table.appendChild(tb); wrap.appendChild(table);
       return wrap;
     }
-
     function recordIn(){
       const auth = authLoad();
       if(!auth) return alert('Not logged in');
       const today = new Date().toISOString().slice(0,10);
       DATA.attendance.push({userId:auth.userId,date:today,in:new Date().toLocaleTimeString(),out:''});
-      save(DATA);
-      alert('Check-in recorded');
-      renderApp();
+      save(DATA); alert('Check-in recorded'); renderApp();
     }
     function recordOut(){
       const auth = authLoad();
       if(!auth) return alert('Not logged in');
       const today = new Date().toISOString().slice(0,10);
-      // find last record without out for this user today
       for(let i=DATA.attendance.length-1;i>=0;i--){
-        const a = DATA.attendance[i];
+        const a=DATA.attendance[i];
         if(a.userId===auth.userId && a.date===today && !a.out){
           a.out = new Date().toLocaleTimeString();
-          save(DATA);
-          alert('Check-out recorded');
-          renderApp();
-          return;
+          save(DATA); alert('Check-out recorded'); renderApp(); return;
         }
       }
-      alert('No check-in found for today');
+      alert('No check-in found');
     }
 
-    // initial render: if logged in go to app, else login
+    // initial entry
     if(authLoad()) renderApp(); else showLogin();
+
+    // expose save globally for debugging (optional)
+    window._topview_save = ()=> save(DATA);
 
   })();
   </script>
