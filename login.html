@@ -12,32 +12,39 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    html, body {
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
     body {
-      height: 100vh;
       background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .overlay {
-      position: absolute;
+      position: fixed;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.4);
       top: 0;
       left: 0;
+      z-index: 1;
     }
 
     .login-box {
       position: relative;
       z-index: 2;
-      background-color: rgba(255, 255, 255, 0.9);
+      background-color: rgba(255, 255, 255, 0.95);
       padding: 40px 30px;
       border-radius: 15px;
       width: 90%;
       max-width: 400px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
       text-align: center;
     }
 
