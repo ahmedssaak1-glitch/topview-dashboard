@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Top View — System (Firebase modular)</title>
+  <title>Top View — System (fixed overlay)</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{--accent:#1f78ff;--muted:#6b7280;--bg:#f6f7fb;--card:#fff;--radius:12px}
@@ -42,35 +42,15 @@
 <body>
   <div id="root"></div>
 
-  <!-- Firebase modular SDK (ES modules) -->
   <script type="module">
-    // Modular imports from CDN (v9)
+    // Firebase modular imports (CDN)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      addDoc,
-      doc,
-      deleteDoc,
-      updateDoc,
-      getDoc,
-      query,
-      where,
-      orderBy,
-      limit
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, updateDoc, getDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
     import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-    // ========== FIREBASE CONFIG — keep your config here ==========
+    // Firebase config (kept from you)
     const firebaseConfig = {
       apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
       authDomain: "topview-system.firebaseapp.com",
@@ -81,27 +61,67 @@
       measurementId: "G-EPVZGH6Y2G"
     };
 
-    // initialize Firebase (modular)
     const fbApp = initializeApp(firebaseConfig);
+    try { getAnalytics(fbApp); } catch(e){}
     const auth = getAuth(fbApp);
     const db = getFirestore(fbApp);
     const storage = getStorage(fbApp);
-    try { const analytics = getAnalytics(fbApp); } catch(e){ /* analytics optional */ }
 
-    // ---------- small DOM helper ----------
-    const root = document.getElementById('root');
-    function el(tag, attrs={}, ...kids){
-      const n = document.createElement(tag);
-      for(const k in attrs){
-        if(k === 'class') n.className = attrs[k];
-        else if(k === 'style') n.style.cssText = attrs[k];
-        else n.setAttribute(k, attrs[k]);
+    // tiny helper to disable any full-screen blocking element automatically (runs on load)
+    function disableBlockingOverlays(){
+      try{
+        const W = window.innerWidth, H = window.innerHeight;
+        // iterate all elements and detect any that cover most of viewport
+        document.querySelectorAll('body *').forEach(el=>{
+          try{
+            const r = el.getBoundingClientRect();
+            const style = getComputedStyle(el);
+            const coversMost = (r.width >= W * 0.9 && r.height >= H * 0.9);
+            const highZ = (parseInt(style.zIndex) || 0) >= 1000;
+            if(coversMost && style.pointerEvents !== 'none'){
+              // make it non-interactive and slightly transparent
+              el.style.pointerEvents = 'none';
+              el.style.zIndex = '1';
+              // keep visible for debugging but not blocking
+              el.style.opacity = el.style.opacity || '0.95';
+            }
+            // also force known classes
+            if(el.classList.contains('overlay') || el.classList.contains('backdrop') || el.hasAttribute('data-overlay')){
+              el.style.pointerEvents = 'none';
+              el.style.zIndex = '1';
+            }
+          }catch(e){}
+        });
+        // ensure our card is on top
+        document.querySelectorAll('.login-card, .card').forEach(c=>{
+          c.style.position = 'relative';
+          c.style.zIndex = '9999';
+        });
+        // ensure inputs are enabled & visible
+        document.querySelectorAll('input, textarea, select').forEach(i=>{
+          i.disabled = false;
+          i.readOnly = false;
+          i.style.color = '#0b1220';
+          i.style.backgroundColor = '#ffffff';
+          i.style.caretColor = '#0b1220';
+        });
+      }catch(e){
+        console.warn('disableBlockingOverlays error', e);
       }
-      kids.forEach(c=> { if(typeof c === 'string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c); });
-      return n;
     }
 
-    // ---------- seed demo data (one-time) ----------
+    // run on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      disableBlockingOverlays();
+      // also run again after small delay (in case some libs add overlays after load)
+      setTimeout(disableBlockingOverlays, 800);
+      setTimeout(disableBlockingOverlays, 2000);
+    });
+
+    // The rest of your app (kept minimal for clarity)...
+    const root = document.getElementById('root');
+    function el(tag, attrs={}, ...kids){ const n=document.createElement(tag); for(const k in attrs){ if(k==='class') n.className=attrs[k]; else if(k==='style') n.style.cssText=attrs[k]; else n.setAttribute(k,attrs[k]); } kids.forEach(c=> typeof c==='string' ? n.appendChild(document.createTextNode(c)) : n.appendChild(c)); return n; }
+
     async function seedDemoData(){
       const usersCol = collection(db, 'users');
       const usersSnap = await getDocs(usersCol);
@@ -113,20 +133,17 @@
       ];
       for(const u of demoUsers){
         await addDoc(usersCol, u);
-        try{ await createUserWithEmailAndPassword(auth, u.email, 'pass123'); } catch(e){ /* ignore if exists */ }
+        try{ await createUserWithEmailAndPassword(auth, u.email, 'pass123'); } catch(e){}
       }
       await addDoc(collection(db,'projects'), {name:'Apartment 12B Fitout', client:'Mr. Hassan', status:'In Progress', budget:45000, engineer:'Mohamed Salah'});
       await addDoc(collection(db,'transactions'), {type:'Expense', category:'Materials', amount:12000, date:new Date().toISOString().slice(0,10), note:'Tiles+adhesives'});
-      console.log('Seeded demo data');
     }
 
-    // ---------- Auth state ----------
     onAuthStateChanged(auth, user => {
       if(user) renderApp(user);
       else showLogin();
     });
 
-    // ---------- Login UI ----------
     function showLogin(){
       root.innerHTML = '';
       const hero = el('div',{class:'hero'});
@@ -138,26 +155,19 @@
       const email = el('input',{type:'email', placeholder:'Email', autocomplete:'username'});
       const pass = el('input',{type:'password', placeholder:'Password', autocomplete:'current-password'});
       const btn = el('button',{}, 'Login');
-      btn.onclick = async ()=>{
-        try{
-          await signInWithEmailAndPassword(auth, email.value.trim(), pass.value);
-        }catch(err){
-          alert('Login failed: ' + (err.message || err));
-        }
+      btn.onclick = async ()=> {
+        try{ await signInWithEmailAndPassword(auth, email.value.trim(), pass.value); } catch(err){ alert('Login failed: ' + (err.message || err)); }
       };
       const signup = el('button',{style:'margin-left:8px;background:#e6eefc;color:var(--accent)'},'Create demo accounts');
       signup.onclick = async ()=>{ await seedDemoData(); alert('Demo users created (e.g. m.fouad@topview.local / pass123)'); };
       card.appendChild(email); card.appendChild(pass);
       card.appendChild(el('div',{style:'display:flex;gap:8px;margin-top:8px'}, btn, signup));
-      card.appendChild(el('p',{class:'small'},'If you used previous demo: Manager = m.fouad@topview.local / pass123'));
       hero.appendChild(card);
       root.appendChild(hero);
     }
 
-    // ---------- App UI ----------
     async function renderApp(user){
       root.innerHTML = '';
-      // fetch data
       const usersSnap = await getDocs(collection(db,'users'));
       const users = usersSnap.docs.map(d => ({id:d.id, ...d.data()}));
       const projectsSnap = await getDocs(collection(db,'projects'));
@@ -169,41 +179,23 @@
       const sidebar = el('div',{class:'sidebar'});
       sidebar.appendChild(el('div',{class:'logo'}, 'Top View'));
       sidebar.appendChild(el('div',{class:'small'}, 'Interior Fit-out'));
-
       const nav = el('div',{class:'nav'});
       const pages = ['Dashboard','Employees','Projects','Finance','Attendance','Settings'];
       let active = 'Dashboard';
-      pages.forEach(p=>{
-        const b = el('button',{}, p);
-        b.onclick = ()=>{ active = p; renderMain(); };
-        nav.appendChild(b);
-      });
+      pages.forEach(p=>{ const b = el('button',{}, p); b.onclick = ()=>{ active = p; renderMain(); }; nav.appendChild(b); });
       sidebar.appendChild(nav);
-
-      const userBox = el('div',{class:'user-box'});
-      userBox.appendChild(el('div',{style:'font-weight:700'}, user.email || user.displayName || 'User'));
+      const userBox = el('div',{class:'user-box'}); userBox.appendChild(el('div',{style:'font-weight:700'}, user.email || 'User'));
       const logoutBtn = el('button',{class:'btn', style:'margin-top:8px;background:#fff;color:var(--accent);border:1px solid #e6eefc'}, 'Logout');
       logoutBtn.onclick = ()=> signOut(auth);
-      userBox.appendChild(logoutBtn);
-      sidebar.appendChild(userBox);
-
+      userBox.appendChild(logoutBtn); sidebar.appendChild(userBox);
       const main = el('div',{class:'main'});
-      app.appendChild(sidebar); app.appendChild(main);
-      root.appendChild(app);
+      app.appendChild(sidebar); app.appendChild(main); root.appendChild(app);
 
-      function updateNav(){
-        [...nav.children].forEach(n=> n.classList.remove('active'));
-        const activeBtn = [...nav.children].find(n=> n.textContent===active);
-        if(activeBtn) activeBtn.classList.add('active');
-      }
+      function updateNav(){ [...nav.children].forEach(n=> n.classList.remove('active')); const activeBtn = [...nav.children].find(n=> n.textContent===active); if(activeBtn) activeBtn.classList.add('active'); }
 
       function renderMain(){
-        main.innerHTML = '';
-        updateNav();
-        const top = el('div',{class:'topbar'});
-        top.appendChild(el('div',{style:'font-weight:700;font-size:18px'}, active));
-        main.appendChild(top);
-
+        main.innerHTML = ''; updateNav();
+        const top = el('div',{class:'topbar'}); top.appendChild(el('div',{style:'font-weight:700;font-size:18px'}, active)); main.appendChild(top);
         if(active === 'Dashboard'){
           const inc = transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+(t.amount||0),0);
           const exp = transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+(t.amount||0),0);
@@ -213,91 +205,40 @@
           grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Expense'), el('div',{style:'font-weight:700;font-size:18px'},'AED '+exp)));
           grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Profit'), el('div',{style:'font-weight:700;font-size:18px'},'AED '+profit)));
           main.appendChild(grid);
-          main.appendChild(el('h3',{},'Active Projects'));
-          main.appendChild(renderProjectsTable(projects));
+          main.appendChild(el('h3',{},'Active Projects')); main.appendChild(renderProjectsTable(projects));
         }
-
-        if(active === 'Employees'){
-          main.appendChild(el('h3',{},'Employees'));
-          main.appendChild(renderEmployeesTable(users));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddEmployee()}, 'Add Employee')));
-        }
-
-        if(active === 'Projects'){
-          main.appendChild(el('h3',{},'Projects'));
-          main.appendChild(renderProjectsTable(projects));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddProject()}, 'New Project')));
-        }
-
-        if(active === 'Finance'){
-          main.appendChild(el('h3',{},'Finance'));
-          main.appendChild(renderTransactionsTable(transactions));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddTransaction()}, 'Add Transaction')));
-        }
-
-        if(active === 'Attendance'){
-          main.appendChild(el('h3',{},'Attendance'));
-          main.appendChild(renderAttendance());
-        }
-
-        if(active === 'Settings'){
-          main.appendChild(el('h3',{},'Settings'));
-          main.appendChild(el('p',{},'Project: Top View — demo'));
-        }
+        if(active === 'Employees'){ main.appendChild(el('h3',{},'Employees')); main.appendChild(renderEmployeesTable(users)); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddEmployee()}, 'Add Employee'))); }
+        if(active === 'Projects'){ main.appendChild(el('h3',{},'Projects')); main.appendChild(renderProjectsTable(projects)); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddProject()}, 'New Project'))); }
+        if(active === 'Finance'){ main.appendChild(el('h3',{},'Finance')); main.appendChild(renderTransactionsTable(transactions)); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddTransaction()}, 'Add Transaction'))); }
+        if(active === 'Attendance'){ main.appendChild(el('h3',{},'Attendance')); main.appendChild(renderAttendance()); }
+        if(active === 'Settings'){ main.appendChild(el('h3',{},'Settings')); main.appendChild(el('p',{},'Project: Top View — demo')); }
       }
 
       function renderEmployeesTable(users){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
+        const wrap = el('div',{class:'card'}); const table = el('table');
         table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Name'), el('th',{},'Role'), el('th',{},'Salary'), el('th',{},'Actions'))));
         const tb = el('tbody');
-        users.forEach(u=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},u.name));
-          tr.appendChild(el('td',{},u.role));
-          tr.appendChild(el('td',{},'AED '+u.salary));
-          const act = el('td',{}, el('div',{class:'actions'}));
-          const del = el('button',{class:'btn', onclick: async ()=>{ if(confirm('Delete user?')){ await deleteDoc(doc(db,'users',u.id)); renderApp(auth.currentUser); } }}, 'Delete');
-          act.firstChild.appendChild(del);
-          tr.appendChild(act);
-          tb.appendChild(tr);
+        users.forEach(u=>{ const tr = el('tr'); tr.appendChild(el('td',{},u.name)); tr.appendChild(el('td',{},u.role)); tr.appendChild(el('td',{},'AED '+u.salary));
+          const act = el('td',{}, el('div',{class:'actions'})); const del = el('button',{class:'btn', onclick: async ()=>{ if(confirm('Delete user?')){ await deleteDoc(doc(db,'users',u.id)); renderApp(auth.currentUser); } }}, 'Delete');
+          act.firstChild.appendChild(del); tr.appendChild(act); tb.appendChild(tr);
         });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
+        table.appendChild(tb); wrap.appendChild(table); return wrap;
       }
 
       function renderProjectsTable(projects){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
+        const wrap = el('div',{class:'card'}); const table = el('table');
         table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Name'), el('th',{},'Client'), el('th',{},'Status'), el('th',{},'Budget'))));
         const tb = el('tbody');
-        projects.forEach(p=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},p.name));
-          tr.appendChild(el('td',{},p.client));
-          tr.appendChild(el('td',{},p.status));
-          tr.appendChild(el('td',{},'AED '+p.budget));
-          tb.appendChild(tr);
-        });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
+        projects.forEach(p=>{ const tr = el('tr'); tr.appendChild(el('td',{},p.name)); tr.appendChild(el('td',{},p.client)); tr.appendChild(el('td',{},p.status)); tr.appendChild(el('td',{},'AED '+p.budget)); tb.appendChild(tr); });
+        table.appendChild(tb); wrap.appendChild(table); return wrap;
       }
 
       function renderTransactionsTable(trans){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
+        const wrap = el('div',{class:'card'}); const table = el('table');
         table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Type'), el('th',{},'Category'), el('th',{},'Amount'), el('th',{},'Date'))));
         const tb = el('tbody');
-        trans.forEach(t=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},t.type));
-          tr.appendChild(el('td',{},t.category));
-          tr.appendChild(el('td',{},'AED '+t.amount));
-          tr.appendChild(el('td',{},t.date));
-          tb.appendChild(tr);
-        });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
+        trans.forEach(t=>{ const tr = el('tr'); tr.appendChild(el('td',{},t.type)); tr.appendChild(el('td',{},t.category)); tr.appendChild(el('td',{},'AED '+t.amount)); tr.appendChild(el('td',{},t.date)); tb.appendChild(tr); });
+        table.appendChild(tb); wrap.appendChild(table); return wrap;
       }
 
       function renderAttendance(){
@@ -326,9 +267,7 @@
             tb.appendChild(tr);
           }
         })();
-        tbl.appendChild(tb);
-        wrap.appendChild(tbl);
-        return wrap;
+        tbl.appendChild(tb); wrap.appendChild(tbl); return wrap;
       }
 
       async function openAddEmployee(){
@@ -337,25 +276,12 @@
         const email = prompt('Email (used for login)'); if(!email) return;
         const role = prompt('Role','Worker'); const salary = Number(prompt('Salary AED','3000')||3000);
         await addDoc(collection(db,'users'), {username, name, role, salary, email});
-        try{ await createUserWithEmailAndPassword(auth, email, 'pass123'); } catch(e){ console.warn('Auth create user error', e.message); }
+        try{ await createUserWithEmailAndPassword(auth, email, 'pass123'); } catch(e){}
         alert('Added. Default password: pass123');
         renderApp(auth.currentUser);
       }
-      async function openAddProject(){
-        const name = prompt('Project name'); if(!name) return;
-        const client = prompt('Client name'); const budget = Number(prompt('Budget AED','10000')||10000);
-        await addDoc(collection(db,'projects'), {name, client, status:'Planned', budget, engineer:''});
-        alert('Project added');
-        renderApp(auth.currentUser);
-      }
-      async function openAddTransaction(){
-        const type = prompt('Type: Expense or Income','Expense'); if(!type) return;
-        const cat = prompt('Category','Materials'); const amount = Number(prompt('Amount AED','1000')||1000);
-        const d = new Date().toISOString().slice(0,10);
-        await addDoc(collection(db,'transactions'), {type, category:cat, amount, date:d});
-        alert('Transaction added');
-        renderApp(auth.currentUser);
-      }
+      async function openAddProject(){ const name = prompt('Project name'); if(!name) return; const client = prompt('Client name'); const budget = Number(prompt('Budget AED','10000')||10000); await addDoc(collection(db,'projects'), {name, client, status:'Planned', budget, engineer:''}); alert('Project added'); renderApp(auth.currentUser); }
+      async function openAddTransaction(){ const type = prompt('Type: Expense or Income','Expense'); if(!type) return; const cat = prompt('Category','Materials'); const amount = Number(prompt('Amount AED','1000')||1000); const d = new Date().toISOString().slice(0,10); await addDoc(collection(db,'transactions'), {type, category:cat, amount, date:d}); alert('Transaction added'); renderApp(auth.currentUser); }
 
       renderMain();
     } // end renderApp
