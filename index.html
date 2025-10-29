@@ -1,466 +1,338 @@
 <!doctype html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOP VIEW — Management System</title>
+  <title>TOP VIEW — Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --accent:#1f78ff;
-      --muted:#6b7280;
-      --bg:#f6f7fb;
-      --card:#ffffff;
-      --glass: rgba(255,255,255,0.95);
-      --radius:12px;
-    }
-    *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#0f172a; direction: rtl}
-    a{color:inherit}
-    header{padding:14px 20px; background:#ffffff; border-bottom:1px solid #eef2f7; display:flex; align-items:center; gap:12px}
-    .brand{font-weight:800; color:var(--accent); font-size:18px}
-    .container{padding:18px}
-    /* layout */
-    .app{display:flex; min-height:calc(100vh - 56px)}
-    .sidebar{width:260px; background:linear-gradient(180deg,#fff,#fbfcff); border-left:1px solid #eef2f7; padding:18px; display:flex; flex-direction:column; gap:12px}
-    .nav button{display:block;padding:10px;border-radius:8px;border:0;background:transparent;text-align:right;width:100%;cursor:pointer;font-weight:600}
+    :root{--accent:#1f78ff;--muted:#6b7280;--bg:#f6f7fb;--card:#fff;--glass:rgba(255,255,255,0.95);--radius:12px}
+    *{box-sizing:border-box} body{font-family:Inter,system-ui,Arial;margin:0;background:var(--bg);color:#0f172a}
+    header{padding:12px 16px;background:#fff;border-bottom:1px solid #eef2f7;display:flex;align-items:center;gap:12px}
+    .brand{font-weight:800;color:var(--accent);font-size:18px}
+    .container{padding:16px}
+    .app{display:flex;gap:12px;min-height:calc(100vh - 56px)}
+    .sidebar{width:260px;background:linear-gradient(180deg,#fff,#fbfcff);border-right:1px solid #eef2f7;padding:14px;display:flex;flex-direction:column;gap:12px}
+    .nav button{display:block;padding:10px;border-radius:8px;border:0;background:transparent;text-align:left;width:100%;cursor:pointer;font-weight:600}
     .nav button.active{background:#f1f6ff;color:var(--accent)}
-    .main{flex:1;padding:20px}
-    .card{background:var(--card); padding:16px; border-radius:12px; box-shadow:0 6px 20px rgba(2,6,23,0.04)}
-    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px}
-    .stat{padding:12px;border-radius:10px;background:var(--card); box-shadow:0 6px 20px rgba(2,6,23,0.04)}
-    table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
-    th,td{padding:10px 12px; border-bottom:1px solid #f3f6fa; text-align:right}
-    th{background:#fafbff; color:var(--muted); font-weight:700}
-    input, select, textarea{width:100%; padding:10px;border-radius:8px;border:1px solid #e6e9ef; margin:6px 0}
-    .row{display:flex; gap:10px}
-    .row .col{flex:1}
-    .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent); color:#fff; cursor:pointer}
+    .main{flex:1;padding:12px}
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+    .stat{padding:12px;border-radius:10px;background:var(--card)}
+    table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+    th,td{padding:10px 12px;border-bottom:1px solid #f3f6fa;text-align:left}
+    th{background:#fafbff;color:var(--muted);font-weight:700}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;margin:6px 0}
+    .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
     .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(15,23,42,0.06)}
     .small{font-size:13px;color:var(--muted)}
-    .login-wrap{min-height:calc(100vh - 56px); display:flex; align-items:center; justify-content:center}
-    .login-card{width:100%; max-width:420px; padding:28px; border-radius:12px; background:var(--glass); box-shadow:0 10px 30px rgba(2,6,23,0.08)}
-    @media(max-width:900px){ .sidebar{display:none} .grid{grid-template-columns:repeat(2,1fr)} }
-    @media(max-width:600px){ .grid{grid-template-columns:1fr} .login-card{padding:20px} table, th, td {font-size:13px} }
-    /* safety overlays */
-    .overlay, .backdrop, .modal-backdrop, [data-overlay] { pointer-events: none !important; z-index: 1 !important; }
-    input, textarea, select { color:#0b1220 !important; background:#fff !important; caret-color:#0b1220 !important; }
+    .file-list{display:flex;flex-direction:column;gap:8px}
+    .file-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;background:#fbfdff;border:1px solid #eef4ff}
+    .file-thumb{width:56px;height:40px;background:#eef5ff;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    @media (max-width:900px){.sidebar{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:600px){.grid{grid-template-columns:1fr}table,th,td{font-size:13px}}
+    /* login styles */
+    .hero{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;background:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80')center/cover no-repeat;position:relative}
+    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+    .login-card{position:relative;z-index:2;background:var(--glass);backdrop-filter:blur(4px);padding:28px;border-radius:14px;width:100%;max-width:420px;box-shadow:0 10px 30px rgba(2,6,23,0.12);text-align:center}
+    .login-card input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #e6e9ef}
+    .login-actions{display:flex;gap:8px;justify-content:center;margin-top:8px}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">TOP VIEW</div>
-    <div class="small">نظام إدارة الشركة — الديكور الداخلي</div>
-    <div style="margin-left:auto" id="user-info"></div>
+    <div class="brand" id="brand">TOP VIEW</div>
+    <div class="small" id="subtitle">Interior Fit-out — Management</div>
+    <div style="margin-left:auto" id="user-controls"></div>
   </header>
 
-  <div id="root" class="container"></div>
+  <main class="container">
+    <div id="root"></div>
+  </main>
 
-  <script type="module">
-  /* ============================
-     TOP VIEW — Single-file SPA
-     Firebase modular (CDN)
-     Features:
-     - Auth (email/password)
-     - Firestore: users(employees), projects, transactions, attendance
-     - CRUD UI for each section
-     - Seed demo data
-     ============================ */
+  <!-- Firebase compat scripts (easier single-file usage) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-  import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs,
-    addDoc,
-    setDoc,
-    doc,
-    deleteDoc,
-    updateDoc,
-    getDoc,
-    query,
-    where,
-    orderBy,
-    limit
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-  import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
-  // -------------------------
-  // Paste your Firebase config below (or keep as-is if this is your project).
-  // The config used here is the one you shared earlier.
-  // -------------------------
+  <script>
+  // ========== CONFIG (من عندك) ==========
   const firebaseConfig = {
     apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
     authDomain: "topview-system.firebaseapp.com",
     projectId: "topview-system",
-    storageBucket: "topview-system.firebasestorage.app",
+    storageBucket: "topview-system.appspot.com", // مهم: .appspot.com
     messagingSenderId: "1073945877413",
     appId: "1:1073945877413:web:d516e451e543f7a9db664c",
     measurementId: "G-EPVZGH6Y2G"
   };
+  // initialize firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
 
-  const fbApp = initializeApp(firebaseConfig);
-  try { getAnalytics(fbApp); } catch(e){ /* optional */ }
-  const auth = getAuth(fbApp);
-  const db = getFirestore(fbApp);
-  const storage = getStorage(fbApp);
-
-  // DOM helpers
-  const root = document.getElementById('root');
-  const userInfo = document.getElementById('user-info');
-  function el(tag, attrs={}, ...kids){
-    const n = document.createElement(tag);
-    for(const k in attrs){
-      if(k === 'class') n.className = attrs[k];
-      else if(k === 'html') n.innerHTML = attrs[k];
-      else n.setAttribute(k, attrs[k]);
-    }
-    kids.forEach(c => { if(typeof c === 'string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c); });
-    return n;
-  }
-
-  // Small utility to format number
-  function money(v){ return 'AED ' + (Number(v)||0); }
-  function nowDate(){ return new Date().toISOString().slice(0,10); }
-
-  // ---------- Authentication UI & logic ----------
+  // demo seeding (creates demo users & sample docs if none)
   async function seedDemoData(){
-    // create demo users and sample data
-    // only run if collections empty (best-effort)
     try{
-      const usersCol = collection(db,'users');
-      const usersSnap = await getDocs(usersCol);
-      if(!usersSnap.empty) return alert('Demo data already exists');
-
+      const usersSnap = await db.collection('users').limit(1).get();
+      if(!usersSnap.empty) { alert('Demo data already present'); return; }
+      // create auth users (catch if exist)
       const demo = [
-        {username:'m.fouad', name:'Mohamed Fouad', role:'Manager', salary:15000, email:'m.fouad@topview.local'},
-        {username:'m.salah', name:'Mohamed Salah', role:'Supervisor', salary:8000, email:'m.salah@topview.local'},
-        {username:'ibrahim', name:'Ibrahim', role:'Worker', salary:3500, email:'ibrahim@topview.local'}
+        {email:'m.fouad@topview.local', password:'pass123', name:'Mohamed Fouad', role:'Manager', salary:15000},
+        {email:'m.salah@topview.local', password:'pass123', name:'Mohamed Salah', role:'Supervisor', salary:8000},
+        {email:'ibrahim@topview.local', password:'pass123', name:'Ibrahim', role:'Worker', salary:3500}
       ];
       for(const u of demo){
-        // create Firestore doc
-        const docRef = await addDoc(usersCol, {...u});
-        // create Auth user with default password (ignore if exists)
-        try{
-          const cu = await createUserWithEmailAndPassword(auth, u.email, 'pass123');
-          // map auth uid -> user doc (set field uid)
-          await setDoc(doc(db,'users', docRef.id), {...u, uid: cu.user.uid}, { merge: true });
-        }catch(e){ console.warn('auth create user error', e.message); }
+        try { await auth.createUserWithEmailAndPassword(u.email, u.password); } catch(e){ /* ignore if exists */ }
+        await db.collection('users').add({ name:u.name, email:u.email, role:u.role, salary:u.salary, username: u.email.split('@')[0] });
       }
-      await addDoc(collection(db,'projects'), {name:'Apartment 12B Fitout', client:'Mr. Hassan', status:'In Progress', budget:45000, engineer:'Mohamed Salah'});
-      await addDoc(collection(db,'transactions'), {type:'Expense', category:'Materials', amount:12000, date:nowDate(), note:'Tiles+adhesives'});
-      alert('Demo data created. Emails like m.fouad@topview.local, password: pass123');
-    }catch(e){
-      console.error(e); alert('Error seeding demo data: ' + e.message);
-    }
+      await db.collection('projects').add({ name:'Apartment 12B Fitout', client:'Mr Hassan', status:'In Progress', budget:45000, engineer:'Mohamed Salah' });
+      await db.collection('transactions').add({ type:'Expense', category:'Materials', amount:12000, date: new Date().toISOString().slice(0,10), note:'Tiles+adhesives' });
+      alert('Demo data created. Use emails like m.fouad@topview.local / pass123');
+    }catch(e){ console.error(e); alert('Seed error: '+(e.message||e)); }
   }
 
+  // UI helpers
+  const root = document.getElementById('root');
+  function el(tag, attrs={}, ...kids){ const n=document.createElement(tag); for(const k in attrs){ if(k==='class') n.className=attrs[k]; else if(k==='html') n.innerHTML=attrs[k]; else n.setAttribute(k, attrs[k]); } kids.forEach(c=> typeof c==='string' ? n.appendChild(document.createTextNode(c)) : c && n.appendChild(c)); return n; }
+
+  // real-time listeners
+  const state = { users:[], projects:[], transactions:[], attendance:[], attachments:[] };
+  function attachListeners(){
+    db.collection('users').onSnapshot(s=> { state.users = s.docs.map(d=>({id:d.id,...d.data()})); renderApp(); });
+    db.collection('projects').onSnapshot(s=> { state.projects = s.docs.map(d=>({id:d.id,...d.data()})); renderApp(); });
+    db.collection('transactions').onSnapshot(s=> { state.transactions = s.docs.map(d=>({id:d.id,...d.data()})); renderApp(); });
+    db.collection('attendance').onSnapshot(s=> { state.attendance = s.docs.map(d=>({id:d.id,...d.data()})); renderApp(); });
+    db.collection('attachments').onSnapshot(s=> { state.attachments = s.docs.map(d=>({id:d.id,...d.data()})); renderApp(); });
+  }
+
+  // auth UI
   function showLogin(){
     root.innerHTML = '';
-    const wrap = el('div',{class:'login-wrap'});
+    const hero = el('div',{class:'hero'});
+    hero.appendChild(el('div',{class:'overlay'}));
     const card = el('div',{class:'login-card'});
-    card.appendChild(el('div',{class:'logo'}, 'TOP VIEW'));
-    card.appendChild(el('div',{class:'small'}, 'نظام إدارة المشاريع والمدفوعات والموظفين'));
-    card.appendChild(el('hr'));
-    const email = el('input',{type:'email', placeholder:'البريد الالكتروني'});
-    const pass = el('input',{type:'password', placeholder:'كلمة المرور'});
-    const row = el('div',{style:'display:flex;gap:8px;flex-direction:row-reverse;'});
-    const btnLogin = el('button',{class:'btn'}, 'دخول');
-    btnLogin.onclick = async () => {
+    card.appendChild(el('div',{class:'brand'},'Top View'));
+    card.appendChild(el('div',{class:'small'}, 'Interior Fit-out — Management'));
+    const email = el('input',{type:'email',id:'login_email',placeholder:'Email'});
+    const pass = el('input',{type:'password',id:'login_pass',placeholder:'Password'});
+    const btn = el('button',{class:'btn'}, 'Login');
+    btn.onclick = async ()=> {
       try{
-        await signInWithEmailAndPassword(auth, email.value.trim(), pass.value);
-      }catch(e){
-        alert('فشل تسجيل الدخول: ' + (e.message || e));
-      }
+        await auth.signInWithEmailAndPassword(email.value.trim(), pass.value);
+        // logged in -> renderApp will be called by onAuthStateChanged
+      }catch(e){ alert('Login failed: '+(e.message||e)); }
     };
-    const btnSeed = el('button',{class:'btn ghost'}, 'إنشاء بيانات تجريبية');
-    btnSeed.onclick = seedDemoData;
-    row.appendChild(btnLogin); row.appendChild(btnSeed);
+    const demoBtn = el('button',{class:'btn ghost', style:'margin-left:8px'}, 'Create demo data');
+    demoBtn.onclick = seedDemoData;
+    const row = el('div',{class:'login-actions'});
+    row.appendChild(btn); row.appendChild(demoBtn);
     card.appendChild(email); card.appendChild(pass); card.appendChild(row);
-    card.appendChild(el('p',{class:'small'}, 'أو قم بالتسجيل ثم سيُنشأ مستند المستخدم تلقائياً'));
-    const btnSignup = el('button',{class:'btn', style:'margin-top:8px'}, 'تسجيل حساب جديد');
-    btnSignup.onclick = async () => {
-      const name = prompt('الاسم الكامل (مثلاً: Ahmed Ali)');
-      if(!name) return;
-      const emailv = prompt('البريد الالكتروني (للدخول)');
-      if(!emailv) return;
-      const password = prompt('كلمة المرور (سيتم استخدامها لتسجيل الدخول)');
-      if(!password) return;
-      try{
-        const { user } = await createUserWithEmailAndPassword(auth, emailv.trim(), password);
-        // create user doc and map uid
-        await addDoc(collection(db,'users'), { name, email: emailv.trim(), role: 'Worker', salary: 3000, uid: user.uid, username: emailv.split('@')[0] });
-        alert('تم إنشاء الحساب. سجّل دخول الآن.');
-      }catch(e){ alert('خطأ عند التسجيل: ' + (e.message || e)); }
-    };
-    card.appendChild(btnSignup);
-    wrap.appendChild(card);
-    root.appendChild(wrap);
+    card.appendChild(el('p',{class:'small'}, 'If you prefer, add users from Firebase Console → Authentication → Add user'));
+    hero.appendChild(card);
+    root.appendChild(hero);
   }
 
-  // ---------- Main App ----------
-  function appLayout(currentUserDoc){
+  // app render
+  let currentPage='Dashboard';
+  let currentUserDoc=null;
+  function renderApp(){
+    const user = auth.currentUser;
+    if(!user){ showLogin(); return; }
+    // build user doc if exists in state.users
+    currentUserDoc = state.users.find(u=>u.email === user.email) || null;
+
     root.innerHTML = '';
-    // sidebar and main
     const app = el('div',{class:'app'});
     const sidebar = el('div',{class:'sidebar'});
-    sidebar.appendChild(el('div',{class:'small'}, 'TOP VIEW — الإدارة'));
+    sidebar.appendChild(el('div',{class:'small'}, 'Top View — Interior Fit-out'));
     const nav = el('div',{class:'nav'});
-    const pages = ['لوحة التحكم','الموظفون','المشاريع','المالية','الحضور','الإعدادات'];
-    let active = 'لوحة التحكم';
-
-    pages.forEach(p=>{
-      const b = el('button',{}, p);
-      b.onclick = ()=>{ active = p; renderMain(); };
-      nav.appendChild(b);
-    });
+    const pages = ['Dashboard','Employees','Projects','Finance','Attendance','Attachments','Settings'];
+    pages.forEach(p=>{ const b = el('button',{}, p); if(p===currentPage) b.classList.add('active'); b.onclick=()=>{ currentPage=p; renderApp(); }; nav.appendChild(b); });
     sidebar.appendChild(nav);
-
-    const userBox = el('div',{class:'card'});
-    userBox.appendChild(el('div',{style:'font-weight:700'}, currentUserDoc.name || currentUserDoc.email));
-    userBox.appendChild(el('div',{class:'small'}, currentUserDoc.role || '—'));
-    const logout = el('button',{class:'btn ghost', style:'margin-top:8px'}, 'خروج');
-    logout.onclick = ()=> signOut(auth);
+    // user box
+    const userBox = el('div',{}, el('div',{style:'font-weight:700'}, currentUserDoc? currentUserDoc.name : user.email), el('div',{class:'small'}, currentUserDoc? currentUserDoc.role : 'User'));
+    const logout = el('button',{class:'btn ghost', style:'margin-top:8px'}, 'Logout');
+    logout.onclick = ()=> { auth.signOut(); };
     userBox.appendChild(logout);
     sidebar.appendChild(userBox);
 
     const main = el('div',{class:'main'});
+    // topbar
+    main.appendChild(el('div',{class:'topbar'}, el('div',{style:'font-weight:700;font-size:18px'}, currentPage)));
+    // pages
+    if(currentPage==='Dashboard'){
+      const inc = state.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+(t.amount||0),0);
+      const exp = state.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+(t.amount||0),0);
+      const profit = inc - exp;
+      const grid = el('div',{class:'grid'});
+      grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Income'), el('div',{style:'font-weight:700;font-size:18px'}, inc + ' AED')));
+      grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Expense'), el('div',{style:'font-weight:700;font-size:18px'}, exp + ' AED')));
+      grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Profit'), el('div',{style:'font-weight:700;font-size:18px'}, profit + ' AED')));
+      main.appendChild(grid);
+      main.appendChild(el('h3',{}, 'Active Projects'));
+      main.appendChild(buildProjectsTable());
+    }
+    if(currentPage==='Employees'){ main.appendChild(el('h3',{},'Employees')); main.appendChild(buildEmployeesTable()); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addEmployee}, 'Add Employee'))); }
+    if(currentPage==='Projects'){ main.appendChild(el('h3',{},'Projects')); main.appendChild(buildProjectsTable()); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addProject}, 'New Project'))); }
+    if(currentPage==='Finance'){ main.appendChild(el('h3',{},'Finance')); main.appendChild(buildTransactionsTable()); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addTransaction}, 'Add Transaction'))); }
+    if(currentPage==='Attendance'){ main.appendChild(el('h3',{},'Attendance')); main.appendChild(buildAttendanceTable()); main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: recordIn}, 'Record In (me)'), el('button',{class:'btn ghost', onclick: recordOut}, 'Record Out (me)'))); }
+    if(currentPage==='Attachments'){ main.appendChild(el('h3',{},'Attachments')); main.appendChild(buildAttachmentsPanel()); }
+
     app.appendChild(sidebar); app.appendChild(main);
     root.appendChild(app);
+  }
 
-    // Fetch data helpers
-    async function fetchAll(){
-      const [uSnap, pSnap, tSnap, aSnap] = await Promise.all([
-        getDocs(collection(db,'users')),
-        getDocs(collection(db,'projects')),
-        getDocs(collection(db,'transactions')),
-        getDocs(collection(db,'attendance'))
-      ]);
-      const users = uSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const projects = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const transactions = tSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      const attendance = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      return { users, projects, transactions, attendance };
-    }
+  // tables & CRUD
+  function buildEmployeesTable(){
+    const wrap = el('div',{class:'card'});
+    const table = el('table');
+    table.appendChild(el('thead',{}, el('tr',{}, el('th',{}, 'Name'), el('th',{}, 'Role'), el('th',{}, 'Salary'), el('th',{}, 'Email'), el('th',{}, 'Actions'))));
+    const tb = el('tbody');
+    state.users.forEach(u=>{
+      const tr = el('tr');
+      tr.appendChild(el('td',{}, u.name || '-'));
+      tr.appendChild(el('td',{}, u.role || '-'));
+      tr.appendChild(el('td',{}, (u.salary||0) + ' AED'));
+      tr.appendChild(el('td',{}, u.email || '-'));
+      const tdAct = el('td',{});
+      const del = el('button',{class:'btn ghost'}, 'Delete');
+      del.onclick = async ()=> { if(confirm('Delete user?')){ await db.collection('users').doc(u.id).delete(); } };
+      tdAct.appendChild(del);
+      tr.appendChild(tdAct);
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb); wrap.appendChild(table);
+    return wrap;
+  }
+  function addEmployee(){
+    const name = prompt('Full name'); if(!name) return;
+    const email = prompt('Email'); if(!email) return;
+    const role = prompt('Role','Worker'); const salary = Number(prompt('Salary AED','3000')||3000);
+    // create auth user and firestore doc
+    auth.createUserWithEmailAndPassword(email.trim(), 'pass123').then(res=>{
+      db.collection('users').add({ name, email: email.trim(), role, salary, uid: res.user.uid, username: email.split('@')[0] });
+      alert('Added. default password: pass123');
+    }).catch(e=>{
+      // still add doc if auth fails (maybe exists)
+      db.collection('users').add({ name, email: email.trim(), role, salary });
+      alert('Added (auth may exist).');
+    });
+  }
 
-    // Render helpers: tables & forms
-    function renderProjectsTable(projects){
-      const wrap = el('div',{class:'card'});
-      const table = el('table');
-      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الاسم'), el('th',{},'العميل'), el('th',{},'الحالة'), el('th',{},'الميزانية'))));
-      const tb = el('tbody');
-      projects.forEach(p=>{
-        const tr = el('tr');
-        tr.appendChild(el('td',{},p.name));
-        tr.appendChild(el('td',{},p.client||'-'));
-        tr.appendChild(el('td',{},p.status||'-'));
-        tr.appendChild(el('td',{}, money(p.budget)));
-        tb.appendChild(tr);
-      });
-      table.appendChild(tb); wrap.appendChild(table);
-      return wrap;
-    }
+  function buildProjectsTable(){
+    const wrap = el('div',{class:'card'});
+    const table = el('table');
+    table.appendChild(el('thead',{}, el('tr',{}, el('th',{}, 'Name'), el('th',{}, 'Client'), el('th',{}, 'Status'), el('th',{}, 'Budget'))));
+    const tb = el('tbody');
+    state.projects.forEach(p=>{
+      const tr = el('tr');
+      tr.appendChild(el('td',{}, p.name));
+      tr.appendChild(el('td',{}, p.client || '-'));
+      tr.appendChild(el('td',{}, p.status || '-'));
+      tr.appendChild(el('td',{}, (p.budget||0) + ' AED'));
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb); wrap.appendChild(table);
+    return wrap;
+  }
+  function addProject(){ const name=prompt('Project name'); if(!name) return; const client=prompt('Client'); const budget=Number(prompt('Budget AED','10000')||10000); db.collection('projects').add({ name, client, budget, status:'Planned', engineer:''}); }
 
-    function renderEmployeesTable(users){
-      const wrap = el('div',{class:'card'});
-      const table = el('table');
-      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الاسم'), el('th',{},'الدور'), el('th',{},'الراتب'), el('th',{},'البريد'), el('th',{},'إجراءات'))));
-      const tb = el('tbody');
-      users.forEach(u=>{
-        const tr = el('tr');
-        tr.appendChild(el('td',{},u.name));
-        tr.appendChild(el('td',{},u.role||'-'));
-        tr.appendChild(el('td',{}, money(u.salary)));
-        tr.appendChild(el('td',{},u.email||'-'));
-        const actionTd = el('td',{});
-        const del = el('button',{class:'btn ghost'}, 'حذف');
-        del.onclick = async ()=>{
-          if(!confirm('حذف الموظف؟')) return;
-          try{
-            if(u.uid){
-              // try to delete user auth — requires admin privileges (not possible from client SDK)
-              // So only delete Firestore doc here
-            }
-            await deleteDoc(doc(db,'users',u.id));
-            alert('تم الحذف'); renderMain();
-          }catch(e){ alert('خطأ: ' + e.message); }
-        };
-        actionTd.appendChild(del);
-        tr.appendChild(actionTd);
-        tb.appendChild(tr);
-      });
-      table.appendChild(tb); wrap.appendChild(table);
-      return wrap;
-    }
+  function buildTransactionsTable(){
+    const wrap = el('div',{class:'card'});
+    const table = el('table');
+    table.appendChild(el('thead',{}, el('tr',{}, el('th',{}, 'Type'), el('th',{}, 'Category'), el('th',{}, 'Amount'), el('th',{}, 'Date'))));
+    const tb = el('tbody');
+    state.transactions.forEach(t=>{
+      const tr = el('tr');
+      tr.appendChild(el('td',{}, t.type));
+      tr.appendChild(el('td',{}, t.category));
+      tr.appendChild(el('td',{}, (t.amount||0) + ' AED'));
+      tr.appendChild(el('td',{}, t.date || '-'));
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb); wrap.appendChild(table);
+    return wrap;
+  }
+  function addTransaction(){ const type = prompt('Type: Expense or Income','Expense'); if(!type) return; const cat = prompt('Category','Materials'); const amount = Number(prompt('Amount AED','1000')||1000); db.collection('transactions').add({ type, category:cat, amount, date:(new Date()).toISOString().slice(0,10) }); }
 
-    function renderTransactionsTable(transactions){
-      const wrap = el('div',{class:'card'});
-      const table = el('table');
-      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'النوع'), el('th',{},'الفئة'), el('th',{},'المبلغ'), el('th',{},'التاريخ'))));
-      const tb = el('tbody');
-      transactions.forEach(t=>{
-        const tr = el('tr');
-        tr.appendChild(el('td',{},t.type));
-        tr.appendChild(el('td',{},t.category));
-        tr.appendChild(el('td',{}, money(t.amount)));
-        tr.appendChild(el('td',{}, t.date));
-        tb.appendChild(tr);
-      });
-      table.appendChild(tb); wrap.appendChild(table);
-      return wrap;
-    }
+  function buildAttendanceTable(){
+    const wrap = el('div',{class:'card'});
+    const table = el('table');
+    table.appendChild(el('thead',{}, el('tr',{}, el('th',{}, 'Employee'), el('th',{}, 'Date'), el('th',{}, 'In'), el('th',{}, 'Out'))));
+    const tb = el('tbody');
+    state.attendance.slice().reverse().forEach(a=>{
+      const u = state.users.find(x=>x.uid === a.uid) || state.users.find(x=>x.id === a.userId) || { name: a.name || '—' };
+      const tr = el('tr');
+      tr.appendChild(el('td',{}, u.name || '-'));
+      tr.appendChild(el('td',{}, a.date));
+      tr.appendChild(el('td',{}, a.in || '-'));
+      tr.appendChild(el('td',{}, a.out || '-'));
+      tb.appendChild(tr);
+    });
+    table.appendChild(tb); wrap.appendChild(table);
+    return wrap;
+  }
+  async function recordIn(){
+    const user = auth.currentUser; if(!user) return alert('Not signed in');
+    await db.collection('attendance').add({ uid: user.uid, date: (new Date()).toISOString().slice(0,10), in: (new Date()).toLocaleTimeString(), out: '' });
+    alert('Check-in recorded');
+  }
+  async function recordOut(){
+    const user = auth.currentUser; if(!user) return alert('Not signed in');
+    const q = await db.collection('attendance').where('uid','==', user.uid).where('date','==',(new Date()).toISOString().slice(0,10)).get();
+    if(q.empty) return alert('No check-in found'); const last = q.docs[q.docs.length - 1];
+    await db.collection('attendance').doc(last.id).update({ out: (new Date()).toLocaleTimeString() }); alert('Check-out recorded');
+  }
 
-    function renderAttendanceTable(attendance, users){
-      const wrap = el('div',{class:'card'});
-      const table = el('table');
-      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الموظف'), el('th',{},'التاريخ'), el('th',{},'دخول'), el('th',{},'خروج'))));
-      const tb = el('tbody');
-      attendance.slice().reverse().forEach(a=>{
-        const u = users.find(x=> x.uid === a.uid) || users.find(x=> x.id === a.userId) || { name: a.name || '—' };
-        const tr = el('tr');
-        tr.appendChild(el('td',{}, u.name || '—'));
-        tr.appendChild(el('td',{}, a.date));
-        tr.appendChild(el('td',{}, a.in||'-'));
-        tr.appendChild(el('td',{}, a.out||'-'));
-        tb.appendChild(tr);
-      });
-      table.appendChild(tb); wrap.appendChild(table);
-      return wrap;
-    }
-
-    // CRUD forms (prompts used for simplicity)
-    async function addEmployee(){
-      const name = prompt('الاسم الكامل'); if(!name) return;
-      const email = prompt('البريد الالكتروني (مستخدم لتسجيل الدخول)'); if(!email) return;
-      const role = prompt('الدور','Worker');
-      const salary = Number(prompt('الراتب AED','3000')||3000);
-      try{
-        // Create Auth user and store uid in users collection
-        const { user } = await createUserWithEmailAndPassword(auth, email.trim(), 'pass123');
-        await addDoc(collection(db,'users'), { name, email: email.trim(), role, salary, uid: user.uid, username: email.split('@')[0] });
-        alert('تم إضافة الموظف. كلمة مرور افتراضية: pass123');
-        renderMain();
-      }catch(e){
-        alert('خطأ: ' + (e.message || e));
+  // attachments panel
+  function buildAttachmentsPanel(){
+    const wrap = el('div',{class:'card'});
+    const fileInput = el('input',{type:'file', multiple:true});
+    const uploadBtn = el('button',{class:'btn'}, 'Upload');
+    const status = el('div',{class:'file-list'});
+    uploadBtn.onclick = async ()=>{
+      const files = Array.from(fileInput.files || []);
+      if(!files.length) return alert('No files');
+      for(const f of files){
+        if(f.size > 20 * 1024 * 1024) { alert('File too big: ' + f.name); continue; }
+        const path = `attachments/${Date.now()}_${f.name.replace(/\s+/g,'_')}`;
+        const ref = storage.ref().child(path);
+        const task = ref.put(f);
+        task.on('state_changed', snap=>{}, err=>{ alert('Upload error: '+err.message); }, async ()=>{
+          const url = await ref.getDownloadURL();
+          await db.collection('attachments').add({ filename: f.name, contentType: f.type, size: f.size, storagePath: path, url, uploadedAt: (new Date()).toISOString() });
+          status.appendChild(el('div',{class:'file-item'}, el('div',{class:'file-thumb'}, el('span',{}, f.name.split('.').pop().toUpperCase())), el('div',{}, el('div',{}, f.name))));
+        });
       }
-    }
-    async function addProject(){
-      const name = prompt('اسم المشروع'); if(!name) return;
-      const client = prompt('اسم العميل'); const budget = Number(prompt('الميزانية AED','10000')||10000);
-      await addDoc(collection(db,'projects'), { name, client, budget, status:'Planned', engineer:'' });
-      alert('تم إضافة المشروع'); renderMain();
-    }
-    async function addTransaction(){
-      const type = prompt('النوع: Expense أو Income','Expense'); if(!type) return;
-      const cat = prompt('الفئة','Materials'); const amount = Number(prompt('المبلغ AED','1000')||1000);
-      const note = prompt('ملاحظة (اختياري)');
-      await addDoc(collection(db,'transactions'), { type, category:cat, amount, date: nowDate(), note: note || '' });
-      alert('تمت الإضافة'); renderMain();
-    }
+      fileInput.value = '';
+    };
+    wrap.appendChild(fileInput); wrap.appendChild(el('div',{style:'margin-top:8px'}, uploadBtn)); wrap.appendChild(status);
+    // list existing attachments
+    wrap.appendChild(el('h4',{}, 'All Attachments'));
+    state.attachments.forEach(a=>{
+      wrap.appendChild(el('div',{class:'file-item'}, el('div',{class:'file-thumb'}, a.contentType && a.contentType.startsWith('image/') ? el('img',{src:a.url, style:'width:100%;height:100%;object-fit:cover'}) : el('span',{}, a.filename.split('.').pop().toUpperCase())), el('div',{}, el('div',{}, a.filename), el('div',{class:'small'}, a.storagePath || ''))));
+    });
+    return wrap;
+  }
 
-    async function recordIn(){
-      const user = auth.currentUser;
-      if(!user) return alert('غير مسجل الدخول');
-      await addDoc(collection(db,'attendance'), { uid: user.uid, date: nowDate(), in: new Date().toLocaleTimeString(), out: '' });
-      alert('تم تسجيل الدخول'); renderMain();
-    }
-    async function recordOut(){
-      const user = auth.currentUser;
-      if(!user) return alert('غير مسجل الدخول');
-      const q = query(collection(db,'attendance'), where('uid','==', user.uid), where('date','==', nowDate()), where('out','==',''));
-      const snap = await getDocs(q);
-      if(snap.empty) return alert('لا يوجد تسجيل دخول مفتوح لليوم');
-      const last = snap.docs[snap.docs.length - 1];
-      await updateDoc(doc(db,'attendance', last.id), { out: new Date().toLocaleTimeString() });
-      alert('تم تسجيل الخروج'); renderMain();
-    }
-
-    // Main render
-    async function renderMain(){
-      main.innerHTML = '';
-      const data = await fetchAll();
-      // topbar stats
-      const inc = data.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+(t.amount||0),0);
-      const exp = data.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+(t.amount||0),0);
-      const profit = inc - exp;
-      if(active === 'لوحة التحكم'){
-        const stats = el('div',{class:'grid'});
-        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'الإيرادات'), el('div',{style:'font-weight:700;font-size:18px'}, money(inc))));
-        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'المصروفات'), el('div',{style:'font-weight:700;font-size:18px'}, money(exp))));
-        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'الربح'), el('div',{style:'font-weight:700;font-size:18px'}, money(profit))));
-        main.appendChild(stats);
-        main.appendChild(el('h3',{}, 'المشاريع النشطة'));
-        main.appendChild(renderProjectsTable(data.projects));
-      }
-      if(active === 'الموظفون'){
-        main.appendChild(el('h3',{}, 'الموظفون'));
-        main.appendChild(renderEmployeesTable(data.users));
-        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addEmployee}, 'إضافة موظف')));
-      }
-      if(active === 'المشاريع'){
-        main.appendChild(el('h3',{}, 'المشاريع'));
-        main.appendChild(renderProjectsTable(data.projects));
-        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addProject}, 'مشروع جديد')));
-      }
-      if(active === 'المالية'){
-        main.appendChild(el('h3',{}, 'المالية'));
-        main.appendChild(renderTransactionsTable(data.transactions));
-        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addTransaction}, 'إضافة معاملة')));
-      }
-      if(active === 'الحضور'){
-        main.appendChild(el('h3',{}, 'الحضور'));
-        main.appendChild(el('div',{style:'display:flex;gap:8px;flex-direction:row-reverse'}, el('button',{class:'btn', onclick: recordIn}, 'تسجيل حضور (دخول)'), el('button',{class:'btn ghost', onclick: recordOut}, 'تسجيل خروج (خروج)')));
-        main.appendChild(renderAttendanceTable(data.attendance, data.users));
-      }
-      if(active === 'الإعدادات'){
-        main.appendChild(el('h3',{}, 'الإعدادات'));
-        main.appendChild(el('div',{class:'card'}, el('p',{}, 'شركة: TOP VIEW — إدارة الديكور الداخلي')));
-        main.appendChild(el('div',{style:'margin-top:8px'}, el('button',{class:'btn ghost', onclick: seedDemoData}, 'إعادة إنشاء بيانات تجريبية (إن لم توجد)')));
-      }
-      updateNav();
-    }
-
-    renderMain();
-    } // end appLayout
-
-  // ---------- Auth state monitoring ----------
-  let currentUserDoc = null;
-  onAuthStateChanged(auth, async (user) => {
-    if(!user){
-      userInfo.innerHTML = '';
+  // auth observer + listeners
+  auth.onAuthStateChanged(user=>{
+    if(user){
+      attachListeners();
+      renderApp();
+      document.getElementById('user-controls').innerHTML = '';
+      document.getElementById('user-controls').appendChild(el('span',{class:'small'}, user.email));
+    } else {
+      document.getElementById('user-controls').innerHTML = '';
       showLogin();
-      return;
-    }
-    // load user document by uid
-    try{
-      // try to find user doc with uid
-      const usersSnap = await getDocs(query(collection(db,'users'), where('uid','==', user.uid), limit(1)));
-      if(!usersSnap.empty){
-        currentUserDoc = { id: usersSnap.docs[0].id, ...usersSnap.docs[0].data() };
-      }else{
-        // fallback: create user doc from auth profile
-        const docRef = await addDoc(collection(db,'users'), { name: user.displayName || user.email.split('@')[0], email: user.email, uid: user.uid, role: 'Worker', salary: 3000 });
-        currentUserDoc = { id: docRef.id, name: user.displayName || user.email.split('@')[0], email: user.email, uid: user.uid, role: 'Worker', salary: 3000 };
-      }
-      // update header
-      userInfo.innerHTML = `<span class="small">مرحباً، ${currentUserDoc.name || user.email}</span>`;
-      appLayout(currentUserDoc);
-    }catch(e){
-      console.error(e);
-      alert('خطأ عند تحميل بيانات المستخدم: ' + e.message);
-      signOut(auth);
     }
   });
 
-  // end of module
+  // initial show
+  showLogin();
   </script>
 </body>
 </html>
