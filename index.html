@@ -34,14 +34,12 @@
 
   <!-- Firebase SDKs (Modular) -->
   <script type="module">
-    // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
     import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
     import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
       authDomain: "topview-system.firebaseapp.com",
@@ -52,17 +50,73 @@
       measurementId: "G-EPVZGH6Y2G"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // ... باقي الكود الخاص بالـ UI والـ CRUD زي الموجود عندك ...
-    // لاحظ: كل دوال firebase.compat لازم تتحول لدوال modular
-    // مثل auth.signInWithEmailAndPassword -> signInWithEmailAndPassword(auth, email, pass)
-    // db.collection('users').get() -> getDocs(collection(db,'users'))
+    const root = document.getElementById('root');
+    function el(tag, attrs={}, ...kids){ 
+      const n=document.createElement(tag); 
+      for(const k in attrs){ 
+        if(k==='class') n.className=attrs[k]; 
+        else n.setAttribute(k,attrs[k]); 
+      } 
+      kids.forEach(c=> typeof c==='string' ? n.appendChild(document.createTextNode(c)) : n.appendChild(c)); 
+      return n; 
+    }
+
+    // Demo: create initial users
+    async function seedDemoData(){
+      const usersRef = collection(db,'users');
+      const usersSnap = await getDocs(usersRef);
+      if(!usersSnap.empty) return;
+      const demoUsers = [
+        {username:'m.fouad', name:'Mohamed Fouad', role:'Manager', salary:15000, email:'m.fouad@topview.local'},
+        {username:'m.salah', name:'Mohamed Salah', role:'Supervisor', salary:8000, email:'m.salah@topview.local'},
+        {username:'ibrahim', name:'Ibrahim', role:'Worker', salary:3500, email:'ibrahim@topview.local'}
+      ];
+      for(const u of demoUsers){
+        await addDoc(usersRef,u);
+        try{ await createUserWithEmailAndPassword(auth,u.email,'pass123'); } catch(e){ }
+      }
+      await addDoc(collection(db,'projects'),{name:'Apartment 12B Fitout', client:'Mr. Hassan', status:'In Progress', budget:45000, engineer:'Mohamed Salah'});
+      await addDoc(collection(db,'transactions'),{type:'Expense', category:'Materials', amount:12000, date:new Date().toISOString().slice(0,10), note:'Tiles+adhesives'});
+      console.log('Seeded demo data');
+    }
+
+    // Login UI
+    function showLogin(){
+      root.innerHTML = '';
+      const hero = el('div',{class:'hero'});
+      hero.appendChild(el('div',{class:'overlay'}));
+      const card = el('div',{class:'card'});
+      card.appendChild(el('div',{class:'logo'}, 'Top View'));
+      card.appendChild(el('div',{class:'small'}, 'Top View — Interior Fit-out'));
+      card.appendChild(el('hr'));
+      const email = el('input',{type:'email', placeholder:'Email'});
+      const pass = el('input',{type:'password', placeholder:'Password'});
+      const btn = el('button',{}, 'Login');
+      btn.onclick = async ()=>{
+        try{
+          await signInWithEmailAndPassword(auth,email.value.trim(),pass.value);
+        }catch(err){ alert('Login failed: '+err.message); }
+      };
+      const signup = el('button',{style:'margin-left:8px;background:#e6eefc;color:var(--accent)'},'Create demo accounts');
+      signup.onclick = async ()=>{ await seedDemoData(); alert('Demo users created. Emails: m.fouad@topview.local, m.salah@topview.local, ibrahim@topview.local / pass123'); };
+      card.appendChild(email); card.appendChild(pass); card.appendChild(el('div',{style:'display:flex;gap:8px;margin-top:8px'}, btn, signup));
+      card.appendChild(el('p',{class:'small'},'If you used previous demo: Manager = m.fouad@topview.local / pass123'));
+      hero.appendChild(card);
+      root.appendChild(hero);
+    }
+
+    onAuthStateChanged(auth,user=>{
+      if(user) renderApp(user);
+      else showLogin();
+    });
+
+    // هنا ممكن نكمل كل باقي الـ CRUD والـ UI بنفس طريقة الكود القديم لكن مع modular imports
   </script>
 </body>
 </html>
