@@ -1,365 +1,466 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="ar">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Top View — System (Firebase modular)</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOP VIEW — Management System</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--accent:#1f78ff;--muted:#6b7280;--bg:#f6f7fb;--card:#fff;--radius:12px}
-    *{box-sizing:border-box} body{font-family:Inter,system-ui,Arial;margin:0;background:var(--bg);color:#0f172a}
-    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background-image:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;position:relative}
-    /* overlay kept visual but not blocking pointer events (fix for invisible/uneditable inputs) */
-    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);pointer-events:none;z-index:1;}
-    .card{position:relative;z-index:9999;background:rgba(255,255,255,0.98);padding:28px;border-radius:14px;width:100%;max-width:420px;box-shadow:0 10px 30px rgba(2,6,23,0.12);text-align:left}
-    .logo{font-weight:800;color:var(--accent);font-size:20px;margin-bottom:6px}
-    input{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e9ef;margin:8px 0;font-size:15px;color:#0b1220;background:#fff}
-    button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
-    .app{display:flex;min-height:100vh}
-    .sidebar{width:260px;background:linear-gradient(180deg,#fff,#fbfcff);border-right:1px solid #eef2f7;padding:18px;display:flex;flex-direction:column;gap:12px}
+    :root{
+      --accent:#1f78ff;
+      --muted:#6b7280;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --glass: rgba(255,255,255,0.95);
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#0f172a; direction: rtl}
+    a{color:inherit}
+    header{padding:14px 20px; background:#ffffff; border-bottom:1px solid #eef2f7; display:flex; align-items:center; gap:12px}
+    .brand{font-weight:800; color:var(--accent); font-size:18px}
+    .container{padding:18px}
+    /* layout */
+    .app{display:flex; min-height:calc(100vh - 56px)}
+    .sidebar{width:260px; background:linear-gradient(180deg,#fff,#fbfcff); border-left:1px solid #eef2f7; padding:18px; display:flex; flex-direction:column; gap:12px}
+    .nav button{display:block;padding:10px;border-radius:8px;border:0;background:transparent;text-align:right;width:100%;cursor:pointer;font-weight:600}
+    .nav button.active{background:#f1f6ff;color:var(--accent)}
     .main{flex:1;padding:20px}
-    .nav button{display:block;padding:10px;border-radius:8px;border:0;background:transparent;text-align:left;width:100%;cursor:pointer}
-    .nav button.active{background:#f1f6ff;color:var(--accent);font-weight:700}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
-    .stat{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
-    table{width:100%;border-collapse:collapse;background:var(--card);border-radius:8px;overflow:hidden}
-    th,td{padding:10px 12px;border-bottom:1px solid #f3f6fa;text-align:left}
-    th{background:#fafbff;color:var(--muted);font-weight:700}
+    .card{background:var(--card); padding:16px; border-radius:12px; box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:14px}
+    .stat{padding:12px;border-radius:10px;background:var(--card); box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+    table{width:100%; border-collapse:collapse; font-size:14px; margin-top:10px}
+    th,td{padding:10px 12px; border-bottom:1px solid #f3f6fa; text-align:right}
+    th{background:#fafbff; color:var(--muted); font-weight:700}
+    input, select, textarea{width:100%; padding:10px;border-radius:8px;border:1px solid #e6e9ef; margin:6px 0}
+    .row{display:flex; gap:10px}
+    .row .col{flex:1}
+    .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent); color:#fff; cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(15,23,42,0.06)}
     .small{font-size:13px;color:var(--muted)}
-    @media(max-width:900px){.sidebar{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:600px){.grid{grid-template-columns:1fr}.card{max-width:340px}}
-
-    /* Extra safety: ensure overlays/backdrops from other libs don't block inputs */
-    .backdrop, .modal-backdrop, [data-overlay] { pointer-events: none !important; z-index: 1 !important; opacity: 0.95 !important; }
-
-    /* Ensure inputs are visible even in dark theme overrides */
-    input, textarea, select { color: #0b1220 !important; background-color: #ffffff !important; caret-color: #0b1220 !important; }
-
-    /* Make sure login card sits above everything */
-    .login-card, .card { position: relative !important; z-index: 9999 !important; }
+    .login-wrap{min-height:calc(100vh - 56px); display:flex; align-items:center; justify-content:center}
+    .login-card{width:100%; max-width:420px; padding:28px; border-radius:12px; background:var(--glass); box-shadow:0 10px 30px rgba(2,6,23,0.08)}
+    @media(max-width:900px){ .sidebar{display:none} .grid{grid-template-columns:repeat(2,1fr)} }
+    @media(max-width:600px){ .grid{grid-template-columns:1fr} .login-card{padding:20px} table, th, td {font-size:13px} }
+    /* safety overlays */
+    .overlay, .backdrop, .modal-backdrop, [data-overlay] { pointer-events: none !important; z-index: 1 !important; }
+    input, textarea, select { color:#0b1220 !important; background:#fff !important; caret-color:#0b1220 !important; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <header>
+    <div class="brand">TOP VIEW</div>
+    <div class="small">نظام إدارة الشركة — الديكور الداخلي</div>
+    <div style="margin-left:auto" id="user-info"></div>
+  </header>
 
-  <!-- Firebase modular SDK (ES modules) -->
+  <div id="root" class="container"></div>
+
   <script type="module">
-    // Modular imports from CDN (v9)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      addDoc,
-      doc,
-      deleteDoc,
-      updateDoc,
-      getDoc,
-      query,
-      where,
-      orderBy,
-      limit
-    } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-    import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+  /* ============================
+     TOP VIEW — Single-file SPA
+     Firebase modular (CDN)
+     Features:
+     - Auth (email/password)
+     - Firestore: users(employees), projects, transactions, attendance
+     - CRUD UI for each section
+     - Seed demo data
+     ============================ */
 
-    // ========== FIREBASE CONFIG — keep your config here ==========
-    const firebaseConfig = {
-      apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
-      authDomain: "topview-system.firebaseapp.com",
-      projectId: "topview-system",
-      storageBucket: "topview-system.firebasestorage.app",
-      messagingSenderId: "1073945877413",
-      appId: "1:1073945877413:web:d516e451e543f7a9db664c",
-      measurementId: "G-EPVZGH6Y2G"
-    };
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    setDoc,
+    doc,
+    deleteDoc,
+    updateDoc,
+    getDoc,
+    query,
+    where,
+    orderBy,
+    limit
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-    // initialize Firebase (modular)
-    const fbApp = initializeApp(firebaseConfig);
-    const auth = getAuth(fbApp);
-    const db = getFirestore(fbApp);
-    const storage = getStorage(fbApp);
-    try { const analytics = getAnalytics(fbApp); } catch(e){ /* analytics optional */ }
+  // -------------------------
+  // Paste your Firebase config below (or keep as-is if this is your project).
+  // The config used here is the one you shared earlier.
+  // -------------------------
+  const firebaseConfig = {
+    apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+    authDomain: "topview-system.firebaseapp.com",
+    projectId: "topview-system",
+    storageBucket: "topview-system.firebasestorage.app",
+    messagingSenderId: "1073945877413",
+    appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+    measurementId: "G-EPVZGH6Y2G"
+  };
 
-    // ---------- small DOM helper ----------
-    const root = document.getElementById('root');
-    function el(tag, attrs={}, ...kids){
-      const n = document.createElement(tag);
-      for(const k in attrs){
-        if(k === 'class') n.className = attrs[k];
-        else if(k === 'style') n.style.cssText = attrs[k];
-        else n.setAttribute(k, attrs[k]);
-      }
-      kids.forEach(c=> { if(typeof c === 'string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c); });
-      return n;
+  const fbApp = initializeApp(firebaseConfig);
+  try { getAnalytics(fbApp); } catch(e){ /* optional */ }
+  const auth = getAuth(fbApp);
+  const db = getFirestore(fbApp);
+  const storage = getStorage(fbApp);
+
+  // DOM helpers
+  const root = document.getElementById('root');
+  const userInfo = document.getElementById('user-info');
+  function el(tag, attrs={}, ...kids){
+    const n = document.createElement(tag);
+    for(const k in attrs){
+      if(k === 'class') n.className = attrs[k];
+      else if(k === 'html') n.innerHTML = attrs[k];
+      else n.setAttribute(k, attrs[k]);
     }
+    kids.forEach(c => { if(typeof c === 'string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c); });
+    return n;
+  }
 
-    // ---------- seed demo data (one-time) ----------
-    async function seedDemoData(){
-      const usersCol = collection(db, 'users');
+  // Small utility to format number
+  function money(v){ return 'AED ' + (Number(v)||0); }
+  function nowDate(){ return new Date().toISOString().slice(0,10); }
+
+  // ---------- Authentication UI & logic ----------
+  async function seedDemoData(){
+    // create demo users and sample data
+    // only run if collections empty (best-effort)
+    try{
+      const usersCol = collection(db,'users');
       const usersSnap = await getDocs(usersCol);
-      if(!usersSnap.empty) return;
-      const demoUsers = [
+      if(!usersSnap.empty) return alert('Demo data already exists');
+
+      const demo = [
         {username:'m.fouad', name:'Mohamed Fouad', role:'Manager', salary:15000, email:'m.fouad@topview.local'},
         {username:'m.salah', name:'Mohamed Salah', role:'Supervisor', salary:8000, email:'m.salah@topview.local'},
         {username:'ibrahim', name:'Ibrahim', role:'Worker', salary:3500, email:'ibrahim@topview.local'}
       ];
-      for(const u of demoUsers){
-        await addDoc(usersCol, u);
-        try{ await createUserWithEmailAndPassword(auth, u.email, 'pass123'); } catch(e){ /* ignore if exists */ }
+      for(const u of demo){
+        // create Firestore doc
+        const docRef = await addDoc(usersCol, {...u});
+        // create Auth user with default password (ignore if exists)
+        try{
+          const cu = await createUserWithEmailAndPassword(auth, u.email, 'pass123');
+          // map auth uid -> user doc (set field uid)
+          await setDoc(doc(db,'users', docRef.id), {...u, uid: cu.user.uid}, { merge: true });
+        }catch(e){ console.warn('auth create user error', e.message); }
       }
       await addDoc(collection(db,'projects'), {name:'Apartment 12B Fitout', client:'Mr. Hassan', status:'In Progress', budget:45000, engineer:'Mohamed Salah'});
-      await addDoc(collection(db,'transactions'), {type:'Expense', category:'Materials', amount:12000, date:new Date().toISOString().slice(0,10), note:'Tiles+adhesives'});
-      console.log('Seeded demo data');
+      await addDoc(collection(db,'transactions'), {type:'Expense', category:'Materials', amount:12000, date:nowDate(), note:'Tiles+adhesives'});
+      alert('Demo data created. Emails like m.fouad@topview.local, password: pass123');
+    }catch(e){
+      console.error(e); alert('Error seeding demo data: ' + e.message);
     }
+  }
 
-    // ---------- Auth state ----------
-    onAuthStateChanged(auth, user => {
-      if(user) renderApp(user);
-      else showLogin();
+  function showLogin(){
+    root.innerHTML = '';
+    const wrap = el('div',{class:'login-wrap'});
+    const card = el('div',{class:'login-card'});
+    card.appendChild(el('div',{class:'logo'}, 'TOP VIEW'));
+    card.appendChild(el('div',{class:'small'}, 'نظام إدارة المشاريع والمدفوعات والموظفين'));
+    card.appendChild(el('hr'));
+    const email = el('input',{type:'email', placeholder:'البريد الالكتروني'});
+    const pass = el('input',{type:'password', placeholder:'كلمة المرور'});
+    const row = el('div',{style:'display:flex;gap:8px;flex-direction:row-reverse;'});
+    const btnLogin = el('button',{class:'btn'}, 'دخول');
+    btnLogin.onclick = async () => {
+      try{
+        await signInWithEmailAndPassword(auth, email.value.trim(), pass.value);
+      }catch(e){
+        alert('فشل تسجيل الدخول: ' + (e.message || e));
+      }
+    };
+    const btnSeed = el('button',{class:'btn ghost'}, 'إنشاء بيانات تجريبية');
+    btnSeed.onclick = seedDemoData;
+    row.appendChild(btnLogin); row.appendChild(btnSeed);
+    card.appendChild(email); card.appendChild(pass); card.appendChild(row);
+    card.appendChild(el('p',{class:'small'}, 'أو قم بالتسجيل ثم سيُنشأ مستند المستخدم تلقائياً'));
+    const btnSignup = el('button',{class:'btn', style:'margin-top:8px'}, 'تسجيل حساب جديد');
+    btnSignup.onclick = async () => {
+      const name = prompt('الاسم الكامل (مثلاً: Ahmed Ali)');
+      if(!name) return;
+      const emailv = prompt('البريد الالكتروني (للدخول)');
+      if(!emailv) return;
+      const password = prompt('كلمة المرور (سيتم استخدامها لتسجيل الدخول)');
+      if(!password) return;
+      try{
+        const { user } = await createUserWithEmailAndPassword(auth, emailv.trim(), password);
+        // create user doc and map uid
+        await addDoc(collection(db,'users'), { name, email: emailv.trim(), role: 'Worker', salary: 3000, uid: user.uid, username: emailv.split('@')[0] });
+        alert('تم إنشاء الحساب. سجّل دخول الآن.');
+      }catch(e){ alert('خطأ عند التسجيل: ' + (e.message || e)); }
+    };
+    card.appendChild(btnSignup);
+    wrap.appendChild(card);
+    root.appendChild(wrap);
+  }
+
+  // ---------- Main App ----------
+  function appLayout(currentUserDoc){
+    root.innerHTML = '';
+    // sidebar and main
+    const app = el('div',{class:'app'});
+    const sidebar = el('div',{class:'sidebar'});
+    sidebar.appendChild(el('div',{class:'small'}, 'TOP VIEW — الإدارة'));
+    const nav = el('div',{class:'nav'});
+    const pages = ['لوحة التحكم','الموظفون','المشاريع','المالية','الحضور','الإعدادات'];
+    let active = 'لوحة التحكم';
+
+    pages.forEach(p=>{
+      const b = el('button',{}, p);
+      b.onclick = ()=>{ active = p; renderMain(); };
+      nav.appendChild(b);
     });
+    sidebar.appendChild(nav);
 
-    // ---------- Login UI ----------
-    function showLogin(){
-      root.innerHTML = '';
-      const hero = el('div',{class:'hero'});
-      hero.appendChild(el('div',{class:'overlay'}));
-      const card = el('div',{class:'card login-card'});
-      card.appendChild(el('div',{class:'logo'}, 'Top View'));
-      card.appendChild(el('div',{class:'small'}, 'Top View — Interior Fit-out'));
-      card.appendChild(el('hr'));
-      const email = el('input',{type:'email', placeholder:'Email', autocomplete:'username'});
-      const pass = el('input',{type:'password', placeholder:'Password', autocomplete:'current-password'});
-      const btn = el('button',{}, 'Login');
-      btn.onclick = async ()=>{
-        try{
-          await signInWithEmailAndPassword(auth, email.value.trim(), pass.value);
-        }catch(err){
-          alert('Login failed: ' + (err.message || err));
-        }
-      };
-      const signup = el('button',{style:'margin-left:8px;background:#e6eefc;color:var(--accent)'},'Create demo accounts');
-      signup.onclick = async ()=>{ await seedDemoData(); alert('Demo users created (e.g. m.fouad@topview.local / pass123)'); };
-      card.appendChild(email); card.appendChild(pass);
-      card.appendChild(el('div',{style:'display:flex;gap:8px;margin-top:8px'}, btn, signup));
-      card.appendChild(el('p',{class:'small'},'If you used previous demo: Manager = m.fouad@topview.local / pass123'));
-      hero.appendChild(card);
-      root.appendChild(hero);
+    const userBox = el('div',{class:'card'});
+    userBox.appendChild(el('div',{style:'font-weight:700'}, currentUserDoc.name || currentUserDoc.email));
+    userBox.appendChild(el('div',{class:'small'}, currentUserDoc.role || '—'));
+    const logout = el('button',{class:'btn ghost', style:'margin-top:8px'}, 'خروج');
+    logout.onclick = ()=> signOut(auth);
+    userBox.appendChild(logout);
+    sidebar.appendChild(userBox);
+
+    const main = el('div',{class:'main'});
+    app.appendChild(sidebar); app.appendChild(main);
+    root.appendChild(app);
+
+    // Fetch data helpers
+    async function fetchAll(){
+      const [uSnap, pSnap, tSnap, aSnap] = await Promise.all([
+        getDocs(collection(db,'users')),
+        getDocs(collection(db,'projects')),
+        getDocs(collection(db,'transactions')),
+        getDocs(collection(db,'attendance'))
+      ]);
+      const users = uSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const projects = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const transactions = tSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const attendance = aSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      return { users, projects, transactions, attendance };
     }
 
-    // ---------- App UI ----------
-    async function renderApp(user){
-      root.innerHTML = '';
-      // fetch data
-      const usersSnap = await getDocs(collection(db,'users'));
-      const users = usersSnap.docs.map(d => ({id:d.id, ...d.data()}));
-      const projectsSnap = await getDocs(collection(db,'projects'));
-      const projects = projectsSnap.docs.map(d => ({id:d.id, ...d.data()}));
-      const txSnap = await getDocs(collection(db,'transactions'));
-      const transactions = txSnap.docs.map(d => ({id:d.id, ...d.data()}));
-
-      const app = el('div',{class:'app'});
-      const sidebar = el('div',{class:'sidebar'});
-      sidebar.appendChild(el('div',{class:'logo'}, 'Top View'));
-      sidebar.appendChild(el('div',{class:'small'}, 'Interior Fit-out'));
-
-      const nav = el('div',{class:'nav'});
-      const pages = ['Dashboard','Employees','Projects','Finance','Attendance','Settings'];
-      let active = 'Dashboard';
-      pages.forEach(p=>{
-        const b = el('button',{}, p);
-        b.onclick = ()=>{ active = p; renderMain(); };
-        nav.appendChild(b);
+    // Render helpers: tables & forms
+    function renderProjectsTable(projects){
+      const wrap = el('div',{class:'card'});
+      const table = el('table');
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الاسم'), el('th',{},'العميل'), el('th',{},'الحالة'), el('th',{},'الميزانية'))));
+      const tb = el('tbody');
+      projects.forEach(p=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},p.name));
+        tr.appendChild(el('td',{},p.client||'-'));
+        tr.appendChild(el('td',{},p.status||'-'));
+        tr.appendChild(el('td',{}, money(p.budget)));
+        tb.appendChild(tr);
       });
-      sidebar.appendChild(nav);
+      table.appendChild(tb); wrap.appendChild(table);
+      return wrap;
+    }
 
-      const userBox = el('div',{class:'user-box'});
-      userBox.appendChild(el('div',{style:'font-weight:700'}, user.email || user.displayName || 'User'));
-      const logoutBtn = el('button',{class:'btn', style:'margin-top:8px;background:#fff;color:var(--accent);border:1px solid #e6eefc'}, 'Logout');
-      logoutBtn.onclick = ()=> signOut(auth);
-      userBox.appendChild(logoutBtn);
-      sidebar.appendChild(userBox);
-
-      const main = el('div',{class:'main'});
-      app.appendChild(sidebar); app.appendChild(main);
-      root.appendChild(app);
-
-      function updateNav(){
-        [...nav.children].forEach(n=> n.classList.remove('active'));
-        const activeBtn = [...nav.children].find(n=> n.textContent===active);
-        if(activeBtn) activeBtn.classList.add('active');
-      }
-
-      function renderMain(){
-        main.innerHTML = '';
-        updateNav();
-        const top = el('div',{class:'topbar'});
-        top.appendChild(el('div',{style:'font-weight:700;font-size:18px'}, active));
-        main.appendChild(top);
-
-        if(active === 'Dashboard'){
-          const inc = transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+(t.amount||0),0);
-          const exp = transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+(t.amount||0),0);
-          const profit = inc - exp;
-          const grid = el('div',{class:'grid'});
-          grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Income'), el('div',{style:'font-weight:700;font-size:18px'},'AED '+inc)));
-          grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Expense'), el('div',{style:'font-weight:700;font-size:18px'},'AED '+exp)));
-          grid.appendChild(el('div',{class:'stat'}, el('div',{class:'small'},'Profit'), el('div',{style:'font-weight:700;font-size:18px'},'AED '+profit)));
-          main.appendChild(grid);
-          main.appendChild(el('h3',{},'Active Projects'));
-          main.appendChild(renderProjectsTable(projects));
-        }
-
-        if(active === 'Employees'){
-          main.appendChild(el('h3',{},'Employees'));
-          main.appendChild(renderEmployeesTable(users));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddEmployee()}, 'Add Employee')));
-        }
-
-        if(active === 'Projects'){
-          main.appendChild(el('h3',{},'Projects'));
-          main.appendChild(renderProjectsTable(projects));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddProject()}, 'New Project')));
-        }
-
-        if(active === 'Finance'){
-          main.appendChild(el('h3',{},'Finance'));
-          main.appendChild(renderTransactionsTable(transactions));
-          main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: ()=> openAddTransaction()}, 'Add Transaction')));
-        }
-
-        if(active === 'Attendance'){
-          main.appendChild(el('h3',{},'Attendance'));
-          main.appendChild(renderAttendance());
-        }
-
-        if(active === 'Settings'){
-          main.appendChild(el('h3',{},'Settings'));
-          main.appendChild(el('p',{},'Project: Top View — demo'));
-        }
-      }
-
-      function renderEmployeesTable(users){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
-        table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Name'), el('th',{},'Role'), el('th',{},'Salary'), el('th',{},'Actions'))));
-        const tb = el('tbody');
-        users.forEach(u=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},u.name));
-          tr.appendChild(el('td',{},u.role));
-          tr.appendChild(el('td',{},'AED '+u.salary));
-          const act = el('td',{}, el('div',{class:'actions'}));
-          const del = el('button',{class:'btn', onclick: async ()=>{ if(confirm('Delete user?')){ await deleteDoc(doc(db,'users',u.id)); renderApp(auth.currentUser); } }}, 'Delete');
-          act.firstChild.appendChild(del);
-          tr.appendChild(act);
-          tb.appendChild(tr);
-        });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
-      }
-
-      function renderProjectsTable(projects){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
-        table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Name'), el('th',{},'Client'), el('th',{},'Status'), el('th',{},'Budget'))));
-        const tb = el('tbody');
-        projects.forEach(p=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},p.name));
-          tr.appendChild(el('td',{},p.client));
-          tr.appendChild(el('td',{},p.status));
-          tr.appendChild(el('td',{},'AED '+p.budget));
-          tb.appendChild(tr);
-        });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
-      }
-
-      function renderTransactionsTable(trans){
-        const wrap = el('div',{class:'card'});
-        const table = el('table');
-        table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'Type'), el('th',{},'Category'), el('th',{},'Amount'), el('th',{},'Date'))));
-        const tb = el('tbody');
-        trans.forEach(t=>{
-          const tr = el('tr');
-          tr.appendChild(el('td',{},t.type));
-          tr.appendChild(el('td',{},t.category));
-          tr.appendChild(el('td',{},'AED '+t.amount));
-          tr.appendChild(el('td',{},t.date));
-          tb.appendChild(tr);
-        });
-        table.appendChild(tb); wrap.appendChild(table);
-        return wrap;
-      }
-
-      function renderAttendance(){
-        const wrap = el('div',{class:'card'});
-        const inBtn = el('button',{class:'btn', onclick: async ()=>{ const uid = auth.currentUser.uid; const today = new Date().toISOString().slice(0,10); await addDoc(collection(db,'attendance'), {uid, date:today, in:new Date().toLocaleTimeString(), out:''}); alert('Check-in recorded'); renderApp(auth.currentUser);} }, 'Record In (me)');
-        const outBtn = el('button',{class:'btn', style:'margin-left:8px', onclick: async ()=>{ const uid = auth.currentUser.uid; const today = new Date().toISOString().slice(0,10); const q = query(collection(db,'attendance'), where('uid','==',uid), where('date','==',today), where('out','==','')); const snap = await getDocs(q); if(!snap.empty){ const docRef = snap.docs[snap.docs.length-1]; await updateDoc(doc(db,'attendance',docRef.id), { out: new Date().toLocaleTimeString() }); alert('Check-out recorded'); renderApp(auth.currentUser); } else alert('No check-in record for today'); } }, 'Record Out (me)');
-        wrap.appendChild(inBtn); wrap.appendChild(outBtn);
-
-        const tbl = el('table',{style:'margin-top:12px'});
-        tbl.appendChild(el('thead',{}, el('tr',{}, el('th',{},'User'), el('th',{},'Date'), el('th',{},'In'), el('th',{},'Out'))));
-        const tb = el('tbody');
-        (async ()=>{
-          const aQuery = query(collection(db,'attendance'), orderBy('date','desc'), limit(50));
-          const snap = await getDocs(aQuery);
-          for(const d of snap.docs){
-            const a = d.data();
-            let name = '—';
-            if(a.uid){
-              try{ const uDoc = await getDoc(doc(db,'users', a.uid)); if(uDoc.exists()) name = uDoc.data().name || '—'; } catch(e){}
+    function renderEmployeesTable(users){
+      const wrap = el('div',{class:'card'});
+      const table = el('table');
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الاسم'), el('th',{},'الدور'), el('th',{},'الراتب'), el('th',{},'البريد'), el('th',{},'إجراءات'))));
+      const tb = el('tbody');
+      users.forEach(u=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},u.name));
+        tr.appendChild(el('td',{},u.role||'-'));
+        tr.appendChild(el('td',{}, money(u.salary)));
+        tr.appendChild(el('td',{},u.email||'-'));
+        const actionTd = el('td',{});
+        const del = el('button',{class:'btn ghost'}, 'حذف');
+        del.onclick = async ()=>{
+          if(!confirm('حذف الموظف؟')) return;
+          try{
+            if(u.uid){
+              // try to delete user auth — requires admin privileges (not possible from client SDK)
+              // So only delete Firestore doc here
             }
-            const tr = el('tr');
-            tr.appendChild(el('td',{}, name));
-            tr.appendChild(el('td',{}, a.date));
-            tr.appendChild(el('td',{}, a.in || '-'));
-            tr.appendChild(el('td',{}, a.out || '-'));
-            tb.appendChild(tr);
-          }
-        })();
-        tbl.appendChild(tb);
-        wrap.appendChild(tbl);
-        return wrap;
-      }
+            await deleteDoc(doc(db,'users',u.id));
+            alert('تم الحذف'); renderMain();
+          }catch(e){ alert('خطأ: ' + e.message); }
+        };
+        actionTd.appendChild(del);
+        tr.appendChild(actionTd);
+        tb.appendChild(tr);
+      });
+      table.appendChild(tb); wrap.appendChild(table);
+      return wrap;
+    }
 
-      async function openAddEmployee(){
-        const name = prompt('Full name'); if(!name) return;
-        const username = prompt('username (for login, e.g. a.ali)'); if(!username) return;
-        const email = prompt('Email (used for login)'); if(!email) return;
-        const role = prompt('Role','Worker'); const salary = Number(prompt('Salary AED','3000')||3000);
-        await addDoc(collection(db,'users'), {username, name, role, salary, email});
-        try{ await createUserWithEmailAndPassword(auth, email, 'pass123'); } catch(e){ console.warn('Auth create user error', e.message); }
-        alert('Added. Default password: pass123');
-        renderApp(auth.currentUser);
-      }
-      async function openAddProject(){
-        const name = prompt('Project name'); if(!name) return;
-        const client = prompt('Client name'); const budget = Number(prompt('Budget AED','10000')||10000);
-        await addDoc(collection(db,'projects'), {name, client, status:'Planned', budget, engineer:''});
-        alert('Project added');
-        renderApp(auth.currentUser);
-      }
-      async function openAddTransaction(){
-        const type = prompt('Type: Expense or Income','Expense'); if(!type) return;
-        const cat = prompt('Category','Materials'); const amount = Number(prompt('Amount AED','1000')||1000);
-        const d = new Date().toISOString().slice(0,10);
-        await addDoc(collection(db,'transactions'), {type, category:cat, amount, date:d});
-        alert('Transaction added');
-        renderApp(auth.currentUser);
-      }
+    function renderTransactionsTable(transactions){
+      const wrap = el('div',{class:'card'});
+      const table = el('table');
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'النوع'), el('th',{},'الفئة'), el('th',{},'المبلغ'), el('th',{},'التاريخ'))));
+      const tb = el('tbody');
+      transactions.forEach(t=>{
+        const tr = el('tr');
+        tr.appendChild(el('td',{},t.type));
+        tr.appendChild(el('td',{},t.category));
+        tr.appendChild(el('td',{}, money(t.amount)));
+        tr.appendChild(el('td',{}, t.date));
+        tb.appendChild(tr);
+      });
+      table.appendChild(tb); wrap.appendChild(table);
+      return wrap;
+    }
 
-      renderMain();
-    } // end renderApp
+    function renderAttendanceTable(attendance, users){
+      const wrap = el('div',{class:'card'});
+      const table = el('table');
+      table.appendChild(el('thead',{}, el('tr',{}, el('th',{},'الموظف'), el('th',{},'التاريخ'), el('th',{},'دخول'), el('th',{},'خروج'))));
+      const tb = el('tbody');
+      attendance.slice().reverse().forEach(a=>{
+        const u = users.find(x=> x.uid === a.uid) || users.find(x=> x.id === a.userId) || { name: a.name || '—' };
+        const tr = el('tr');
+        tr.appendChild(el('td',{}, u.name || '—'));
+        tr.appendChild(el('td',{}, a.date));
+        tr.appendChild(el('td',{}, a.in||'-'));
+        tr.appendChild(el('td',{}, a.out||'-'));
+        tb.appendChild(tr);
+      });
+      table.appendChild(tb); wrap.appendChild(table);
+      return wrap;
+    }
 
+    // CRUD forms (prompts used for simplicity)
+    async function addEmployee(){
+      const name = prompt('الاسم الكامل'); if(!name) return;
+      const email = prompt('البريد الالكتروني (مستخدم لتسجيل الدخول)'); if(!email) return;
+      const role = prompt('الدور','Worker');
+      const salary = Number(prompt('الراتب AED','3000')||3000);
+      try{
+        // Create Auth user and store uid in users collection
+        const { user } = await createUserWithEmailAndPassword(auth, email.trim(), 'pass123');
+        await addDoc(collection(db,'users'), { name, email: email.trim(), role, salary, uid: user.uid, username: email.split('@')[0] });
+        alert('تم إضافة الموظف. كلمة مرور افتراضية: pass123');
+        renderMain();
+      }catch(e){
+        alert('خطأ: ' + (e.message || e));
+      }
+    }
+    async function addProject(){
+      const name = prompt('اسم المشروع'); if(!name) return;
+      const client = prompt('اسم العميل'); const budget = Number(prompt('الميزانية AED','10000')||10000);
+      await addDoc(collection(db,'projects'), { name, client, budget, status:'Planned', engineer:'' });
+      alert('تم إضافة المشروع'); renderMain();
+    }
+    async function addTransaction(){
+      const type = prompt('النوع: Expense أو Income','Expense'); if(!type) return;
+      const cat = prompt('الفئة','Materials'); const amount = Number(prompt('المبلغ AED','1000')||1000);
+      const note = prompt('ملاحظة (اختياري)');
+      await addDoc(collection(db,'transactions'), { type, category:cat, amount, date: nowDate(), note: note || '' });
+      alert('تمت الإضافة'); renderMain();
+    }
+
+    async function recordIn(){
+      const user = auth.currentUser;
+      if(!user) return alert('غير مسجل الدخول');
+      await addDoc(collection(db,'attendance'), { uid: user.uid, date: nowDate(), in: new Date().toLocaleTimeString(), out: '' });
+      alert('تم تسجيل الدخول'); renderMain();
+    }
+    async function recordOut(){
+      const user = auth.currentUser;
+      if(!user) return alert('غير مسجل الدخول');
+      const q = query(collection(db,'attendance'), where('uid','==', user.uid), where('date','==', nowDate()), where('out','==',''));
+      const snap = await getDocs(q);
+      if(snap.empty) return alert('لا يوجد تسجيل دخول مفتوح لليوم');
+      const last = snap.docs[snap.docs.length - 1];
+      await updateDoc(doc(db,'attendance', last.id), { out: new Date().toLocaleTimeString() });
+      alert('تم تسجيل الخروج'); renderMain();
+    }
+
+    // Main render
+    async function renderMain(){
+      main.innerHTML = '';
+      const data = await fetchAll();
+      // topbar stats
+      const inc = data.transactions.filter(t=>t.type==='Income').reduce((s,t)=>s+(t.amount||0),0);
+      const exp = data.transactions.filter(t=>t.type==='Expense').reduce((s,t)=>s+(t.amount||0),0);
+      const profit = inc - exp;
+      if(active === 'لوحة التحكم'){
+        const stats = el('div',{class:'grid'});
+        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'الإيرادات'), el('div',{style:'font-weight:700;font-size:18px'}, money(inc))));
+        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'المصروفات'), el('div',{style:'font-weight:700;font-size:18px'}, money(exp))));
+        stats.appendChild(el('div',{class:'stat'}, el('div',{class:'small'}, 'الربح'), el('div',{style:'font-weight:700;font-size:18px'}, money(profit))));
+        main.appendChild(stats);
+        main.appendChild(el('h3',{}, 'المشاريع النشطة'));
+        main.appendChild(renderProjectsTable(data.projects));
+      }
+      if(active === 'الموظفون'){
+        main.appendChild(el('h3',{}, 'الموظفون'));
+        main.appendChild(renderEmployeesTable(data.users));
+        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addEmployee}, 'إضافة موظف')));
+      }
+      if(active === 'المشاريع'){
+        main.appendChild(el('h3',{}, 'المشاريع'));
+        main.appendChild(renderProjectsTable(data.projects));
+        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addProject}, 'مشروع جديد')));
+      }
+      if(active === 'المالية'){
+        main.appendChild(el('h3',{}, 'المالية'));
+        main.appendChild(renderTransactionsTable(data.transactions));
+        main.appendChild(el('div',{style:'margin-top:12px'}, el('button',{class:'btn', onclick: addTransaction}, 'إضافة معاملة')));
+      }
+      if(active === 'الحضور'){
+        main.appendChild(el('h3',{}, 'الحضور'));
+        main.appendChild(el('div',{style:'display:flex;gap:8px;flex-direction:row-reverse'}, el('button',{class:'btn', onclick: recordIn}, 'تسجيل حضور (دخول)'), el('button',{class:'btn ghost', onclick: recordOut}, 'تسجيل خروج (خروج)')));
+        main.appendChild(renderAttendanceTable(data.attendance, data.users));
+      }
+      if(active === 'الإعدادات'){
+        main.appendChild(el('h3',{}, 'الإعدادات'));
+        main.appendChild(el('div',{class:'card'}, el('p',{}, 'شركة: TOP VIEW — إدارة الديكور الداخلي')));
+        main.appendChild(el('div',{style:'margin-top:8px'}, el('button',{class:'btn ghost', onclick: seedDemoData}, 'إعادة إنشاء بيانات تجريبية (إن لم توجد)')));
+      }
+      updateNav();
+    }
+
+    renderMain();
+    } // end appLayout
+
+  // ---------- Auth state monitoring ----------
+  let currentUserDoc = null;
+  onAuthStateChanged(auth, async (user) => {
+    if(!user){
+      userInfo.innerHTML = '';
+      showLogin();
+      return;
+    }
+    // load user document by uid
+    try{
+      // try to find user doc with uid
+      const usersSnap = await getDocs(query(collection(db,'users'), where('uid','==', user.uid), limit(1)));
+      if(!usersSnap.empty){
+        currentUserDoc = { id: usersSnap.docs[0].id, ...usersSnap.docs[0].data() };
+      }else{
+        // fallback: create user doc from auth profile
+        const docRef = await addDoc(collection(db,'users'), { name: user.displayName || user.email.split('@')[0], email: user.email, uid: user.uid, role: 'Worker', salary: 3000 });
+        currentUserDoc = { id: docRef.id, name: user.displayName || user.email.split('@')[0], email: user.email, uid: user.uid, role: 'Worker', salary: 3000 };
+      }
+      // update header
+      userInfo.innerHTML = `<span class="small">مرحباً، ${currentUserDoc.name || user.email}</span>`;
+      appLayout(currentUserDoc);
+    }catch(e){
+      console.error(e);
+      alert('خطأ عند تحميل بيانات المستخدم: ' + e.message);
+      signOut(auth);
+    }
+  });
+
+  // end of module
   </script>
 </body>
 </html>
