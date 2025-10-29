@@ -9,10 +9,11 @@
     :root{--accent:#1f78ff;--muted:#6b7280;--bg:#f6f7fb;--card:#fff;--radius:12px}
     *{box-sizing:border-box} body{font-family:Inter,system-ui,Arial;margin:0;background:var(--bg);color:#0f172a}
     .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;background-image:url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80');background-size:cover;background-position:center;position:relative}
-    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45)}
-    .card{position:relative;z-index:2;background:rgba(255,255,255,0.95);padding:28px;border-radius:14px;width:100%;max-width:420px;box-shadow:0 10px 30px rgba(2,6,23,0.12);text-align:left}
+    /* overlay kept visual but not blocking pointer events (fix for invisible/uneditable inputs) */
+    .overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45);pointer-events:none;z-index:1;}
+    .card{position:relative;z-index:9999;background:rgba(255,255,255,0.98);padding:28px;border-radius:14px;width:100%;max-width:420px;box-shadow:0 10px 30px rgba(2,6,23,0.12);text-align:left}
     .logo{font-weight:800;color:var(--accent);font-size:20px;margin-bottom:6px}
-    input{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e9ef;margin:8px 0;font-size:15px}
+    input{width:100%;padding:12px;border-radius:10px;border:1px solid #e6e9ef;margin:8px 0;font-size:15px;color:#0b1220;background:#fff}
     button{padding:10px 12px;border-radius:10px;border:0;background:var(--accent);color:#fff;cursor:pointer}
     .app{display:flex;min-height:100vh}
     .sidebar{width:260px;background:linear-gradient(180deg,#fff,#fbfcff);border-right:1px solid #eef2f7;padding:18px;display:flex;flex-direction:column;gap:12px}
@@ -27,6 +28,15 @@
     .small{font-size:13px;color:var(--muted)}
     @media(max-width:900px){.sidebar{display:none}.grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:600px){.grid{grid-template-columns:1fr}.card{max-width:340px}}
+
+    /* Extra safety: ensure overlays/backdrops from other libs don't block inputs */
+    .backdrop, .modal-backdrop, [data-overlay] { pointer-events: none !important; z-index: 1 !important; opacity: 0.95 !important; }
+
+    /* Ensure inputs are visible even in dark theme overrides */
+    input, textarea, select { color: #0b1220 !important; background-color: #ffffff !important; caret-color: #0b1220 !important; }
+
+    /* Make sure login card sits above everything */
+    .login-card, .card { position: relative !important; z-index: 9999 !important; }
   </style>
 </head>
 <body>
@@ -60,7 +70,7 @@
     } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
     import { getStorage } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-    // Your Firebase config (from your snippet)
+    // ========== FIREBASE CONFIG — keep your config here ==========
     const firebaseConfig = {
       apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
       authDomain: "topview-system.firebaseapp.com",
@@ -78,7 +88,7 @@
     const storage = getStorage(fbApp);
     try { const analytics = getAnalytics(fbApp); } catch(e){ /* analytics optional */ }
 
-    // small helpers
+    // ---------- small DOM helper ----------
     const root = document.getElementById('root');
     function el(tag, attrs={}, ...kids){
       const n = document.createElement(tag);
@@ -87,18 +97,15 @@
         else if(k === 'style') n.style.cssText = attrs[k];
         else n.setAttribute(k, attrs[k]);
       }
-      kids.forEach(c=> {
-        if(typeof c === 'string') n.appendChild(document.createTextNode(c));
-        else if(c) n.appendChild(c);
-      });
+      kids.forEach(c=> { if(typeof c === 'string') n.appendChild(document.createTextNode(c)); else if(c) n.appendChild(c); });
       return n;
     }
 
-    // Seed demo data in Firestore + create Auth accounts (once)
+    // ---------- seed demo data (one-time) ----------
     async function seedDemoData(){
       const usersCol = collection(db, 'users');
       const usersSnap = await getDocs(usersCol);
-      if(!usersSnap.empty) return; // already seeded
+      if(!usersSnap.empty) return;
       const demoUsers = [
         {username:'m.fouad', name:'Mohamed Fouad', role:'Manager', salary:15000, email:'m.fouad@topview.local'},
         {username:'m.salah', name:'Mohamed Salah', role:'Supervisor', salary:8000, email:'m.salah@topview.local'},
@@ -113,23 +120,23 @@
       console.log('Seeded demo data');
     }
 
-    // Auth state
+    // ---------- Auth state ----------
     onAuthStateChanged(auth, user => {
       if(user) renderApp(user);
       else showLogin();
     });
 
-    // Login UI
+    // ---------- Login UI ----------
     function showLogin(){
       root.innerHTML = '';
       const hero = el('div',{class:'hero'});
       hero.appendChild(el('div',{class:'overlay'}));
-      const card = el('div',{class:'card'});
+      const card = el('div',{class:'card login-card'});
       card.appendChild(el('div',{class:'logo'}, 'Top View'));
       card.appendChild(el('div',{class:'small'}, 'Top View — Interior Fit-out'));
       card.appendChild(el('hr'));
-      const email = el('input',{type:'email', placeholder:'Email'});
-      const pass = el('input',{type:'password', placeholder:'Password'});
+      const email = el('input',{type:'email', placeholder:'Email', autocomplete:'username'});
+      const pass = el('input',{type:'password', placeholder:'Password', autocomplete:'current-password'});
       const btn = el('button',{}, 'Login');
       btn.onclick = async ()=>{
         try{
@@ -139,7 +146,7 @@
         }
       };
       const signup = el('button',{style:'margin-left:8px;background:#e6eefc;color:var(--accent)'},'Create demo accounts');
-      signup.onclick = async ()=>{ await seedDemoData(); alert('Demo users created (emails like m.fouad@topview.local, password pass123).'); };
+      signup.onclick = async ()=>{ await seedDemoData(); alert('Demo users created (e.g. m.fouad@topview.local / pass123)'); };
       card.appendChild(email); card.appendChild(pass);
       card.appendChild(el('div',{style:'display:flex;gap:8px;margin-top:8px'}, btn, signup));
       card.appendChild(el('p',{class:'small'},'If you used previous demo: Manager = m.fouad@topview.local / pass123'));
@@ -147,16 +154,16 @@
       root.appendChild(hero);
     }
 
-    // App UI (reads Firestore data)
+    // ---------- App UI ----------
     async function renderApp(user){
       root.innerHTML = '';
       // fetch data
       const usersSnap = await getDocs(collection(db,'users'));
-      const users = usersSnap.docs.map(d=>({id:d.id, ...d.data()}));
+      const users = usersSnap.docs.map(d => ({id:d.id, ...d.data()}));
       const projectsSnap = await getDocs(collection(db,'projects'));
-      const projects = projectsSnap.docs.map(d=>({id:d.id, ...d.data()}));
+      const projects = projectsSnap.docs.map(d => ({id:d.id, ...d.data()}));
       const txSnap = await getDocs(collection(db,'transactions'));
-      const transactions = txSnap.docs.map(d=>({id:d.id, ...d.data()}));
+      const transactions = txSnap.docs.map(d => ({id:d.id, ...d.data()}));
 
       const app = el('div',{class:'app'});
       const sidebar = el('div',{class:'sidebar'});
@@ -293,7 +300,6 @@
         return wrap;
       }
 
-      // Attendance UI: record in/out + show latest records
       function renderAttendance(){
         const wrap = el('div',{class:'card'});
         const inBtn = el('button',{class:'btn', onclick: async ()=>{ const uid = auth.currentUser.uid; const today = new Date().toISOString().slice(0,10); await addDoc(collection(db,'attendance'), {uid, date:today, in:new Date().toLocaleTimeString(), out:''}); alert('Check-in recorded'); renderApp(auth.currentUser);} }, 'Record In (me)');
@@ -303,7 +309,6 @@
         const tbl = el('table',{style:'margin-top:12px'});
         tbl.appendChild(el('thead',{}, el('tr',{}, el('th',{},'User'), el('th',{},'Date'), el('th',{},'In'), el('th',{},'Out'))));
         const tb = el('tbody');
-        // fetch last 50 attendance records ordered by date desc
         (async ()=>{
           const aQuery = query(collection(db,'attendance'), orderBy('date','desc'), limit(50));
           const snap = await getDocs(aQuery);
@@ -326,7 +331,6 @@
         return wrap;
       }
 
-      // CRUD helpers (add)
       async function openAddEmployee(){
         const name = prompt('Full name'); if(!name) return;
         const username = prompt('username (for login, e.g. a.ali)'); if(!username) return;
