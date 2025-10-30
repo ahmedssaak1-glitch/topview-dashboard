@@ -1,344 +1,333 @@
 <!DOCTYPE html>
 <html lang="ar">
-<الرأس>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TopView — لوحة المعلومات</title>
+<title>TopView — Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<النمط>
-الجسم { عائلة الخطوط: 'Inter'، بدون تذييل؛ الخلفية: #f4f6fa؛ الهامش: 0؛ اللون: #222؛ }
-.login-bg { الخلفية: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') مركز/غلاف بدون تكرار؛ الموضع: ثابت؛ أعلى: 0؛ يسار: 0؛ العرض: 100%؛ الارتفاع: 100%؛ الفلتر: سطوع (0.5)؛ مؤشر z: -1؛ }
-.login-box { أقصى عرض: 340 بكسل؛ الخلفية: #fff؛ الحشو: 24 بكسل؛ نصف قطر الحدود: 16 بكسل؛ الهامش: 120 بكسل تلقائيًا؛ ظل الصندوق: 0 4 بكسل 16 بكسل rgba(0,0,0,0.15)؛ }
-h2 { محاذاة النص: المركز؛ }
-الإدخال {العرض: 100٪؛ الحشو: 10 بكسل؛ الهامش العلوي: 8 بكسل؛ الهامش السفلي: 14 بكسل؛ الحد: 1 بكسل ثابت #ccc؛ نصف قطر الحد: 8 بكسل؛ حجم الخط: 14 بكسل؛ }
-الزر {العرض: 100%؛ الحشو: 10 بكسل؛ الحدود: لا شيء؛ نصف قطر الحدود: 8 بكسل؛ الخلفية: #007bff؛ اللون: #fff؛ وزن الخط: 600؛ المؤشر: مؤشر؛ حجم الخط: 15 بكسل؛ }
-الزر: مرر الماوس فوق { الخلفية: #0056b3؛ }
-.sidebar { العرض: 220 بكسل؛ الخلفية: #fff؛ الارتفاع: 100vh؛ الموضع: ثابت؛ الحدود اليمنى: 1 بكسل صلبة #ddd؛ الحشو العلوي: 20 بكسل؛ }
-.sidebar h3 { محاذاة النص: في المنتصف؛ اللون: #007bff؛ الهامش السفلي: 20 بكسل؛ }
-.زر الشريط الجانبي { العرض: 90%؛ الهامش: 6 بيكسل تلقائي؛ العرض: كتلة؛ الخلفية: لا شيء؛ اللون: #222؛ محاذاة النص: يسار؛ الحشو: 10 بيكسل 12 بيكسل؛ نصف قطر الحدود: 8 بيكسل؛ الانتقال: 0.2 ثانية؛ }
-.زر الشريط الجانبي.نشط، زر الشريط الجانبي:تحويم {الخلفية: #007bff؛ اللون: #fff؛ }
-رئيسي { هامش يسار: 240 بكسل؛ الحشو: 20 بكسل؛ }
-.card { الخلفية: #fff؛ نصف قطر الحدود: 12 بكسل؛ الحشو: 16 بكسل؛ ظل الصندوق: 0 1 بكسل 4 بكسل rgba(0,0,0,0.1)؛ }
-الجدول {العرض: 100٪؛ انهيار الحدود: انهيار؛ هامش الأعلى: 10 بكسل؛ }
-th, td { التبطين: 10 بكسل؛ الحد السفلي: 1 بكسل صلب #eee؛ }
-th { محاذاة النص: يسار؛ الخلفية: #f9fafb؛ }
-tr:hover td { الخلفية: #f1f5ff؛ }
-.btn { الخلفية: #007bff؛ اللون: #fff؛ الحشو: 8 بكسل 14 بكسل؛ نصف قطر الحدود: 8 بكسل؛ الحدود: لا شيء؛ المؤشر: مؤشر؛ }
-.btn:hover { الخلفية: #0056b3؛ }
-.btn.ghost { الخلفية: #eee؛ اللون: #333؛ }
+<style>
+body { font-family: 'Inter', sans-serif; margin:0; background:#f4f6fa; color:#222; }
+.login-bg { background: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat; position: fixed; top:0; left:0; width:100%; height:100%; filter: brightness(0.5); z-index:-1; }
+.login-box { max-width:340px; background:#fff; padding:24px; border-radius:16px; margin:120px auto; box-shadow:0 4px 16px rgba(0,0,0,0.15);}
+h2 { text-align:center; }
+input { width:100%; padding:10px; margin:8px 0 14px; border:1px solid #ccc; border-radius:8px; font-size:14px; }
+button { width:100%; padding:10px; border:none; border-radius:8px; background:#007bff; color:#fff; font-weight:600; cursor:pointer; font-size:15px; }
+button:hover { background:#0056b3; }
+.sidebar { width:220px; background:#fff; height:100vh; position:fixed; border-right:1px solid #ddd; padding-top:20px; }
+.sidebar h3 { text-align:center; color:#007bff; margin-bottom:20px; }
+.sidebar button { width:90%; margin:6px auto; display:block; background:none; color:#222; text-align:left; padding:10px 12px; border-radius:8px; transition:0.2s; cursor:pointer; }
+.sidebar button.active, .sidebar button:hover { background:#007bff; color:#fff; }
+main { margin-left:240px; padding:20px; }
+.card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,0.1); }
+table { width:100%; border-collapse:collapse; margin-top:10px; }
+th, td { padding:10px; border-bottom:1px solid #eee; }
+th { text-align:left; background:#f9fafb; }
+tr:hover td { background:#f1f5ff; }
+.btn { background:#007bff; color:#fff; padding:8px 14px; border-radius:8px; border:none; cursor:pointer; }
+.btn:hover { background:#0056b3; }
+.btn.ghost { background:#eee; color:#333; }
+[contenteditable]:focus { outline:none; background:#e6ffe6; transition:0.4s; }
 </style>
 </head>
-<الجسم>
+<body>
 <div id="app"></div>
 
-<!-- مجموعة أدوات تطوير البرامج Firebase -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-<النص>
-// تكوين Firebase (من عندك)
-ثابت firebaseConfig = {
-مفتاح API: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw"،
-نطاق المصادقة: "topview-system.firebaseapp.com"،
-معرف المشروع: "topview-system"،
-storageBucket: "topview-system.firebasestorage.app"،
-معرف المرسل: "1073945877413"،
-معرف التطبيق: "1:1073945877413:web:d516e451e543f7a9db664c"،
-معرف القياس: "G-EPVZGH6Y2G"
+<script>
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+  authDomain: "topview-system.firebaseapp.com",
+  projectId: "topview-system",
+  storageBucket: "topview-system.firebasestorage.app",
+  messagingSenderId: "1073945877413",
+  appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+  measurementId: "G-EPVZGH6Y2G"
 };
 firebase.initializeApp(firebaseConfig);
-ثابت db = firebase.firestore();
+const db = firebase.firestore();
 
-const state = { user: null, page: 'Clients', clients: [], attendance: [], costs: [] };
-ثابت التطبيق = document.getElementById('التطبيق');
+const state = { user:null, page:'clients', clients:[], attendance:[], costs:[] };
+const app = document.getElementById('app');
 
-// دالة مساعدة لعمل عناصر بسرعة
-دالة el(tag, attrs={}, ...children){
-  ثابت e = document.createElement(العلامة)؛
-  بالنسبة إلى (const [k,v] من Object.entries(attrs)){
-    إذا (k.startsWith('on')) e.addEventListener(k.substring(2)، v)؛
-    وإلا e.setAttribute(k, v);
+function el(tag, attrs={}, ...children){
+  const e = document.createElement(tag);
+  for(const [k,v] of Object.entries(attrs)){
+    if(k.startsWith('on')) e.addEventListener(k.substring(2), v);
+    else e.setAttribute(k,v);
   }
-  لـ (ثابت ج للأطفال)
-    إذا (نوع c === 'سلسلة') e.appendChild(document.createTextNode(c));
-    وإلا إذا (ج) e.appendChild(ج)؛
+  for(const c of children){
+    if(typeof c==='string') e.appendChild(document.createTextNode(c));
+    else if(c) e.appendChild(c);
   }
-  العودة هـ؛
+  return e;
 }
 
-// تسجيل الدخول
-دالة renderLogin(){
-  التطبيق.innerHTML = '';
-  ثابت bg = el('div',{class:'login-bg'});
-  ثابت مربع = el('div',{class:'login-box'},
-    el('h2',{},'نظام العرض العلوي'),
-    el('إدخال',{معرف:'البريد الإلكتروني',نوع:'البريد الإلكتروني',عنصر نائب:'البريد الإلكتروني'}),
-    el('إدخال',{معرف:'كلمة المرور',نوع:'كلمة المرور',عنصر نائب:'كلمة المرور'}),
-    el('زر',{عند النقر:تسجيل الدخول},'تسجيل الدخول')
+// Login
+function renderLogin(){
+  app.innerHTML='';
+  const bg = el('div',{class:'login-bg'});
+  const box = el('div',{class:'login-box'},
+    el('h2',{},'TopView System'),
+    el('input',{id:'email', type:'email', placeholder:'Email'}),
+    el('input',{id:'password', type:'password', placeholder:'Password'}),
+    el('button',{onclick:login},'Login')
   );
-  التطبيق.append(bg,box);
+  app.append(bg,box);
 }
 
-دالة تسجيل الدخول (){
-  ثابت البريد الإلكتروني = document.getElementById('البريد الإلكتروني').value.trim();
-  كلمة مرور ثابتة = document.getElementById('كلمة المرور').value.trim();
-  إذا (البريد الإلكتروني ==='admin@topview.com' وكلمة المرور ==='123456') {
-    state.user = { الاسم: 'المسؤول' };
-    تحميل الكل();
-    تقديم لوحة التحكم();
-  }آخر{
-    تنبيه('بيانات اعتماد غير صالحة');
-  }
+function login(){
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  if(email==='admin@topview.com' && password==='123456'){
+    state.user={name:'Admin'};
+    loadAll();
+    renderDashboard();
+  } else alert('Invalid credentials');
 }
 
-// تحميل كل البيانات
-دالة loadAll(){
-  مجموعة قاعدة البيانات('العملاء').onSnapshot(s=>{
-    حالة العملاء = s.docs.map(d=>({id:d.id, ...d.data()}));
-    إذا (state.user) يتم عرض لوحة التحكم();
+// Load all data
+function loadAll(){
+  db.collection('clients').onSnapshot(s=>{
+    state.clients = s.docs.map(d=>({id:d.id, ...d.data()}));
+    if(state.user) renderDashboard();
   });
-  مجموعة قاعدة البيانات('الحضور').onSnapshot(s=>{
-    حالة الحضور = s.docs.map(d=>({id:d.id, ...d.data()}));
-    إذا (state.user) يتم عرض لوحة التحكم();
+  db.collection('attendance').onSnapshot(s=>{
+    state.attendance = s.docs.map(d=>({id:d.id, ...d.data()}));
+    if(state.user) renderDashboard();
   });
-  مجموعة قواعد البيانات('التكاليف').onSnapshot(s=>{
-    الحالة.التكاليف = s.docs.map(d=>({id:d.id, ...d.data()}));
-    إذا (state.user) يتم عرض لوحة التحكم();
+  db.collection('costs').onSnapshot(s=>{
+    state.costs = s.docs.map(d=>({id:d.id, ...d.data()}));
+    if(state.user) renderDashboard();
   });
 }
 
-// الواجهة الرئيسية
-دالة renderDashboard(){
-  التطبيق.innerHTML = '';
-  ثابت الشريط الجانبي = el('div',{class:'sidebar'},
-    el('h3',{},'عرض علوي'),
-    el('button',{class:state.page==='Clients'?'active':'', onclick:()=>switchPage('Clients')},'سجل العملاء'),
-    el('button',{class:state.page==='Attendance'?'active':'', onclick:()=>switchPage('Attendance')},'سجل الدوام'),
-    el('button',{class:state.page==='Costs'?'active':'', onclick:()=>switchPage('Costs')},'سجل التكاليف'),
-    el('زر',{عند النقر:()=>تسجيل الخروج()},'تسجيل الخروج')
+// Dashboard
+function renderDashboard(){
+  app.innerHTML='';
+  const sidebar = el('div',{class:'sidebar'},
+    el('h3',{},'TopView'),
+    el('button',{class: state.page==='clients'?'active':'', onclick:()=>switchPage('clients')},'Clients'),
+    el('button',{class: state.page==='attendance'?'active':'', onclick:()=>switchPage('attendance')},'Attendance'),
+    el('button',{class: state.page==='costs'?'active':'', onclick:()=>switchPage('costs')},'Costs'),
+    el('button',{onclick:logout},'Logout')
   );
-  ثابت رئيسي = el('رئيسي');
-  إذا (state.page==='العملاء') main.appendChild(buildClientsTable());
-  إذا (state.page==='الحضور') main.appendChild(buildAttendanceTable());
-  إذا (state.page==='التكاليف') main.appendChild(buildCostsTable());
-  التطبيق.append(الشريط الجانبي، الرئيسي)؛
+  const main = el('main');
+  if(state.page==='clients') main.appendChild(buildClientsTable());
+  if(state.page==='attendance') main.appendChild(buildAttendanceTable());
+  if(state.page==='costs') main.appendChild(buildCostsTable());
+  app.append(sidebar, main);
 }
 
-دالة switchPage(p){ state.page=p; renderDashboard(); }
-دالة تسجيل الخروج () { state.user = null؛ renderLogin ()؛ }
+function switchPage(p){ state.page=p; renderDashboard(); }
+function logout(){ state.user=null; renderLogin(); }
 
-// جدول العملاء
-دالة buildClientsTable(){
-  ثابت التفاف = el('div',{class:'card'});
-  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},'سجل العملاء'),
-    el('button',{class:'btn',onclick:openAddClient},'إضافة عميل')
+// Editable cell helper
+function editableCell(obj, field, coll){
+  const d = el('div',{contenteditable:true, style:'min-width:100px;'}, obj[field]||'');
+  d.addEventListener('blur', async ()=>{
+    const val = d.textContent.trim();
+    await db.collection(coll).doc(obj.id).update({[field]:val});
+  });
+  d.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); d.blur(); } });
+  return d;
+}
+
+// Delete button helper
+function deleteBtn(id, coll){
+  const b = el('button',{class:'btn ghost'},'Delete');
+  b.onclick = async ()=>{
+    if(confirm('Delete this row?')) await db.collection(coll).doc(id).delete();
+  }
+  return b;
+}
+
+// Clients table
+function buildClientsTable(){
+  const wrap = el('div',{class:'card'});
+  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},'Clients'),
+    el('button',{class:'btn', onclick:openAddClient},'Add Client')
   ));
-  ثابت الجدول = el('الجدول');
-  ثابت الرأس = el('الرأس',{}, el('tr',{},
-    el('th',{},'رقم العميل (رقم العميل)'),
-    el('th',{},'اسم العميل (اسم العميل)'),
-    el('th',{},'الجنسيه (الجنسية)'),
-    el('th',{},'رقم الهويه (رقم الهوية)'),
-    el('th',{},'البريد الإلكتروني (البريد الإلكتروني)'),
-    إل('th',{},'الموقع (الموقع)'),
-    el('th',{},'اسم المبنى (اسم المبنى)'),
-    el('th',{},'نوع الوحدة (نوع الوحدة)'),
-    el('th',{},'رقم العقار (رقم العقار)'),
-    el('th',{},'ملاحظات (تعليقات)'),
-    el('th',{},'حذف')
+  const table = el('table');
+  const thead = el('thead',{}, el('tr',{},
+    el('th',{},'Client No'),
+    el('th',{},'Name'),
+    el('th',{},'Nationality'),
+    el('th',{},'ID Number'),
+    el('th',{},'Email'),
+    el('th',{},'Location'),
+    el('th',{},'Building Name'),
+    el('th',{},'Unit Type'),
+    el('th',{},'Property No'),
+    el('th',{},'Comments'),
+    el('th',{},'Delete')
   ));
-  ثابت tbody = el('tbody');
-  حالة. العملاء. لكل (ج => {
-    ثابت tr = el('tr',{},
-      el('td',{},خلية قابلة للتعديل(c,'رقم العميل','العملاء')),
-      el('td',{},editableCell(c,'اسم العميل','العملاء')),
-      el('td',{},editableCell(c,'الجنسية','العملاء')),
-      el('td',{},editableCell(c,'idNumber','العملاء')),
-      el('td',{},editableCell(c,'البريد الإلكتروني','العملاء')),
-      el('td',{},editableCell(c,'الموقع','العملاء')),
-      el('td',{},editableCell(c,'اسم المبنى','العملاء')),
-      el('td',{},editableCell(c,'نوع الوحدة','العملاء')),
-      el('td',{},editableCell(c,'رقم الخاصية','العملاء')),
-      el('td',{},editableCell(c,'تعليقات','عملاء')),
-      el('td',{},deleteBtn(c.id,'العملاء'))
+  const tbody = el('tbody');
+  state.clients.forEach(c=>{
+    const tr = el('tr',{},
+      el('td',{},editableCell(c,'clientNo','clients')),
+      el('td',{},editableCell(c,'name','clients')),
+      el('td',{},editableCell(c,'nationality','clients')),
+      el('td',{},editableCell(c,'idNumber','clients')),
+      el('td',{},editableCell(c,'email','clients')),
+      el('td',{},editableCell(c,'location','clients')),
+      el('td',{},editableCell(c,'building','clients')),
+      el('td',{},editableCell(c,'unitType','clients')),
+      el('td',{},editableCell(c,'propertyNo','clients')),
+      el('td',{},editableCell(c,'comments','clients')),
+      el('td',{},deleteBtn(c.id,'clients'))
     );
     tbody.appendChild(tr);
   });
-  الجدول. إلحاق (الرأس، الجسم)؛
-  wrap.appendChild(الجدول)؛
-  عودة اللفاف؛
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
 }
 
-دالة غير متزامنة openAddClient(){
-  const clientNumber = موجه('رقم العميل:');
-  إذا لم يكن (clientNumber) ارجع؛
-  const clientName = موجه('اسم العميل:');
-  جنسية ثابتة = موجه('الجنسيه:');
-  const idNumber = موجه('رقم الهويه:');
-  البريد الإلكتروني const = موجه('البريد الإلكتروني:');
-  موقع ثابت = موجه('الموقع:');
-  const BuildingName = موجه('اسم المبنى:');
-  const UnitType = موجه('نوع الوحدة:');
-  const propertyNo = موجه('رقم العقار:');
-  تعليقات ثابتة = موجه('ملاحظات:');
-  انتظر db.collection('clients').add({
-    رقم العميل، اسم العميل، الجنسية، رقم الهوية، البريد الإلكتروني، الموقع، اسم المبنى، نوع الوحدة، رقم الخاصية، التعليقات، تاريخ الإنشاء: تاريخ جديد ().toISOString ()
-  });
-  تنبيه('تمت إضافة العميل!');
+async function openAddClient(){
+  const clientNo = prompt('Client No:'); if(!clientNo) return;
+  const name = prompt('Name:'); if(!name) return;
+  const nationality = prompt('Nationality:'); 
+  const idNumber = prompt('ID Number:'); 
+  const email = prompt('Email:'); 
+  const location = prompt('Location:'); 
+  const building = prompt('Building Name:'); 
+  const unitType = prompt('Unit Type:'); 
+  const propertyNo = prompt('Property No:'); 
+  const comments = prompt('Comments:'); 
+  await db.collection('clients').add({clientNo, name, nationality, idNumber, email, location, building, unitType, propertyNo, comments, createdAt:new Date().toISOString()});
+  alert('Client added!');
 }
 
-// جدول الدوام
-دالة buildAttendanceTable(){
-  ثابت التفاف = el('div',{class:'card'});
-  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},'سجل الدوام'),
-    el('button',{class:'btn',onclick:openAddAttendance},'إضافة سجل احتفالي')
+// Attendance table
+function buildAttendanceTable(){
+  const wrap = el('div',{class:'card'});
+  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},'Attendance'),
+    el('button',{class:'btn', onclick:openAddAttendance},'Add Attendance')
   ));
-  ثابت الجدول = el('الجدول');
-  ثابت الرأس = el('الرأس',{}, el('tr',{},
-    إل('th',{},'التاريخ (التاريخ)'),
-    el('th',{},'الاسم الكامل (الاسم الكامل)'),
-    el('th',{},'المسمى الوظيفي (المسمى الوظيفي)'),
-    el('th',{},'القسم (القسم)'),
-    el('th',{},'وقت الحضور (وقت الحضور)'),
-    el('th',{},'وقت الانصراف (وقت المغادرة)'),
-    el('th',{},'عدد ساعات العمل (عدد ساعات العمل)'),
-    el('th',{},'ساعات إضافية (ساعات إضافية)'),
-    el('th',{},'ساعة التأخير (ساعات التأخير)'),
-    el('th',{},'ملاحظات المشرف (ملاحظات المشرف)'),
-    el('th',{},'ملاحظات (تعليقات)'),
-    el('th',{},'حذف')
+  const table = el('table');
+  const thead = el('thead',{}, el('tr',{},
+    el('th',{},'Date'),
+    el('th',{},'Full Name'),
+    el('th',{},'Job Title'),
+    el('th',{},'Department'),
+    el('th',{},'Check In'),
+    el('th',{},'Check Out'),
+    el('th',{},'Hours'),
+    el('th',{},'Extra Hours'),
+    el('th',{},'Late Hours'),
+    el('th',{},'Admin Notes'),
+    el('th',{},'Comments'),
+    el('th',{},'Delete')
   ));
-  ثابت tbody = el('tbody');
-  حالة.الحضور.لكل(a=>{
-    ثابت tr = el('tr',{},
+  const tbody = el('tbody');
+  state.attendance.forEach(a=>{
+    const tr = el('tr',{},
       el('td',{},editableCell(a,'date','attendance')),
-      el('td',{},editableCell(a,'الاسم الكامل','الحضور')),
-      el('td',{},editableCell(a,'عنوان الوظيفة','الحضور')),
-      el('td',{},editableCell(a,'قسم','حضور')),
-      el('td',{},editableCell(a,'وقت الحضور','الحضور')),
-      el('td',{},editableCell(a,'وقت الخروج','الحضور')),
-      el('td',{},editableCell(a,'ساعات العمل','الحضور')),
-      el('td',{},editableCell(a,'ساعات إضافية','الحضور')),
-      el('td',{},editableCell(a,'ساعات التأخير','الحضور')),
-      el('td',{},editableCell(a,'ملاحظات المسؤول','الحضور')),
-      el('td',{},editableCell(a,'تعليقات','حضور')),
-      el('td',{},deleteBtn(a.id,'الحضور'))
+      el('td',{},editableCell(a,'fullName','attendance')),
+      el('td',{},editableCell(a,'jobTitle','attendance')),
+      el('td',{},editableCell(a,'department','attendance')),
+      el('td',{},editableCell(a,'checkIn','attendance')),
+      el('td',{},editableCell(a,'checkOut','attendance')),
+      el('td',{},editableCell(a,'hours','attendance')),
+      el('td',{},editableCell(a,'extraHours','attendance')),
+      el('td',{},editableCell(a,'lateHours','attendance')),
+      el('td',{},editableCell(a,'adminNotes','attendance')),
+      el('td',{},editableCell(a,'comments','attendance')),
+      el('td',{},deleteBtn(a.id,'attendance'))
     );
     tbody.appendChild(tr);
   });
-  الجدول. إلحاق (الرأس، الجسم)؛
-  wrap.appendChild(الجدول)؛
-  عودة اللفاف؛
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
 }
 
-دالة غير متزامنة openAddAttendance(){
-  تاريخ ثابت = موجه('التاريخ:');
-  إذا لم يكن التاريخ صحيحًا، ارجع؛
-  const fullName = موجه('الاسم الكامل:');
-  const jobTitle = موجه('المسمى الوظيفي:');
-  قسم ثابت = موجه('القسم:');
-  const AttendanceTime = موجه('وقت الحضور:');
-  const checkoutTime = موجه('وقت الانصراف:');
-  const WorkingHours = موجه('عدد ساعات العمل:');
-  const extraHours = موجه('ساعات إضافية:');
-  const DelayHours = موجه('ساعة التأخير:');
-  const adminNotes = موجه('ملاحظات المشرف:');
-  تعليقات ثابتة = موجه('ملاحظات:');
-  انتظر db.collection('الحضور').add({
-    التاريخ، الاسم الكامل، عنوان الوظيفة، القسم، وقت الحضور، وقت الخروج، ساعات العمل، ساعات العمل الإضافية، ساعات التأخير، ملاحظات المسؤول، التعليقات، createdAt:new Date().toISOSring()
-  });
-  تنبيه('تمت إضافة سجل الدوام!');
+async function openAddAttendance(){
+  const date = prompt('Date:'); if(!date) return;
+  const fullName = prompt('Full Name:'); if(!fullName) return;
+  const jobTitle = prompt('Job Title:'); 
+  const department = prompt('Department:'); 
+  const checkIn = prompt('Check In:'); 
+  const checkOut = prompt('Check Out:'); 
+  const hours = prompt('Hours:'); 
+  const extraHours = prompt('Extra Hours:'); 
+  const lateHours = prompt('Late Hours:'); 
+  const adminNotes = prompt('Admin Notes:'); 
+  const comments = prompt('Comments:'); 
+  await db.collection('attendance').add({date, fullName, jobTitle, department, checkIn, checkOut, hours, extraHours, lateHours, adminNotes, comments, createdAt:new Date().toISOString()});
+  alert('Attendance added!');
 }
 
-// جدول التكاليف (مثال، تعديل الأعمدة حاجتك)
-دالة buildCostsTable(){
-  ثابت التفاف = el('div',{class:'card'});
-  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},' سجل التكاليف'),
-    el('button',{class:'btn',onclick:openAddCost},' إضافة تكلفة')
+// Costs table
+function buildCostsTable(){
+  const wrap = el('div',{class:'card'});
+  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},'Costs'),
+    el('button',{class:'btn', onclick:openAddCost},'Add Cost')
   ));
-  ثابت الجدول = el('الجدول');
-  ثابت الرأس = el('الرأس',{}, el('tr',{},
-    el('th',{},'القسم الرئيسي (القسم الرئيسي)'),
-    el('th',{},'البند العميق (البند الفرعي)'),
-    el('th',{},'الوصف (الوصف)'),
-    el('th',{},'الكمية (الكمية)'),
-    el('th',{},'سعر الوحدة (سعر الوحدة)'),
-    el('th',{},'الاجمالى (المجموع)'),
-    el('th',{},' طريقة الدفع (طريقة الدفع)'),
-    el('th',{},'رقم رقمي (رقم الفاتورة)'),
-    el('th',{},'تاريخ الشراء (تاريخ الشراء)'),
-    el('th',{},'ملاحظات (تعليقات)'),
-    el('th',{},'حذف')
+  const table = el('table');
+  const thead = el('thead',{}, el('tr',{},
+    el('th',{},'Main Section'),
+    el('th',{},'Sub Item'),
+    el('th',{},'Description'),
+    el('th',{},'Quantity'),
+    el('th',{},'Unit Price'),
+    el('th',{},'Total'),
+    el('th',{},'Payment Method'),
+    el('th',{},'Invoice No'),
+    el('th',{},'Purchase Date'),
+    el('th',{},'Comments'),
+    el('th',{},'Delete')
   ));
-  ثابت tbody = el('tbody');
-  الدولة.التكاليف.لكل(c=>{
-    ثابت tr = el('tr',{},
-      el('td',{},editableCell(c,'القسم الرئيسي','التكاليف')),
-      el('td',{},خلية قابلة للتعديل(c,'العنصر الفرعي','التكاليف')),
-      el('td',{},editableCell(c,'الوصف','التكاليف')),
-      el('td',{},editableCell(c,'الكمية','التكاليف')),
-      el('td',{},editableCell(c,'سعر الوحدة','التكاليف')),
-      el('td',{},editableCell(c,'الإجمالي','التكاليف')),
-      el('td',{},editableCell(c,'طريقة الدفع','التكاليف')),
-      el('td',{},editableCell(c,'رقم الفاتورة','التكاليف')),
-      el('td',{},editableCell(c,'تاريخ الشراء','التكاليف')),
-      el('td',{},editableCell(c,'تعليقات','تكاليف')),
+  const tbody = el('tbody');
+  state.costs.forEach(c=>{
+    const tr = el('tr',{},
+      el('td',{},editableCell(c,'mainSection','costs')),
+      el('td',{},editableCell(c,'subItem','costs')),
+      el('td',{},editableCell(c,'description','costs')),
+      el('td',{},editableCell(c,'quantity','costs')),
+      el('td',{},editableCell(c,'unitPrice','costs')),
+      el('td',{},editableCell(c,'total','costs')),
+      el('td',{},editableCell(c,'paymentMethod','costs')),
+      el('td',{},editableCell(c,'invoiceNo','costs')),
+      el('td',{},editableCell(c,'purchaseDate','costs')),
+      el('td',{},editableCell(c,'comments','costs')),
       el('td',{},deleteBtn(c.id,'costs'))
     );
     tbody.appendChild(tr);
   });
-  الجدول. إلحاق (الرأس، الجسم)؛
-  wrap.appendChild(الجدول)؛
-  عودة اللفاف؛
+  table.appendChild(thead);
+  table.appendChild(tbody);
+  wrap.appendChild(table);
+  return wrap;
 }
 
-دالة غير متزامنة openAddCost(){
-  const mainSection = موجه('القسم الرئيسي:');
-  إذا لم يتم إرجاع (mainSection)؛
-  const subItem = موجه('البند العميق:');
-  وصف ثابت = موجه('الوصف:');
-  كمية ثابتة = موجه('الكمية:');
-  const UnitPrice = موجه('سعر الوحدة:');
-  const Total = موجه('الاجمالى:');
-  طريقة الدفع const = موجه('طريقة الدفع:');
-  const الفاتورةNumber = موجه('رقم رقمي:');
-  const buyDate = موجه('تاريخ الشراء:');
-  تعليقات ثابتة = موجه('ملاحظات:');
-  انتظر db.collection('costs').add({
-    القسم الرئيسي، العنصر الفرعي، الوصف، الكمية، سعر الوحدة، الإجمالي، طريقة الدفع، رقم الفاتورة، تاريخ الشراء، التعليقات، تاريخ الإنشاء: تاريخ جديد ().toISOString ()
-  });
-  تنبيه('تمت إضافة التكلفة!');
+async function openAddCost(){
+  const mainSection = prompt('Main Section:'); if(!mainSection) return;
+  const subItem = prompt('Sub Item:'); 
+  const description = prompt('Description:'); 
+  const quantity = prompt('Quantity:'); 
+  const unitPrice = prompt('Unit Price:'); 
+  const total = prompt('Total:'); 
+  const paymentMethod = prompt('Payment Method:'); 
+  const invoiceNo = prompt('Invoice No:'); 
+  const purchaseDate = prompt('Purchase Date:'); 
+  const comments = prompt('Comments:'); 
+  await db.collection('costs').add({mainSection, subItem, description, quantity, unitPrice, total, paymentMethod, invoiceNo, purchaseDate, comments, createdAt:new Date().toISOString()});
+  alert('Cost added!');
 }
 
-// خلية قابلة للتعديل
-دالة editableCell(obj,field,coll){
-  ثابت d = el('div',{contenteditable:true,style:'outline:none;min-width:100px;'}, obj[field]||'');
-  d.addEventListener('blur', async ()=>{
-    const val = d.textContent.trim();
-    انتظر db.collection(coll).doc(obj.id).update({ [الحقل]: val });
-    d.style.background='#e6ffe6';
-    setTimeout(()=>d.style.background='شفاف',400);
-  });
-  د. إضافة مستمع الحدث('keydown',(e)=>{إذا(e.key==='Enter'){e.preventDefault();d.blur();}});
-  العودة د؛
-}
-
-دالة deleteBtn(id,coll){
-  ثابت b = el('زر',{class:'btn ghost'},'حذف');
-  ب. عند النقر = غير متزامن () => {
-    if(confirm('حذف هذا السطر؟')){
-      انتظر db.collection(coll).doc(id).delete();
-    }
-  };
-  العودة ب؛
-}
-
-// تشغيل أولي
-تقديم تسجيل الدخول();
+// Initial render
+renderLogin();
 </script>
 </body>
 </html>
