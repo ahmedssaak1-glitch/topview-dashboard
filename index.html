@@ -1,258 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TopView — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance | Top View Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js"></script>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #7b8c93;
+      font-family: "Inter", sans-serif;
+      background: #f9fafb;
+      color: #333;
       margin: 0;
-      color: #4c7f94;
+      padding: 0;
     }
-    .login-bg {
-      background: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      filter: brightness(0.5);
-      z-index: -1;
+    header {
+      background: #f1f1f1;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ddd;
     }
-    .login-box {
-      max-width: 340px;
-      background: #fff;
-      padding: 24px;
-      border-radius: 16px;
-      margin: 120px auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    }
-    h2 { text-align: center; }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
+    header h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
     }
     button {
-      width: 100%;
-      padding: 10px;
+      background: #d4af37;
+      color: white;
       border: none;
-      border-radius: 8px;
-      background: #007bff;
-      color: #fff;
-      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 15px;
+      font-weight: 600;
     }
-    button:hover { background: #0056b3; }
-    .sidebar {
-      width: 220px;
-      background: #fff;
-      height: 100vh;
-      position: fixed;
-      border-right: 1px solid #ddd;
-      padding-top: 20px;
-    }
-    .sidebar h3 { text-align: center; color: #007bff; margin-bottom: 20px; }
-    .sidebar button {
-      width: 90%;
-      margin: 6px auto;
-      display: block;
-      background: none;
-      color: #222;
-      text-align: left;
-      padding: 10px 12px;
-      border-radius: 8px;
-      transition: 0.2s;
-    }
-    .sidebar button.active, .sidebar button:hover {
-      background: #007bff; color: #fff;
+    button:hover {
+      background: #c39b2f;
     }
     main {
-      margin-left: 240px;
-      padding: 20px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      padding: 1.5rem;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      background: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     th, td {
-      padding: 10px;
+      padding: 0.8rem;
       border-bottom: 1px solid #eee;
+      text-align: left;
     }
-    th { text-align: left; background: #f9fafb; }
-    tr:hover td { background: #f1f5ff; }
-    .btn { background: #007bff; color: #fff; padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; }
-    .btn:hover { background: #0056b3; }
-    .btn.ghost { background: #eee; color: #333; }
+    th {
+      background: #fafafa;
+    }
+    .actions button {
+      margin-right: 5px;
+      padding: 0.4rem 0.8rem;
+    }
+    input, select {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #addForm {
+      margin-bottom: 1.5rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    #addForm input[type="file"] {
+      border: none;
+    }
   </style>
 </head>
 <body>
-  <div id="app"></div>
+  <header>
+    <h1>Finance — Income & Expenses</h1>
+    <button id="addBtn">Add Transaction</button>
+  </header>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <main>
+    <div id="addForm" style="display: none;">
+      <h3>Add New Transaction</h3>
+      <form id="transactionForm">
+        <input type="date" id="date" required /> 
+        <select id="type">
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+        <input type="text" id="desc" placeholder="Description" required />
+        <input type="number" id="amount" placeholder="Amount" required />
+        <input type="file" id="file" accept="image/*" />
+        <button type="submit">Save</button>
+      </form>
+    </div>
 
-  <script>
-  // Firebase Config (من عندك)
-  const firebaseConfig = {
-    apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
-    authDomain: "topview-system.firebaseapp.com",
-    projectId: "topview-system",
-    storageBucket: "topview-system.firebasestorage.app",
-    messagingSenderId: "1073945877413",
-    appId: "1:1073945877413:web:d516e451e543f7a9db664c",
-    measurementId: "G-EPVZGH6Y2G"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Attachment</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="financeTable"></tbody>
+    </table>
+  </main>
 
-  // الحالة العامة
-  const state = { user: null, page: 'Clients', clients: [] };
-  const app = document.getElementById('app');
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-  // دالة مساعدة لعمل عناصر بسرعة
-  function el(tag, attrs={}, ...children){
-    const e = document.createElement(tag);
-    for (const [k,v] of Object.entries(attrs)){
-      if(k.startsWith('on')) e.addEventListener(k.substring(2), v);
-      else e.setAttribute(k, v);
-    }
-    for (const c of children){
-      if(typeof c === 'string') e.appendChild(document.createTextNode(c));
-      else if(c) e.appendChild(c);
-    }
-    return e;
-  }
-
-  // تسجيل الدخول
-  function renderLogin(){
-    app.innerHTML = '';
-    const bg = el('div',{class:'login-bg'});
-    const box = el('div',{class:'login-box'},
-      el('h2',{},'TopView interior decoration'),
-      el('input',{id:'email',type:'email',placeholder:'Email'}),
-      el('input',{id:'password',type:'password',placeholder:'Password'}),
-      el('button',{onclick:login},'Login')
-    );
-    app.append(bg,box);
-  }
-
-  function login(){
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-    if(email==='admin@topview.com' && password==='123456'){
-      state.user = { name:'Admin' };
-      loadClients();
-      renderDashboard();
-    }else{
-      alert('Invalid credentials');
-    }
-  }
-
-  // الواجهة الرئيسية
-  function renderDashboard(){
-    app.innerHTML = '';
-    const sidebar = el('div',{class:'sidebar'},
-      el('h3',{},'TopView'),
-      el('button',{class: state.page==='Clients'?'active':'', onclick:()=>switchPage('Clients')},'Clients'),
-      el('button',{onclick:()=>logout()},'Logout')
-    );
-    const main = el('main');
-    if(state.page==='Clients') main.appendChild(buildClientsTable());
-    app.append(sidebar,main);
-  }
-
-  function switchPage(p){ state.page=p; renderDashboard(); }
-  function logout(){ state.user=null; renderLogin(); }
-
-  // تحميل العملاء من Firestore
-  function loadClients(){
-    db.collection('clients').onSnapshot(s=>{
-      state.clients = s.docs.map(d=>({id:d.id, ...d.data()}));
-      if(state.user) renderDashboard();
-    });
-  }
-
-  // إضافة عميل
-  async function openAddClient(){
-    const name = prompt('Client name:');
-    if(!name) return;
-    const phone = prompt('Phone (optional):');
-    const project = prompt('Project (optional):');
-    const status = prompt('Status (Lead / Active / Completed):','Lead');
-    await db.collection('clients').add({ name, phone, project, status, createdAt:new Date().toISOString() });
-    alert('Client added!');
-  }
-
-  // جدول العملاء
-  function buildClientsTable(){
-    const wrap = el('div',{class:'card'});
-    wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-      el('h3',{},'Clients'),
-      el('button',{class:'btn',onclick:openAddClient},'Add Client')
-    ));
-    const table = el('table');
-    const thead = el('thead',{}, el('tr',{},
-      el('th',{},'Name'),
-      el('th',{},'Phone'),
-      el('th',{},'Project'),
-      el('th',{},'Status'),
-      el('th',{},'Actions')
-    ));
-    const tbody = el('tbody');
-    state.clients.forEach(c=>{
-      const tr = el('tr',{},
-        el('td',{},editableCell(c,'name')),
-        el('td',{},editableCell(c,'phone')),
-        el('td',{},editableCell(c,'project')),
-        el('td',{},editableCell(c,'status')),
-        el('td',{},deleteBtn(c.id))
-      );
-      tbody.appendChild(tr);
-    });
-    table.append(thead,tbody);
-    wrap.appendChild(table);
-    return wrap;
-  }
-
-  // خلية قابلة للتعديل
-  function editableCell(client,field){
-    const d = el('div',{contenteditable:true,style:'outline:none;min-width:100px;'}, client[field]||'');
-    d.addEventListener('blur', async ()=>{
-      const val = d.textContent.trim();
-      await db.collection('clients').doc(client.id).update({ [field]: val });
-      d.style.background='#e6ffe6';
-      setTimeout(()=>d.style.background='transparent',400);
-    });
-    d.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();d.blur();}});
-    return d;
-  }
-
-  function deleteBtn(id){
-    const b = el('button',{class:'btn ghost'},'Delete');
-    b.onclick = async ()=>{
-      if(confirm('Delete this client?')){
-        await db.collection('clients').doc(id).delete();
-      }
+    const firebaseConfig = {
+      apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+      authDomain: "topview-system.firebaseapp.com",
+      projectId: "topview-system",
+      storageBucket: "topview-system.firebasestorage.app",
+      messagingSenderId: "1073945877413",
+      appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+      measurementId: "G-EPVZGH6Y2G"
     };
-    return b;
-  }
 
-  // تشغيل أولي
-  renderLogin();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const addBtn = document.getElementById("addBtn");
+    const addForm = document.getElementById("addForm");
+    const transactionForm = document.getElementById("transactionForm");
+    const table = document.getElementById("financeTable");
+
+    addBtn.onclick = () => {
+      addForm.style.display = addForm.style.display === "none" ? "block" : "none";
+    };
+
+    async function loadData() {
+      table.innerHTML = "";
+      const snapshot = await getDocs(collection(db, "finance"));
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data.date}</td>
+          <td>${data.type}</td>
+          <td>${data.desc}</td>
+          <td>${data.amount}</td>
+          <td>${data.attachment ? `<a href="${data.attachment}" target="_blank">View</a>` : "-"}</td>
+          <td class="actions">
+            <button class="delete" data-id="${docSnap.id}">Delete</button>
+          </td>
+        `;
+        table.appendChild(tr);
+      });
+
+      document.querySelectorAll(".delete").forEach(btn => {
+        btn.onclick = async (e) => {
+          const id = e.target.dataset.id;
+          await deleteDoc(doc(db, "finance", id));
+          loadData();
+        };
+      });
+    }
+
+    transactionForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const date = document.getElementById("date").value;
+      const type = document.getElementById("type").value;
+      const desc = document.getElementById("desc").value;
+      const amount = document.getElementById("amount").value;
+      const file = document.getElementById("file").files[0];
+
+      let attachmentURL = "";
+      if (file) {
+        const fileRef = ref(storage, "attachments/" + file.name);
+        await uploadBytes(fileRef, file);
+        attachmentURL = await getDownloadURL(fileRef);
+      }
+
+      await addDoc(collection(db, "finance"), {
+        date, type, desc, amount, attachment: attachmentURL
+      });
+
+      transactionForm.reset();
+      addForm.style.display = "none";
+      loadData();
+    });
+
+    loadData();
   </script>
 </body>
 </html>
