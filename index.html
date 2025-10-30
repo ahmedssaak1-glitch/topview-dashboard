@@ -1,331 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TopView — Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f4f6fa;
-      margin: 0;
-      color: #222;
-    }
-    .login-bg {
-      background: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat;
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      filter: brightness(0.5);
-      z-index: -1;
-    }
-    .login-box {
-      max-width: 340px;
-      background: #fff;
-      padding: 24px;
-      border-radius: 16px;
-      margin: 120px auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    }
-    h2 { text-align: center; }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      margin-bottom: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #007bff;
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 15px;
-    }
-    button:hover { background: #0056b3; }
-    .sidebar {
-      width: 220px;
-      background: #fff;
-      height: 100vh;
-      position: fixed;
-      border-right: 1px solid #ddd;
-      padding-top: 20px;
-    }
-    .sidebar h3 { text-align: center; color: #007bff; margin-bottom: 20px; }
-    .sidebar button {
-      width: 90%;
-      margin: 6px auto;
-      display: block;
-      background: none;
-      color: #222;
-      text-align: left;
-      padding: 10px 12px;
-      border-radius: 8px;
-      transition: 0.2s;
-    }
-    .sidebar button.active, .sidebar button:hover {
-      background: #007bff; color: #fff;
-    }
-    main {
-      margin-left: 240px;
-      padding: 20px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-    th { text-align: left; background: #f9fafb; }
-    tr:hover td { background: #f1f5ff; }
-    .btn { background: #007bff; color: #fff; padding: 8px 14px; border-radius: 8px; border: none; cursor: pointer; }
-    .btn:hover { background: #0056b3; }
-    .btn.ghost { background: #eee; color: #333; }
-  </style>
+<html lang="ar">
+<الرأس>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TopView — لوحة المعلومات</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<النمط>
+الجسم { عائلة الخطوط: 'Inter'، بدون تذييل؛ الخلفية: #f4f6fa؛ الهامش: 0؛ اللون: #222؛ }
+.login-bg { الخلفية: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') مركز/غلاف بدون تكرار؛ الموضع: ثابت؛ أعلى: 0؛ يسار: 0؛ العرض: 100%؛ الارتفاع: 100%؛ الفلتر: سطوع (0.5)؛ مؤشر z: -1؛ }
+.login-box { أقصى عرض: 340 بكسل؛ الخلفية: #fff؛ الحشو: 24 بكسل؛ نصف قطر الحدود: 16 بكسل؛ الهامش: 120 بكسل تلقائيًا؛ ظل الصندوق: 0 4 بكسل 16 بكسل rgba(0,0,0,0.15)؛ }
+h2 { محاذاة النص: المركز؛ }
+الإدخال {العرض: 100٪؛ الحشو: 10 بكسل؛ الهامش العلوي: 8 بكسل؛ الهامش السفلي: 14 بكسل؛ الحد: 1 بكسل ثابت #ccc؛ نصف قطر الحد: 8 بكسل؛ حجم الخط: 14 بكسل؛ }
+الزر {العرض: 100%؛ الحشو: 10 بكسل؛ الحدود: لا شيء؛ نصف قطر الحدود: 8 بكسل؛ الخلفية: #007bff؛ اللون: #fff؛ وزن الخط: 600؛ المؤشر: مؤشر؛ حجم الخط: 15 بكسل؛ }
+الزر: مرر الماوس فوق { الخلفية: #0056b3؛ }
+.sidebar { العرض: 220 بكسل؛ الخلفية: #fff؛ الارتفاع: 100vh؛ الموضع: ثابت؛ الحدود اليمنى: 1 بكسل صلبة #ddd؛ الحشو العلوي: 20 بكسل؛ }
+.sidebar h3 { محاذاة النص: في المنتصف؛ اللون: #007bff؛ الهامش السفلي: 20 بكسل؛ }
+.زر الشريط الجانبي { العرض: 90%؛ الهامش: 6 بيكسل تلقائي؛ العرض: كتلة؛ الخلفية: لا شيء؛ اللون: #222؛ محاذاة النص: يسار؛ الحشو: 10 بيكسل 12 بيكسل؛ نصف قطر الحدود: 8 بيكسل؛ الانتقال: 0.2 ثانية؛ }
+.زر الشريط الجانبي.نشط، زر الشريط الجانبي:تحويم {الخلفية: #007bff؛ اللون: #fff؛ }
+رئيسي { هامش يسار: 240 بكسل؛ الحشو: 20 بكسل؛ }
+.card { الخلفية: #fff؛ نصف قطر الحدود: 12 بكسل؛ الحشو: 16 بكسل؛ ظل الصندوق: 0 1 بكسل 4 بكسل rgba(0,0,0,0.1)؛ }
+الجدول {العرض: 100٪؛ انهيار الحدود: انهيار؛ هامش الأعلى: 10 بكسل؛ }
+th, td { التبطين: 10 بكسل؛ الحد السفلي: 1 بكسل صلب #eee؛ }
+th { محاذاة النص: يسار؛ الخلفية: #f9fafb؛ }
+tr:hover td { الخلفية: #f1f5ff؛ }
+.btn { الخلفية: #007bff؛ اللون: #fff؛ الحشو: 8 بكسل 14 بكسل؛ نصف قطر الحدود: 8 بكسل؛ الحدود: لا شيء؛ المؤشر: مؤشر؛ }
+.btn:hover { الخلفية: #0056b3؛ }
+.btn.ghost { الخلفية: #eee؛ اللون: #333؛ }
+</style>
 </head>
-<body>
-  <div id="app"></div>
+<الجسم>
+<div id="app"></div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+<!-- مجموعة أدوات تطوير البرامج Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-  <script>
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
-    authDomain: "topview-system.firebaseapp.com",
-    projectId: "topview-system",
-    storageBucket: "topview-system.appspot.com",
-    messagingSenderId: "1073945877413",
-    appId: "1:1073945877413:web:d516e451e543f7a9db664c",
-    measurementId: "G-EPVZGH6Y2G"
+<النص>
+// تكوين Firebase (من عندك)
+ثابت firebaseConfig = {
+مفتاح API: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw"،
+نطاق المصادقة: "topview-system.firebaseapp.com"،
+معرف المشروع: "topview-system"،
+storageBucket: "topview-system.firebasestorage.app"،
+معرف المرسل: "1073945877413"،
+معرف التطبيق: "1:1073945877413:web:d516e451e543f7a9db664c"،
+معرف القياس: "G-EPVZGH6Y2G"
+};
+firebase.initializeApp(firebaseConfig);
+ثابت db = firebase.firestore();
+
+const state = { user: null, page: 'Clients', clients: [], attendance: [], costs: [] };
+ثابت التطبيق = document.getElementById('التطبيق');
+
+// دالة مساعدة لعمل عناصر بسرعة
+دالة el(tag, attrs={}, ...children){
+  ثابت e = document.createElement(العلامة)؛
+  بالنسبة إلى (const [k,v] من Object.entries(attrs)){
+    إذا (k.startsWith('on')) e.addEventListener(k.substring(2)، v)؛
+    وإلا e.setAttribute(k, v);
+  }
+  لـ (ثابت ج للأطفال)
+    إذا (نوع c === 'سلسلة') e.appendChild(document.createTextNode(c));
+    وإلا إذا (ج) e.appendChild(ج)؛
+  }
+  العودة هـ؛
+}
+
+// تسجيل الدخول
+دالة renderLogin(){
+  التطبيق.innerHTML = '';
+  ثابت bg = el('div',{class:'login-bg'});
+  ثابت مربع = el('div',{class:'login-box'},
+    el('h2',{},'نظام العرض العلوي'),
+    el('إدخال',{معرف:'البريد الإلكتروني',نوع:'البريد الإلكتروني',عنصر نائب:'البريد الإلكتروني'}),
+    el('إدخال',{معرف:'كلمة المرور',نوع:'كلمة المرور',عنصر نائب:'كلمة المرور'}),
+    el('زر',{عند النقر:تسجيل الدخول},'تسجيل الدخول')
+  );
+  التطبيق.append(bg,box);
+}
+
+دالة تسجيل الدخول (){
+  ثابت البريد الإلكتروني = document.getElementById('البريد الإلكتروني').value.trim();
+  كلمة مرور ثابتة = document.getElementById('كلمة المرور').value.trim();
+  إذا (البريد الإلكتروني ==='admin@topview.com' وكلمة المرور ==='123456') {
+    state.user = { الاسم: 'المسؤول' };
+    تحميل الكل();
+    تقديم لوحة التحكم();
+  }آخر{
+    تنبيه('بيانات اعتماد غير صالحة');
+  }
+}
+
+// تحميل كل البيانات
+دالة loadAll(){
+  مجموعة قاعدة البيانات('العملاء').onSnapshot(s=>{
+    حالة العملاء = s.docs.map(d=>({id:d.id, ...d.data()}));
+    إذا (state.user) يتم عرض لوحة التحكم();
+  });
+  مجموعة قاعدة البيانات('الحضور').onSnapshot(s=>{
+    حالة الحضور = s.docs.map(d=>({id:d.id, ...d.data()}));
+    إذا (state.user) يتم عرض لوحة التحكم();
+  });
+  مجموعة قواعد البيانات('التكاليف').onSnapshot(s=>{
+    الحالة.التكاليف = s.docs.map(d=>({id:d.id, ...d.data()}));
+    إذا (state.user) يتم عرض لوحة التحكم();
+  });
+}
+
+// الواجهة الرئيسية
+دالة renderDashboard(){
+  التطبيق.innerHTML = '';
+  ثابت الشريط الجانبي = el('div',{class:'sidebar'},
+    el('h3',{},'عرض علوي'),
+    el('button',{class:state.page==='Clients'?'active':'', onclick:()=>switchPage('Clients')},'سجل العملاء'),
+    el('button',{class:state.page==='Attendance'?'active':'', onclick:()=>switchPage('Attendance')},'سجل الدوام'),
+    el('button',{class:state.page==='Costs'?'active':'', onclick:()=>switchPage('Costs')},'سجل التكاليف'),
+    el('زر',{عند النقر:()=>تسجيل الخروج()},'تسجيل الخروج')
+  );
+  ثابت رئيسي = el('رئيسي');
+  إذا (state.page==='العملاء') main.appendChild(buildClientsTable());
+  إذا (state.page==='الحضور') main.appendChild(buildAttendanceTable());
+  إذا (state.page==='التكاليف') main.appendChild(buildCostsTable());
+  التطبيق.append(الشريط الجانبي، الرئيسي)؛
+}
+
+دالة switchPage(p){ state.page=p; renderDashboard(); }
+دالة تسجيل الخروج () { state.user = null؛ renderLogin ()؛ }
+
+// جدول العملاء
+دالة buildClientsTable(){
+  ثابت التفاف = el('div',{class:'card'});
+  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},'سجل العملاء'),
+    el('button',{class:'btn',onclick:openAddClient},'إضافة عميل')
+  ));
+  ثابت الجدول = el('الجدول');
+  ثابت الرأس = el('الرأس',{}, el('tr',{},
+    el('th',{},'رقم العميل (رقم العميل)'),
+    el('th',{},'اسم العميل (اسم العميل)'),
+    el('th',{},'الجنسيه (الجنسية)'),
+    el('th',{},'رقم الهويه (رقم الهوية)'),
+    el('th',{},'البريد الإلكتروني (البريد الإلكتروني)'),
+    إل('th',{},'الموقع (الموقع)'),
+    el('th',{},'اسم المبنى (اسم المبنى)'),
+    el('th',{},'نوع الوحدة (نوع الوحدة)'),
+    el('th',{},'رقم العقار (رقم العقار)'),
+    el('th',{},'ملاحظات (تعليقات)'),
+    el('th',{},'حذف')
+  ));
+  ثابت tbody = el('tbody');
+  حالة. العملاء. لكل (ج => {
+    ثابت tr = el('tr',{},
+      el('td',{},خلية قابلة للتعديل(c,'رقم العميل','العملاء')),
+      el('td',{},editableCell(c,'اسم العميل','العملاء')),
+      el('td',{},editableCell(c,'الجنسية','العملاء')),
+      el('td',{},editableCell(c,'idNumber','العملاء')),
+      el('td',{},editableCell(c,'البريد الإلكتروني','العملاء')),
+      el('td',{},editableCell(c,'الموقع','العملاء')),
+      el('td',{},editableCell(c,'اسم المبنى','العملاء')),
+      el('td',{},editableCell(c,'نوع الوحدة','العملاء')),
+      el('td',{},editableCell(c,'رقم الخاصية','العملاء')),
+      el('td',{},editableCell(c,'تعليقات','عملاء')),
+      el('td',{},deleteBtn(c.id,'العملاء'))
+    );
+    tbody.appendChild(tr);
+  });
+  الجدول. إلحاق (الرأس، الجسم)؛
+  wrap.appendChild(الجدول)؛
+  عودة اللفاف؛
+}
+
+دالة غير متزامنة openAddClient(){
+  const clientNumber = موجه('رقم العميل:');
+  إذا لم يكن (clientNumber) ارجع؛
+  const clientName = موجه('اسم العميل:');
+  جنسية ثابتة = موجه('الجنسيه:');
+  const idNumber = موجه('رقم الهويه:');
+  البريد الإلكتروني const = موجه('البريد الإلكتروني:');
+  موقع ثابت = موجه('الموقع:');
+  const BuildingName = موجه('اسم المبنى:');
+  const UnitType = موجه('نوع الوحدة:');
+  const propertyNo = موجه('رقم العقار:');
+  تعليقات ثابتة = موجه('ملاحظات:');
+  انتظر db.collection('clients').add({
+    رقم العميل، اسم العميل، الجنسية، رقم الهوية، البريد الإلكتروني، الموقع، اسم المبنى، نوع الوحدة، رقم الخاصية، التعليقات، تاريخ الإنشاء: تاريخ جديد ().toISOString ()
+  });
+  تنبيه('تمت إضافة العميل!');
+}
+
+// جدول الدوام
+دالة buildAttendanceTable(){
+  ثابت التفاف = el('div',{class:'card'});
+  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},'سجل الدوام'),
+    el('button',{class:'btn',onclick:openAddAttendance},'إضافة سجل احتفالي')
+  ));
+  ثابت الجدول = el('الجدول');
+  ثابت الرأس = el('الرأس',{}, el('tr',{},
+    إل('th',{},'التاريخ (التاريخ)'),
+    el('th',{},'الاسم الكامل (الاسم الكامل)'),
+    el('th',{},'المسمى الوظيفي (المسمى الوظيفي)'),
+    el('th',{},'القسم (القسم)'),
+    el('th',{},'وقت الحضور (وقت الحضور)'),
+    el('th',{},'وقت الانصراف (وقت المغادرة)'),
+    el('th',{},'عدد ساعات العمل (عدد ساعات العمل)'),
+    el('th',{},'ساعات إضافية (ساعات إضافية)'),
+    el('th',{},'ساعة التأخير (ساعات التأخير)'),
+    el('th',{},'ملاحظات المشرف (ملاحظات المشرف)'),
+    el('th',{},'ملاحظات (تعليقات)'),
+    el('th',{},'حذف')
+  ));
+  ثابت tbody = el('tbody');
+  حالة.الحضور.لكل(a=>{
+    ثابت tr = el('tr',{},
+      el('td',{},editableCell(a,'date','attendance')),
+      el('td',{},editableCell(a,'الاسم الكامل','الحضور')),
+      el('td',{},editableCell(a,'عنوان الوظيفة','الحضور')),
+      el('td',{},editableCell(a,'قسم','حضور')),
+      el('td',{},editableCell(a,'وقت الحضور','الحضور')),
+      el('td',{},editableCell(a,'وقت الخروج','الحضور')),
+      el('td',{},editableCell(a,'ساعات العمل','الحضور')),
+      el('td',{},editableCell(a,'ساعات إضافية','الحضور')),
+      el('td',{},editableCell(a,'ساعات التأخير','الحضور')),
+      el('td',{},editableCell(a,'ملاحظات المسؤول','الحضور')),
+      el('td',{},editableCell(a,'تعليقات','حضور')),
+      el('td',{},deleteBtn(a.id,'الحضور'))
+    );
+    tbody.appendChild(tr);
+  });
+  الجدول. إلحاق (الرأس، الجسم)؛
+  wrap.appendChild(الجدول)؛
+  عودة اللفاف؛
+}
+
+دالة غير متزامنة openAddAttendance(){
+  تاريخ ثابت = موجه('التاريخ:');
+  إذا لم يكن التاريخ صحيحًا، ارجع؛
+  const fullName = موجه('الاسم الكامل:');
+  const jobTitle = موجه('المسمى الوظيفي:');
+  قسم ثابت = موجه('القسم:');
+  const AttendanceTime = موجه('وقت الحضور:');
+  const checkoutTime = موجه('وقت الانصراف:');
+  const WorkingHours = موجه('عدد ساعات العمل:');
+  const extraHours = موجه('ساعات إضافية:');
+  const DelayHours = موجه('ساعة التأخير:');
+  const adminNotes = موجه('ملاحظات المشرف:');
+  تعليقات ثابتة = موجه('ملاحظات:');
+  انتظر db.collection('الحضور').add({
+    التاريخ، الاسم الكامل، عنوان الوظيفة، القسم، وقت الحضور، وقت الخروج، ساعات العمل، ساعات العمل الإضافية، ساعات التأخير، ملاحظات المسؤول، التعليقات، createdAt:new Date().toISOSring()
+  });
+  تنبيه('تمت إضافة سجل الدوام!');
+}
+
+// جدول التكاليف (مثال، تعديل الأعمدة حاجتك)
+دالة buildCostsTable(){
+  ثابت التفاف = el('div',{class:'card'});
+  لف.appendChild(el('div',{style:'display:flex;just-content:space-between;align-items:center;margin-bottom:8px'},
+    el('h3',{},' سجل التكاليف'),
+    el('button',{class:'btn',onclick:openAddCost},' إضافة تكلفة')
+  ));
+  ثابت الجدول = el('الجدول');
+  ثابت الرأس = el('الرأس',{}, el('tr',{},
+    el('th',{},'القسم الرئيسي (القسم الرئيسي)'),
+    el('th',{},'البند العميق (البند الفرعي)'),
+    el('th',{},'الوصف (الوصف)'),
+    el('th',{},'الكمية (الكمية)'),
+    el('th',{},'سعر الوحدة (سعر الوحدة)'),
+    el('th',{},'الاجمالى (المجموع)'),
+    el('th',{},' طريقة الدفع (طريقة الدفع)'),
+    el('th',{},'رقم رقمي (رقم الفاتورة)'),
+    el('th',{},'تاريخ الشراء (تاريخ الشراء)'),
+    el('th',{},'ملاحظات (تعليقات)'),
+    el('th',{},'حذف')
+  ));
+  ثابت tbody = el('tbody');
+  الدولة.التكاليف.لكل(c=>{
+    ثابت tr = el('tr',{},
+      el('td',{},editableCell(c,'القسم الرئيسي','التكاليف')),
+      el('td',{},خلية قابلة للتعديل(c,'العنصر الفرعي','التكاليف')),
+      el('td',{},editableCell(c,'الوصف','التكاليف')),
+      el('td',{},editableCell(c,'الكمية','التكاليف')),
+      el('td',{},editableCell(c,'سعر الوحدة','التكاليف')),
+      el('td',{},editableCell(c,'الإجمالي','التكاليف')),
+      el('td',{},editableCell(c,'طريقة الدفع','التكاليف')),
+      el('td',{},editableCell(c,'رقم الفاتورة','التكاليف')),
+      el('td',{},editableCell(c,'تاريخ الشراء','التكاليف')),
+      el('td',{},editableCell(c,'تعليقات','تكاليف')),
+      el('td',{},deleteBtn(c.id,'costs'))
+    );
+    tbody.appendChild(tr);
+  });
+  الجدول. إلحاق (الرأس، الجسم)؛
+  wrap.appendChild(الجدول)؛
+  عودة اللفاف؛
+}
+
+دالة غير متزامنة openAddCost(){
+  const mainSection = موجه('القسم الرئيسي:');
+  إذا لم يتم إرجاع (mainSection)؛
+  const subItem = موجه('البند العميق:');
+  وصف ثابت = موجه('الوصف:');
+  كمية ثابتة = موجه('الكمية:');
+  const UnitPrice = موجه('سعر الوحدة:');
+  const Total = موجه('الاجمالى:');
+  طريقة الدفع const = موجه('طريقة الدفع:');
+  const الفاتورةNumber = موجه('رقم رقمي:');
+  const buyDate = موجه('تاريخ الشراء:');
+  تعليقات ثابتة = موجه('ملاحظات:');
+  انتظر db.collection('costs').add({
+    القسم الرئيسي، العنصر الفرعي، الوصف، الكمية، سعر الوحدة، الإجمالي، طريقة الدفع، رقم الفاتورة، تاريخ الشراء، التعليقات، تاريخ الإنشاء: تاريخ جديد ().toISOString ()
+  });
+  تنبيه('تمت إضافة التكلفة!');
+}
+
+// خلية قابلة للتعديل
+دالة editableCell(obj,field,coll){
+  ثابت d = el('div',{contenteditable:true,style:'outline:none;min-width:100px;'}, obj[field]||'');
+  d.addEventListener('blur', async ()=>{
+    const val = d.textContent.trim();
+    انتظر db.collection(coll).doc(obj.id).update({ [الحقل]: val });
+    d.style.background='#e6ffe6';
+    setTimeout(()=>d.style.background='شفاف',400);
+  });
+  د. إضافة مستمع الحدث('keydown',(e)=>{إذا(e.key==='Enter'){e.preventDefault();d.blur();}});
+  العودة د؛
+}
+
+دالة deleteBtn(id,coll){
+  ثابت b = el('زر',{class:'btn ghost'},'حذف');
+  ب. عند النقر = غير متزامن () => {
+    if(confirm('حذف هذا السطر؟')){
+      انتظر db.collection(coll).doc(id).delete();
+    }
   };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  const storage = firebase.storage();
+  العودة ب؛
+}
 
-  const state = { user: null, page: 'Clients', clients: [], finance: [] };
-  const app = document.getElementById('app');
-
-  function el(tag, attrs={}, ...children){
-    const e = document.createElement(tag);
-    for (const [k,v] of Object.entries(attrs)){
-      if(k.startsWith('on')) e.addEventListener(k.substring(2), v);
-      else e.setAttribute(k, v);
-    }
-    for (const c of children){
-      if(typeof c === 'string') e.appendChild(document.createTextNode(c));
-      else if(c) e.appendChild(c);
-    }
-    return e;
-  }
-
-  function renderLogin(){
-    app.innerHTML = '';
-    const bg = el('div',{class:'login-bg'});
-    const box = el('div',{class:'login-box'},
-      el('h2',{},'TopView System'),
-      el('input',{id:'email',type:'email',placeholder:'Email'}),
-      el('input',{id:'password',type:'password',placeholder:'Password'}),
-      el('button',{onclick:login},'Login')
-    );
-    app.append(bg,box);
-  }
-
-  function login(){
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-    if(email==='admin@topview.com' && password==='123456'){
-      state.user = { name:'Admin' };
-      loadClients();
-      loadFinance();
-      renderDashboard();
-    }else{
-      alert('Invalid credentials');
-    }
-  }
-
-  function renderDashboard(){
-    app.innerHTML = '';
-    const sidebar = el('div',{class:'sidebar'},
-      el('h3',{},'TopView'),
-      el('button',{class: state.page==='Clients'?'active':'', onclick:()=>switchPage('Clients')},'Clients'),
-      el('button',{class: state.page==='Finance'?'active':'', onclick:()=>switchPage('Finance')},'Finance'),
-      el('button',{onclick:()=>logout()},'Logout')
-    );
-    const main = el('main');
-    if(state.page==='Clients') main.appendChild(buildClientsTable());
-    if(state.page==='Finance') main.appendChild(buildFinanceTable());
-    app.append(sidebar,main);
-  }
-
-  function switchPage(p){ state.page=p; renderDashboard(); }
-  function logout(){ state.user=null; renderLogin(); }
-
-  // Clients
-  function loadClients(){
-    db.collection('clients').onSnapshot(s=>{
-      state.clients = s.docs.map(d=>({id:d.id, ...d.data()}));
-      if(state.user) renderDashboard();
-    });
-  }
-
-  async function openAddClient(){
-    const name = prompt('Client name:');
-    if(!name) return;
-    const phone = prompt('Phone (optional):');
-    const project = prompt('Project (optional):');
-    const status = prompt('Status (Lead / Active / Completed):','Lead');
-    await db.collection('clients').add({ name, phone, project, status, createdAt:new Date().toISOString() });
-    alert('Client added!');
-  }
-
-  function buildClientsTable(){
-    const wrap = el('div',{class:'card'});
-    wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-      el('h3',{},'Clients'),
-      el('button',{class:'btn',onclick:openAddClient},'Add Client')
-    ));
-    const table = el('table');
-    const thead = el('thead',{}, el('tr',{},
-      el('th',{},'Name'),
-      el('th',{},'Phone'),
-      el('th',{},'Project'),
-      el('th',{},'Status'),
-      el('th',{},'Actions')
-    ));
-    const tbody = el('tbody');
-    state.clients.forEach(c=>{
-      const tr = el('tr',{} ,
-        el('td',{},editableCell(c,'name')),
-        el('td',{},editableCell(c,'phone')),
-        el('td',{},editableCell(c,'project')),
-        el('td',{},editableCell(c,'status')),
-        el('td',{},deleteBtn('clients',c.id))
-      );
-      tbody.appendChild(tr);
-    });
-    table.append(thead,tbody);
-    wrap.appendChild(table);
-    return wrap;
-  }
-
-  // Finance
-  function loadFinance(){
-    db.collection('finance').onSnapshot(s=>{
-      state.finance = s.docs.map(d=>({id:d.id, ...d.data()}));
-      if(state.user && state.page==='Finance') renderDashboard();
-    });
-  }
-
-  async function openAddFinance(){
-    const type = prompt('Type (Revenue / Expense):','Revenue');
-    const date = prompt('Date (YYYY-MM-DD):', new Date().toISOString().slice(0,10));
-    const quantity = prompt('Quantity:','1');
-    const price = prompt('Price per unit:','0');
-    const notes = prompt('Notes:','');
-    const file = confirm('Upload image or receipt?');
-
-    let fileURL = '';
-    if(file){
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = async ()=>{
-        const f = input.files[0];
-        if(f){
-          const ref = storage.ref('finance/'+Date.now()+'-'+f.name);
-          await ref.put(f);
-          fileURL = await ref.getDownloadURL();
-          await db.collection('finance').add({ type, date, quantity, price, notes, fileURL });
-          alert('Finance record added!');
-        }
-      };
-      input.click();
-    }else{
-      await db.collection('finance').add({ type, date, quantity, price, notes, fileURL });
-      alert('Finance record added!');
-    }
-  }
-
-  function buildFinanceTable(){
-    const wrap = el('div',{class:'card'});
-    wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-      el('h3',{},'Finance (Revenues & Expenses)'),
-      el('button',{class:'btn',onclick:openAddFinance},'Add Record')
-    ));
-    const table = el('table');
-    const thead = el('thead',{}, el('tr',{},
-      el('th',{},'Type'),
-      el('th',{},'Date'),
-      el('th',{},'Quantity'),
-      el('th',{},'Price'),
-      el('th',{},'Total'),
-      el('th',{},'Notes'),
-      el('th',{},'Invoice'),
-      el('th',{},'Actions')
-    ));
-    const tbody = el('tbody');
-    state.finance.forEach(f=>{
-      const total = (parseFloat(f.quantity||0)*parseFloat(f.price||0)).toFixed(2);
-      const tr = el('tr',{},
-        el('td',{},editableCell(f,'type','finance')),
-        el('td',{},editableCell(f,'date','finance')),
-        el('td',{},editableCell(f,'quantity','finance')),
-        el('td',{},editableCell(f,'price','finance')),
-        el('td',{},total),
-        el('td',{},editableCell(f,'notes','finance')),
-        el('td',{}, f.fileURL ? el('a',{href:f.fileURL,target:'_blank'},'View') : '-'),
-        el('td',{},deleteBtn('finance',f.id))
-      );
-      tbody.appendChild(tr);
-    });
-    table.append(thead,tbody);
-    wrap.appendChild(table);
-    return wrap;
-  }
-
-  // Helpers
-  function editableCell(item,field,collection='clients'){
-    const d = el('div',{contenteditable:true,style:'outline:none;min-width:80px;'}, item[field]||'');
-    d.addEventListener('blur', async ()=>{
-      const val = d.textContent.trim();
-      await db.collection(collection).doc(item.id).update({ [field]: val });
-      d.style.background='#e6ffe6';
-      setTimeout(()=>d.style.background='transparent',400);
-    });
-    d.addEventListener('keydown',(e)=>{if(e.key==='Enter'){e.preventDefault();d.blur();}});
-    return d;
-  }
-
-  function deleteBtn(collection,id){
-    const b = el('button',{class:'btn ghost'},'Delete');
-    b.onclick = async ()=>{
-      if(confirm('Delete this record?')){
-        await db.collection(collection).doc(id).delete();
-      }
-    };
-    return b;
-  }
-
-  renderLogin();
-  </script>
+// تشغيل أولي
+تقديم تسجيل الدخول();
+</script>
 </body>
 </html>
