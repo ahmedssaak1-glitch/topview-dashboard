@@ -3,199 +3,216 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Finance | Top View Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
-  <script type="module" src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js"></script>
-  <style>
-    body {
-      font-family: "Inter", sans-serif;
-      background: #f9fafb;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #f1f1f1;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #ddd;
-    }
-    header h1 {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-    button {
-      background: #d4af37;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    button:hover {
-      background: #c39b2f;
-    }
-    main {
-      padding: 1.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    th, td {
-      padding: 0.8rem;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-    th {
-      background: #fafafa;
-    }
-    .actions button {
-      margin-right: 5px;
-      padding: 0.4rem 0.8rem;
-    }
-    input, select {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    #addForm {
-      margin-bottom: 1.5rem;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    #addForm input[type="file"] {
-      border: none;
-    }
-  </style>
+  <title>Top View — Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <h1>Finance — Income & Expenses</h1>
-    <button id="addBtn">Add Transaction</button>
-  </header>
+<body class="bg-gray-100 text-gray-900">
 
-  <main>
-    <div id="addForm" style="display: none;">
-      <h3>Add New Transaction</h3>
-      <form id="transactionForm">
-        <input type="date" id="date" required /> 
-        <select id="type">
-          <option value="Income">Income</option>
+  <!-- Navbar -->
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-xl font-semibold text-blue-600">🏗️ Top View Dashboard</h1>
+    <div class="space-x-4">
+      <button onclick="showSection('clients')" class="text-gray-700 hover:text-blue-600 font-medium">Clients</button>
+      <button onclick="showSection('finance')" class="text-gray-700 hover:text-blue-600 font-medium">Finance</button>
+    </div>
+  </nav>
+
+  <!-- Main Sections -->
+  <main class="p-6">
+
+    <!-- Clients Section -->
+    <section id="clients" class="space-y-6">
+      <h2 class="text-2xl font-semibold">Clients</h2>
+      <form id="clientForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow">
+        <input id="clientName" type="text" placeholder="Client Name" class="border p-2 rounded" required />
+        <input id="projectType" type="text" placeholder="Project Type" class="border p-2 rounded" required />
+        <input id="status" type="text" placeholder="Status (In / Out)" class="border p-2 rounded" />
+        <input id="notes" type="text" placeholder="Notes" class="border p-2 rounded" />
+        <button type="submit" class="col-span-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Add Client</button>
+      </form>
+
+      <div class="bg-white p-4 rounded-xl shadow">
+        <input id="searchClient" type="text" placeholder="Search clients..." class="border p-2 rounded w-full md:w-1/3 mb-4" />
+        <table class="min-w-full border">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-2">Name</th>
+              <th class="border p-2">Project Type</th>
+              <th class="border p-2">Status</th>
+              <th class="border p-2">Notes</th>
+            </tr>
+          </thead>
+          <tbody id="clientTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Finance Section -->
+    <section id="finance" class="hidden space-y-6">
+      <h2 class="text-2xl font-semibold">Finance — Revenues & Expenses</h2>
+
+      <!-- Upload Form -->
+      <form id="financeForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded-xl shadow">
+        <select id="type" class="border p-2 rounded" required>
+          <option value="">Select Type</option>
+          <option value="Revenue">Revenue</option>
           <option value="Expense">Expense</option>
         </select>
-        <input type="text" id="desc" placeholder="Description" required />
-        <input type="number" id="amount" placeholder="Amount" required />
-        <input type="file" id="file" accept="image/*" />
-        <button type="submit">Save</button>
-      </form>
-    </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Amount</th>
-          <th>Attachment</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="financeTable"></tbody>
-    </table>
+        <input type="date" id="date" class="border p-2 rounded" required />
+        <input type="number" id="quantity" placeholder="Quantity" class="border p-2 rounded" required />
+        <input type="number" id="price" placeholder="Price" class="border p-2 rounded" required />
+        <input type="text" id="notesFinance" placeholder="Notes" class="border p-2 rounded" />
+        <input type="file" id="invoiceFile" class="border p-2 rounded" accept="image/*" />
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 col-span-full">Add Record</button>
+      </form>
+
+      <!-- Search -->
+      <div class="mb-3">
+        <input type="text" id="searchFinance" placeholder="Search..." class="border p-2 rounded w-full md:w-1/3" />
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto bg-white p-4 rounded-xl shadow">
+        <table class="min-w-full border">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border p-2">Type</th>
+              <th class="border p-2">Date</th>
+              <th class="border p-2">Quantity</th>
+              <th class="border p-2">Price</th>
+              <th class="border p-2">Total</th>
+              <th class="border p-2">Notes</th>
+              <th class="border p-2">Invoice</th>
+            </tr>
+          </thead>
+          <tbody id="financeTable"></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
+  <!-- Firebase -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
       authDomain: "topview-system.firebaseapp.com",
       projectId: "topview-system",
-      storageBucket: "topview-system.firebasestorage.app",
+      storageBucket: "topview-system.appspot.com",
       messagingSenderId: "1073945877413",
       appId: "1:1073945877413:web:d516e451e543f7a9db664c",
       measurementId: "G-EPVZGH6Y2G"
     };
 
     const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const db = getDatabase(app);
     const storage = getStorage(app);
 
-    const addBtn = document.getElementById("addBtn");
-    const addForm = document.getElementById("addForm");
-    const transactionForm = document.getElementById("transactionForm");
-    const table = document.getElementById("financeTable");
-
-    addBtn.onclick = () => {
-      addForm.style.display = addForm.style.display === "none" ? "block" : "none";
-    };
-
-    async function loadData() {
-      table.innerHTML = "";
-      const snapshot = await getDocs(collection(db, "finance"));
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${data.date}</td>
-          <td>${data.type}</td>
-          <td>${data.desc}</td>
-          <td>${data.amount}</td>
-          <td>${data.attachment ? `<a href="${data.attachment}" target="_blank">View</a>` : "-"}</td>
-          <td class="actions">
-            <button class="delete" data-id="${docSnap.id}">Delete</button>
-          </td>
-        `;
-        table.appendChild(tr);
-      });
-
-      document.querySelectorAll(".delete").forEach(btn => {
-        btn.onclick = async (e) => {
-          const id = e.target.dataset.id;
-          await deleteDoc(doc(db, "finance", id));
-          loadData();
-        };
-      });
+    // Show section function
+    function showSection(sectionId) {
+      document.querySelectorAll("main > section").forEach(sec => sec.classList.add("hidden"));
+      document.getElementById(sectionId).classList.remove("hidden");
     }
+    window.showSection = showSection;
 
-    transactionForm.addEventListener("submit", async (e) => {
+    // CLIENTS
+    const clientForm = document.getElementById("clientForm");
+    const clientTable = document.getElementById("clientTable");
+    const searchClient = document.getElementById("searchClient");
+
+    clientForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const date = document.getElementById("date").value;
-      const type = document.getElementById("type").value;
-      const desc = document.getElementById("desc").value;
-      const amount = document.getElementById("amount").value;
-      const file = document.getElementById("file").files[0];
+      const clientName = document.getElementById("clientName").value;
+      const projectType = document.getElementById("projectType").value;
+      const status = document.getElementById("status").value;
+      const notes = document.getElementById("notes").value;
 
-      let attachmentURL = "";
-      if (file) {
-        const fileRef = ref(storage, "attachments/" + file.name);
-        await uploadBytes(fileRef, file);
-        attachmentURL = await getDownloadURL(fileRef);
-      }
+      const newRef = push(ref(db, "clients"));
+      await set(newRef, { clientName, projectType, status, notes });
 
-      await addDoc(collection(db, "finance"), {
-        date, type, desc, amount, attachment: attachmentURL
-      });
-
-      transactionForm.reset();
-      addForm.style.display = "none";
-      loadData();
+      clientForm.reset();
     });
 
-    loadData();
+    onValue(ref(db, "clients"), (snapshot) => {
+      const data = snapshot.val();
+      clientTable.innerHTML = "";
+      for (const id in data) {
+        const c = data[id];
+        const row = `
+          <tr class="border">
+            <td class="border p-2">${c.clientName}</td>
+            <td class="border p-2">${c.projectType}</td>
+            <td class="border p-2">${c.status}</td>
+            <td class="border p-2">${c.notes}</td>
+          </tr>`;
+        clientTable.innerHTML += row;
+      }
+    });
+
+    searchClient.addEventListener("input", () => {
+      const value = searchClient.value.toLowerCase();
+      Array.from(clientTable.children).forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+      });
+    });
+
+    // FINANCE
+    const financeForm = document.getElementById("financeForm");
+    const financeTable = document.getElementById("financeTable");
+    const searchFinance = document.getElementById("searchFinance");
+
+    financeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const type = document.getElementById("type").value;
+      const date = document.getElementById("date").value;
+      const quantity = +document.getElementById("quantity").value;
+      const price = +document.getElementById("price").value;
+      const total = quantity * price;
+      const notesFinance = document.getElementById("notesFinance").value;
+      const file = document.getElementById("invoiceFile").files[0];
+
+      let fileURL = "";
+      if (file) {
+        const storageRef = sRef(storage, `invoices/${Date.now()}-${file.name}`);
+        await uploadBytes(storageRef, file);
+        fileURL = await getDownloadURL(storageRef);
+      }
+
+      const newRef = push(ref(db, "finance"));
+      await set(newRef, { type, date, quantity, price, total, notesFinance, fileURL });
+
+      financeForm.reset();
+    });
+
+    onValue(ref(db, "finance"), (snapshot) => {
+      const data = snapshot.val();
+      financeTable.innerHTML = "";
+      for (const id in data) {
+        const f = data[id];
+        const row = `
+          <tr class="border">
+            <td class="border p-2">${f.type}</td>
+            <td class="border p-2">${f.date}</td>
+            <td class="border p-2">${f.quantity}</td>
+            <td class="border p-2">${f.price}</td>
+            <td class="border p-2 font-semibold">${f.total}</td>
+            <td class="border p-2">${f.notesFinance}</td>
+            <td class="border p-2">${f.fileURL ? `<a href="${f.fileURL}" target="_blank" class="text-blue-600 underline">View</a>` : "-"}</td>
+          </tr>`;
+        financeTable.innerHTML += row;
+      }
+    });
+
+    searchFinance.addEventListener("input", () => {
+      const value = searchFinance.value.toLowerCase();
+      Array.from(financeTable.children).forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
+      });
+    });
   </script>
 </body>
 </html>
