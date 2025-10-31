@@ -200,6 +200,20 @@ const langs = {
 let currentLang = "en";
 let currentPage = "generalAccounts";
 
+// ====== Firebase Init ======
+const firebaseConfig = {
+  apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+  authDomain: "topview-system.firebaseapp.com",
+  projectId: "topview-system",
+  storageBucket: "topview-system.firebasestorage.app",
+  messagingSenderId: "1073945877413",
+  appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+  measurementId: "G-EPVZGH6Y2G"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
+
 // ====== LANG RENDER ======
 function renderLang(){
   document.getElementById('dashboardTitle').textContent = langs[currentLang].dashboard;
@@ -238,7 +252,7 @@ function renderPage(page, langOnly=false){
 async function loadPageData(page){
   const tbody = document.querySelector(`#${page}Table tbody`);
   tbody.innerHTML='';
-  const colRef = collection(getFirestore(), page);
+  const colRef = collection(db, page);
   const snapshot = await getDocs(colRef);
   snapshot.forEach(docSnap=>{
     const data = docSnap.data();
@@ -275,10 +289,10 @@ window.saveRow = async function(page,btn,id){
   const cols=fieldKeys[page];
   tr.querySelectorAll('.cell-value').forEach((div,i)=>data[cols[i]]=div.innerText);
   if(id){
-    await setDoc(doc(getFirestore(), page, id), data);
+    await setDoc(doc(db, page, id), data);
     alert('Updated!');
   }else{
-    const docRef = await addDoc(collection(getFirestore(), page), data);
+    const docRef = await addDoc(collection(db, page), data);
     alert('Saved!');
     btn.setAttribute('onclick',`window.saveRow('${page}',this,'${docRef.id}')`);
   }
@@ -289,7 +303,7 @@ window.uploadFile = async function(e,page,id,input){
   const file = e.target.files[0];
   if(!file) return;
   const filename = `${page}/${Date.now()}_${file.name}`;
-  const storageRef = ref(getStorage(), filename);
+  const storageRef = ref(storage, filename);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
   alert('File uploaded! URL: ' + url);
