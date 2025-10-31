@@ -15,35 +15,35 @@
 *{box-sizing:border-box;}
 body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text);}
 header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06);}
-.brand{font-weight:800;color:var(--primary); font-size:24px;}
+.brand{font-weight:800;color:var(--primary); font-size:22px;}
 .header-controls{margin-left:auto; display:flex; gap:10px; align-items:center;}
 .lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer;}
 .user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03);}
 .layout{display:flex; min-height:calc(100vh - 72px);}
 .sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px;}
-.sidebar h3{margin:0;color:var(--primary); font-size:28px; letter-spacing:1px;}
-.menu-btn{display:block;text-align:right;padding:16px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);font-size:20px;transition:0.2s;}
+.sidebar h3{margin:0 0 24px 0;color:var(--primary); font-size:24px; letter-spacing:1px;}
+.menu-btn{display:block;text-align:right;padding:14px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);font-size:17px;transition:0.2s;}
 .menu-btn.active{background:rgba(11,99,214,0.10); color:var(--primary);}
 main{flex:1;padding:20px;}
 .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.search{padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px; font-size:18px;}
-.card{background:var(--panel);padding:18px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
-.table-wrap{overflow:auto;border-radius:10px;}
-table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:18px;min-width:900px;}
-thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:14px 10px;border-bottom:2px solid rgba(0,0,0,0.10);text-align:right;font-size:20px;}
-td, th{padding:14px 10px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;}
-td{background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);}
-td div[contenteditable]{min-width:120px;outline:none;padding:10px 8px;border-radius:8px;white-space:pre-wrap;word-break:break-word;min-height:40px;font-size:18px;line-height:1.6;}
-tr:hover td{background:rgba(11,99,214,0.04);}
-.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:15px;}
-.controls{display:flex;gap:8px;align-items:center;}
-.btn{background:var(--primary);color:#fff;padding:10px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:18px;}
+.search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px; font-size:16px;}
+.card{background:var(--panel);padding:18px 14px 24px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
+.stacked-table-wrap{display:flex;flex-wrap:wrap;gap:18px;}
+.stacked-record{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:18px 16px;min-width:260px;max-width:340px;flex:1 1 320px;display:flex;flex-direction:column;gap:10px;}
+.stacked-row{display:flex;flex-direction:column;gap:2px;}
+.stacked-label{font-size:15px;color:var(--primary);font-weight:600;margin-bottom:2px;}
+.stacked-value{font-size:16px;color:var(--text);background:#f5f7fb;border-radius:7px;padding:7px 8px;min-height:28px;outline:none;white-space:pre-wrap;word-break:break-word;}
+.stacked-value[contenteditable]{transition:background 0.2s;}
+.stacked-value[contenteditable]:focus{background:#e6f0ff;}
+.stacked-actions{display:flex;gap:8px;margin-top:10px;}
+.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:14px;}
+.btn{background:var(--primary);color:#fff;padding:8px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:16px;}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);}
 .export{background:linear-gradient(90deg,var(--accent),var(--primary));}
 .page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04);}
 .attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px;}
 .divider{height:2px;background:rgba(0,0,0,0.06);margin:14px 0;border-radius:4px;}
-.small{font-size:15px;color:var(--muted);}
+.small{font-size:14px;color:var(--muted);}
 #loginScreen{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover; z-index:9999;}
 .login-box{position: relative; background-color: rgba(255, 255, 255, 0.9); padding:40px 30px; border-radius:15px; width:90%; max-width:400px; box-shadow:0 5px 20px rgba(0,0,0,0.2); text-align:center; font-family:'Poppins', sans-serif;}
 .login-box h2{ margin-bottom:25px; color:#333; }
@@ -51,7 +51,7 @@ tr:hover td{background:rgba(11,99,214,0.04);}
 .login-box button{ width:100%; padding:12px; background-color:#0070f3; color:white; font-size:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
 .login-box button:hover{ background-color:#005bb5; }
 .login-box p{ margin-top:20px; color:#333; font-weight:500; }
-@media (max-width:900px){ .sidebar{display:none} table{min-width:700px} }
+@media (max-width:900px){ .sidebar{display:none} .stacked-table-wrap{flex-direction:column;} }
 @media (max-width:480px){ .login-box{ padding:25px 20px; } }
 </style>
 </head>
@@ -85,7 +85,7 @@ tr:hover td{background:rgba(11,99,214,0.04);}
 
 <div class="layout">
 <aside class="sidebar" id="sidebar">
-<h3 id="dashboardTitle">Dashboard</h3>
+<h3 id="dashboardTitle" style="margin-bottom:32px;">Dashboard</h3>
 <button class="menu-btn active" data-page="generalAccounts"></button>
 <button class="menu-btn" data-page="attendanceLog"></button>
 <button class="menu-btn" data-page="employeeRecords"></button>
@@ -146,7 +146,7 @@ const langs = {
       "Cost Records"
     ],
     uploadNote: "Upload page files (Excel/Word/PDF) and attachments per row.",
-    addRow: "Add Row",
+    addRow: "Add Record",
     exportCsv: "Export CSV",
     exportExcel: "Export Excel",
     search: "Search current page...",
@@ -166,7 +166,7 @@ const langs = {
       "سجلات التكلفة"
     ],
     uploadNote: "ارفع ملفات الصفحة (اكسل/وورد/بي دي اف) أو مرفقات لكل صف.",
-    addRow: "إضافة صف",
+    addRow: "إضافة سجل",
     exportCsv: "تصدير CSV",
     exportExcel: "تصدير Excel",
     search: "بحث في الصفحة الحالية...",
@@ -209,7 +209,7 @@ function renderLang(){
   document.getElementById('dashboardTitle').textContent = langs[currentLang].dashboard;
   document.querySelectorAll('.menu-btn[data-page]').forEach((btn,i)=>{
     btn.textContent = langs[currentLang].menu[i];
-    btn.style.fontSize = "20px";
+    btn.style.fontSize = "17px";
     btn.style.fontWeight = "bold";
     btn.style.letterSpacing = "0.5px";
   });
@@ -229,9 +229,9 @@ function renderPage(page, langOnly=false){
   container.innerHTML='';
   const card = document.createElement('div'); card.className='card';
   const cols = pagesColumns[page][currentLang];
-  card.innerHTML=`<h3 style="font-size:26px;letter-spacing:1px;margin-bottom:18px;">${langs[currentLang].menu[Object.keys(pagesColumns).indexOf(page)]}</h3>
-  <div class="table-wrap"><table id="${page}Table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>${langs[currentLang].attachments}</th><th>${langs[currentLang].actions}</th></tr></thead><tbody></tbody></table></div>
-  <button class="btn" id="addRowBtn">${langs[currentLang].addRow}</button>`;
+  card.innerHTML=`<h3 style="font-size:22px;letter-spacing:1px;margin-bottom:28px;">${langs[currentLang].menu[Object.keys(pagesColumns).indexOf(page)]}</h3>
+  <div class="stacked-table-wrap" id="stackedTable"></div>
+  <button class="btn" id="addRowBtn" style="margin-top:18px">${langs[currentLang].addRow}</button>`;
   container.appendChild(card);
   if(!langOnly) loadPageData(page);
   document.getElementById('addRowBtn').onclick = ()=>addRow(page);
@@ -239,45 +239,56 @@ function renderPage(page, langOnly=false){
 
 // ====== LOAD DATA ======
 async function loadPageData(page){
-  const tbody = document.querySelector(`#${page}Table tbody`);
-  tbody.innerHTML='';
+  const wrap = document.getElementById('stackedTable');
+  wrap.innerHTML='';
   const colRef = collection(db, page);
   const snapshot = await getDocs(colRef);
   snapshot.forEach(docSnap=>{
     const data = docSnap.data();
-    addRowToTable(page, data, docSnap.id);
+    addStackedRecord(page, data, docSnap.id);
   });
 }
 
-// ====== ADD ROW TO TABLE ======
-function addRowToTable(page, data={}, id=null){
-  const tbody = document.querySelector(`#${page}Table tbody`);
+// ====== ADD STACKED RECORD ======
+function addStackedRecord(page, data={}, id=null){
+  const wrap = document.getElementById('stackedTable');
   const cols = pagesColumns[page][currentLang];
-  const tr = document.createElement('tr');
-  tr.innerHTML = cols.map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')
-    + `<td><label class="file-uploader">${langs[currentLang].attach}<input type="file" style="display:none" onchange="window.uploadFile(event,'${page}','${id||''}',this)"></label></td>`
-    + `<td><button class="btn ghost" onclick="window.saveRow('${page}',this,${id?`'${id}'`:null})">${langs[currentLang].save}</button></td>`;
-  tbody.appendChild(tr);
+  const record = document.createElement('div');
+  record.className = 'stacked-record';
+  record.innerHTML = cols.map(col=>`
+    <div class="stacked-row">
+      <div class="stacked-label">${col}</div>
+      <div class="stacked-value" contenteditable>${data[col]||''}</div>
+    </div>
+  `).join('') + `
+    <div class="stacked-actions">
+      <label class="file-uploader">${langs[currentLang].attach}
+        <input type="file" style="display:none" onchange="window.uploadFile(event,'${page}','${id||''}',this)">
+      </label>
+      <button class="btn ghost" onclick="window.saveStackedRecord('${page}',this,${id?`'${id}'`:null})">${langs[currentLang].save}</button>
+    </div>
+  `;
+  wrap.appendChild(record);
 }
 
 // ====== ADD ROW BUTTON ======
 window.addRow = function(page){
-  addRowToTable(page);
+  addStackedRecord(page);
 };
 
-// ====== SAVE ROW ======
-window.saveRow = async function(page,btn,id){
-  const tr = btn.closest('tr');
+// ====== SAVE STACKED RECORD ======
+window.saveStackedRecord = async function(page,btn,id){
+  const record = btn.closest('.stacked-record');
   const data={};
   const cols=pagesColumns[page][currentLang];
-  tr.querySelectorAll('td div[contenteditable]').forEach((td,i)=>data[cols[i]]=td.innerText);
+  record.querySelectorAll('.stacked-value').forEach((div,i)=>data[cols[i]]=div.innerText);
   if(id){
     await setDoc(doc(db, page, id), data);
     alert('Updated!');
   }else{
     const docRef = await addDoc(collection(db, page), data);
     alert('Saved!');
-    btn.setAttribute('onclick',`window.saveRow('${page}',this,'${docRef.id}')`);
+    btn.setAttribute('onclick',`window.saveStackedRecord('${page}',this,'${docRef.id}')`);
   }
 };
 
@@ -294,11 +305,13 @@ window.uploadFile = async function(e,page,id,input){
 
 // ====== EXPORT CSV ======
 document.getElementById('exportCsvBtn').addEventListener('click',()=>{
-  const table=document.querySelector('table');
-  let csv=[];
-  table.querySelectorAll('tr').forEach(tr=>{
-    const cells=Array.from(tr.querySelectorAll('th, td'));
-    csv.push(cells.map(c=>`"${c.innerText}"`).join(','));
+  const records = document.querySelectorAll('.stacked-record');
+  if(!records.length) return;
+  const cols = pagesColumns[currentPage][currentLang];
+  let csv = [cols.join(',')];
+  records.forEach(rec=>{
+    const vals = Array.from(rec.querySelectorAll('.stacked-value')).map(div=>`"${div.innerText.replace(/"/g,'""')}"`);
+    csv.push(vals.join(','));
   });
   const blob=new Blob([csv.join('\n')],{type:'text/csv'});
   const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download='page-data.csv'; link.click();
@@ -320,8 +333,8 @@ themeToggle.addEventListener('click', ()=>{
 // ====== SEARCH ======
 document.getElementById('globalSearch').addEventListener('input', e=>{
   const term = e.target.value.toLowerCase();
-  document.querySelectorAll('tbody tr').forEach(tr=>{
-    tr.style.display = Array.from(tr.cells).some(td=>td.innerText.toLowerCase().includes(term))?'':'none';
+  document.querySelectorAll('.stacked-record').forEach(rec=>{
+    rec.style.display = Array.from(rec.querySelectorAll('.stacked-value')).some(div=>div.innerText.toLowerCase().includes(term))?'':'none';
   });
 });
 
