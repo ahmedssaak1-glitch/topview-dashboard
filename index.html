@@ -1,333 +1,490 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TopView — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<style>
-body { font-family: 'Inter', sans-serif; margin:0; background:#f4f6fa; color:#222; }
-.login-bg { background: url('https://images.unsplash.com/photo-1508120272534-9e2d58b7d1f2?auto=format&fit=crop&w=1400&q=80') center/cover no-repeat; position: fixed; top:0; left:0; width:100%; height:100%; filter: brightness(0.5); z-index:-1; }
-.login-box { max-width:340px; background:#fff; padding:24px; border-radius:16px; margin:120px auto; box-shadow:0 4px 16px rgba(0,0,0,0.15);}
-h2 { text-align:center; }
-input { width:100%; padding:10px; margin:8px 0 14px; border:1px solid #ccc; border-radius:8px; font-size:14px; }
-button { width:100%; padding:10px; border:none; border-radius:8px; background:#007bff; color:#fff; font-weight:600; cursor:pointer; font-size:15px; }
-button:hover { background:#0056b3; }
-.sidebar { width:220px; background:#fff; height:100vh; position:fixed; border-right:1px solid #ddd; padding-top:20px; }
-.sidebar h3 { text-align:center; color:#007bff; margin-bottom:20px; }
-.sidebar button { width:90%; margin:6px auto; display:block; background:none; color:#222; text-align:left; padding:10px 12px; border-radius:8px; transition:0.2s; cursor:pointer; }
-.sidebar button.active, .sidebar button:hover { background:#007bff; color:#fff; }
-main { margin-left:240px; padding:20px; }
-.card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,0.1); }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th, td { padding:10px; border-bottom:1px solid #eee; }
-th { text-align:left; background:#f9fafb; }
-tr:hover td { background:#f1f5ff; }
-.btn { background:#007bff; color:#fff; padding:8px 14px; border-radius:8px; border:none; cursor:pointer; }
-.btn:hover { background:#0056b3; }
-.btn.ghost { background:#eee; color:#333; }
-[contenteditable]:focus { outline:none; background:#e6ffe6; transition:0.4s; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOP VIEW — Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --accent:#d4af37; /* دهبي */
+      --blue:#007bff;
+      --bg:#f4f6fa;
+      --card:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#0b1220; direction:rtl}
+    header{height:64px; display:flex; align-items:center; gap:12px; padding:0 18px; background:var(--card); border-bottom:1px solid #e9eef6}
+    .brand{font-weight:800;color:var(--blue); font-size:18px}
+    .layout{display:flex; min-height:calc(100vh - 64px)}
+    .sidebar{width:260px; background:#fff; border-left:1px solid #eef2f7; padding:18px; display:flex; flex-direction:column; gap:10px}
+    .sidebar h4{margin:0;text-align:center;color:var(--blue)}
+    .side-btn{background:transparent;border:0;text-align:right;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .side-btn.active{background:#f1f6ff;color:var(--blue)}
+    main{flex:1;padding:18px}
+    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .search{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef; width:320px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:8px;border-bottom:1px solid #f3f6fa;text-align:right;vertical-align:middle}
+    th{background:#fafbff;color:#6b7280;font-weight:700}
+    td div[contenteditable]{min-width:80px;outline:none;padding:6px;border-radius:6px}
+    tr:hover td{background:#fbfcff}
+    .thumbnail{width:44px;height:32px;object-fit:cover;border-radius:6px;border:1px solid #eef4ff;cursor:pointer}
+    .file-uploader{font-size:13px;padding:6px;border-radius:6px;border:1px dashed #e3e8f1;background:#fbfdff;cursor:pointer}
+    .small{font-size:13px;color:#6b7280}
+    .actions{display:flex;gap:6px;justify-content:flex-start}
+    .btn{background:var(--blue);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid #e6e9ef;color:#333}
+    .note{font-size:13px;color:#6b7280;margin-top:6px}
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60}
+    .modal .box{background:#fff;padding:12px;border-radius:10px;max-width:90%;max-height:90%;display:flex;flex-direction:column;gap:8px}
+    .modal img{max-width:100%;max-height:70vh;border-radius:6px}
+    /* responsive */
+    @media (max-width:900px){ .sidebar{display:none} main{margin-left:0;padding:12px} header{padding:0 10px} }
+  </style>
 </head>
 <body>
-<div id="app"></div>
+  <header>
+    <div class="brand">TOP VIEW — النظام الإداري</div>
+    <div class="small">Dashboard</div>
+    <div style="margin-left:auto" id="userInfo" class="small"></div>
+  </header>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <h4>قوائم المصنع</h4>
+      <!-- القوائم المستخرجة من الاكسل (حسب طلبك) -->
+      <button class="side-btn" data-page="employees">بيانات الموظفين</button>
+      <button class="side-btn" data-page="attendance">الحضور والانصراف</button>
+      <button class="side-btn" data-page="dailyTasks">المهام اليومية</button>
+      <button class="side-btn" data-page="projects">متابعة المشاريع</button>
+      <button class="side-btn" data-page="materials">المواد والمخزون</button>
+      <button class="side-btn" data-page="equipment">المعدات</button>
+      <button class="side-btn" data-page="maintenance">الصيانة</button>
+      <button class="side-btn" data-page="adminNotes">ملاحظات إدارية</button>
+      <button class="side-btn" data-page="finance">الإيرادات والمصروفات</button>
+      <div style="flex:1"></div>
+      <button class="side-btn" id="logoutBtn">تسجيل خروج</button>
+      <div class="note">اضغط على أي صفحة لعرض الجدول الخاص بها. التعديل مباشر — اكتب واغمض الخلية للحفظ.</div>
+    </aside>
 
-<script>
-// Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
-  authDomain: "topview-system.firebaseapp.com",
-  projectId: "topview-system",
-  storageBucket: "topview-system.firebasestorage.app",
-  messagingSenderId: "1073945877413",
-  appId: "1:1073945877413:web:d516e451e543f7a9db664c",
-  measurementId: "G-EPVZGH6Y2G"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    <main>
+      <div class="topbar">
+        <div>
+          <input id="searchBox" class="search" placeholder="بحث في الصفحة الحالية..." />
+        </div>
+        <div class="small">الصفحة: <span id="pageTitle">—</span></div>
+      </div>
 
-const state = { user:null, page:'clients', clients:[], attendance:[], costs:[] };
-const app = document.getElementById('app');
+      <div id="content"></div>
+    </main>
+  </div>
 
-function el(tag, attrs={}, ...children){
-  const e = document.createElement(tag);
-  for(const [k,v] of Object.entries(attrs)){
-    if(k.startsWith('on')) e.addEventListener(k.substring(2), v);
-    else e.setAttribute(k,v);
+  <!-- image modal -->
+  <div id="imgModal" class="modal" onclick="closeModal()">
+    <div class="box" onclick="event.stopPropagation()">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="small">صورة الفاتورة</div>
+        <div>
+          <a id="downloadLink" class="btn" href="#" download>تحميل</a>
+          <button onclick="closeModal()" class="btn ghost">إغلاق</button>
+        </div>
+      </div>
+      <img id="modalImage" src="" alt="invoice"/>
+    </div>
+  </div>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+  <script>
+  // ================== CONFIG ==================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+    authDomain: "topview-system.firebaseapp.com",
+    projectId: "topview-system",
+    storageBucket: "topview-system.appspot.com",
+    messagingSenderId: "1073945877413",
+    appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+    measurementId: "G-EPVZGH6Y2G"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const storage = firebase.storage();
+
+  // ================== state ==================
+  let currentPage = 'employees';
+  const pageCollections = {
+    employees: 'employees',
+    attendance: 'attendance',
+    dailyTasks: 'daily_tasks',
+    projects: 'projects',
+    materials: 'materials',
+    equipment: 'equipment',
+    maintenance: 'maintenance',
+    adminNotes: 'admin_notes',
+    finance: 'finance'
+  };
+
+  // keep local cache of docs per page
+  const cache = {};
+  Object.keys(pageCollections).forEach(k=> cache[k]=[]);
+
+  // initial user info (simple admin login used before)
+  let user = null;
+
+  // ================== helpers ==================
+  function q(sel, root=document) { return root.querySelector(sel); }
+  function el(tag, attrs={}, ...kids){ const e=document.createElement(tag); for(const k in attrs){ if(k.startsWith('on')) e.addEventListener(k.substring(2), attrs[k]); else e.setAttribute(k, attrs[k]); } kids.forEach(c=> typeof c==='string' ? e.appendChild(document.createTextNode(c)) : c && e.appendChild(c)); return e; }
+
+  function showPageTitle(name){ q('#pageTitle').textContent = name; }
+
+  // ================== modal ==================
+  function openModal(url){
+    q('#modalImage').src = url;
+    q('#downloadLink').href = url;
+    q('#imgModal').style.display = 'flex';
   }
-  for(const c of children){
-    if(typeof c==='string') e.appendChild(document.createTextNode(c));
-    else if(c) e.appendChild(c);
+  function closeModal(){ q('#imgModal').style.display = 'none'; q('#modalImage').src=''; q('#downloadLink').href='#'; }
+
+  // ================== Auth (simple) ==================
+  function showLoginPrompt(){
+    // simple prompt login (keeps same UX you had)
+    const email = prompt('Email:','admin@topview.com');
+    const pass = prompt('Password:','123456');
+    if(email === 'admin@topview.com' && pass === '123456'){
+      user = {email};
+      q('#userInfo').textContent = email;
+      // attach listeners
+      attachAllListeners();
+      renderCurrent();
+    } else {
+      alert('خطأ فى بيانات الدخول');
+      showLoginPrompt();
+    }
   }
-  return e;
-}
 
-// Login
-function renderLogin(){
-  app.innerHTML='';
-  const bg = el('div',{class:'login-bg'});
-  const box = el('div',{class:'login-box'},
-    el('h2',{},'TopView System'),
-    el('input',{id:'email', type:'email', placeholder:'Email'}),
-    el('input',{id:'password', type:'password', placeholder:'Password'}),
-    el('button',{onclick:login},'Login')
-  );
-  app.append(bg,box);
-}
-
-function login(){
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  if(email==='admin@topview.com' && password==='123456'){
-    state.user={name:'Admin'};
-    loadAll();
-    renderDashboard();
-  } else alert('Invalid credentials');
-}
-
-// Load all data
-function loadAll(){
-  db.collection('clients').onSnapshot(s=>{
-    state.clients = s.docs.map(d=>({id:d.id, ...d.data()}));
-    if(state.user) renderDashboard();
-  });
-  db.collection('attendance').onSnapshot(s=>{
-    state.attendance = s.docs.map(d=>({id:d.id, ...d.data()}));
-    if(state.user) renderDashboard();
-  });
-  db.collection('costs').onSnapshot(s=>{
-    state.costs = s.docs.map(d=>({id:d.id, ...d.data()}));
-    if(state.user) renderDashboard();
-  });
-}
-
-// Dashboard
-function renderDashboard(){
-  app.innerHTML='';
-  const sidebar = el('div',{class:'sidebar'},
-    el('h3',{},'TopView'),
-    el('button',{class: state.page==='clients'?'active':'', onclick:()=>switchPage('clients')},'Clients'),
-    el('button',{class: state.page==='attendance'?'active':'', onclick:()=>switchPage('attendance')},'Attendance'),
-    el('button',{class: state.page==='costs'?'active':'', onclick:()=>switchPage('costs')},'Costs'),
-    el('button',{onclick:logout},'Logout')
-  );
-  const main = el('main');
-  if(state.page==='clients') main.appendChild(buildClientsTable());
-  if(state.page==='attendance') main.appendChild(buildAttendanceTable());
-  if(state.page==='costs') main.appendChild(buildCostsTable());
-  app.append(sidebar, main);
-}
-
-function switchPage(p){ state.page=p; renderDashboard(); }
-function logout(){ state.user=null; renderLogin(); }
-
-// Editable cell helper
-function editableCell(obj, field, coll){
-  const d = el('div',{contenteditable:true, style:'min-width:100px;'}, obj[field]||'');
-  d.addEventListener('blur', async ()=>{
-    const val = d.textContent.trim();
-    await db.collection(coll).doc(obj.id).update({[field]:val});
-  });
-  d.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); d.blur(); } });
-  return d;
-}
-
-// Delete button helper
-function deleteBtn(id, coll){
-  const b = el('button',{class:'btn ghost'},'Delete');
-  b.onclick = async ()=>{
-    if(confirm('Delete this row?')) await db.collection(coll).doc(id).delete();
+  // ================== Attach realtime listeners ==================
+  function attachAllListeners(){
+    Object.keys(pageCollections).forEach(page=>{
+      const col = pageCollections[page];
+      db.collection(col).orderBy('createdAt','asc').onSnapshot(snap=>{
+        cache[page] = snap.docs.map(d=> ({ id: d.id, ...d.data() }) );
+        if(page===currentPage) renderCurrent();
+      });
+    });
   }
-  return b;
-}
 
-// Clients table
-function buildClientsTable(){
-  const wrap = el('div',{class:'card'});
-  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},'Clients'),
-    el('button',{class:'btn', onclick:openAddClient},'Add Client')
-  ));
-  const table = el('table');
-  const thead = el('thead',{}, el('tr',{},
-    el('th',{},'Client No'),
-    el('th',{},'Name'),
-    el('th',{},'Nationality'),
-    el('th',{},'ID Number'),
-    el('th',{},'Email'),
-    el('th',{},'Location'),
-    el('th',{},'Building Name'),
-    el('th',{},'Unit Type'),
-    el('th',{},'Property No'),
-    el('th',{},'Comments'),
-    el('th',{},'Delete')
-  ));
-  const tbody = el('tbody');
-  state.clients.forEach(c=>{
-    const tr = el('tr',{},
-      el('td',{},editableCell(c,'clientNo','clients')),
-      el('td',{},editableCell(c,'name','clients')),
-      el('td',{},editableCell(c,'nationality','clients')),
-      el('td',{},editableCell(c,'idNumber','clients')),
-      el('td',{},editableCell(c,'email','clients')),
-      el('td',{},editableCell(c,'location','clients')),
-      el('td',{},editableCell(c,'building','clients')),
-      el('td',{},editableCell(c,'unitType','clients')),
-      el('td',{},editableCell(c,'propertyNo','clients')),
-      el('td',{},editableCell(c,'comments','clients')),
-      el('td',{},deleteBtn(c.id,'clients'))
-    );
-    tbody.appendChild(tr);
+  // ================== Renderers ==================
+  // renders table for page with columns based on page
+  function renderCurrent(){
+    showPageTitle(getPageLabel(currentPage));
+    q('#searchBox').value = '';
+    q('#content').innerHTML = '';
+    const container = el('div',{class:'card'});
+    container.appendChild(el('h3',{}, getPageLabel(currentPage)));
+    // search handler
+    q('#searchBox').oninput = ()=> filterTable(q('table.table-page'));
+
+    // build table based on page
+    const table = buildTableFor(currentPage);
+    table.classList.add('table-page');
+    container.appendChild(table);
+    q('#content').appendChild(container);
+  }
+
+  function getPageLabel(key){
+    const labels = {
+      employees: 'بيانات الموظفين',
+      attendance: 'الحضور والانصراف',
+      dailyTasks: 'المهام اليومية',
+      projects: 'متابعة المشاريع',
+      materials: 'المواد والمخزون',
+      equipment: 'المعدات',
+      maintenance: 'الصيانة',
+      adminNotes: 'ملاحظات إدارية',
+      finance: 'الإيرادات والمصروفات'
+    };
+    return labels[key] || key;
+  }
+
+  // filter rows by search input
+  function filterTable(table){
+    const qv = q('#searchBox').value.trim().toLowerCase();
+    if(!table) return;
+    Array.from(table.tBodies[0].rows).forEach(row=>{
+      row.style.display = row.innerText.toLowerCase().includes(qv) ? '' : 'none';
+    });
+  }
+
+  // build table with columns according to page schema
+  function buildTableFor(page){
+    // define schema per page: array of {key,label,editable, type}
+    const schemas = {
+      employees: [
+        {k:'empId',l:'ID',e:true},
+        {k:'name',l:'Name',e:true},
+        {k:'role',l:'Role',e:true},
+        {k:'phone',l:'Phone',e:true},
+        {k:'salary',l:'Salary',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Invoice',e:false, type:'file'}
+      ],
+      attendance: [
+        {k:'empName',l:'Employee',e:true},
+        {k:'date',l:'Date',e:true},
+        {k:'checkIn',l:'Check In',e:true},
+        {k:'checkOut',l:'Check Out',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Attachment',e:false, type:'file'}
+      ],
+      dailyTasks: [
+        {k:'date',l:'Date',e:true},
+        {k:'task',l:'Task',e:true},
+        {k:'assignedTo',l:'Assigned To',e:true},
+        {k:'status',l:'Status',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Attachment',e:false, type:'file'}
+      ],
+      projects: [
+        {k:'projectName',l:'Project',e:true},
+        {k:'client',l:'Client',e:true},
+        {k:'status',l:'Status',e:true},
+        {k:'budget',l:'Budget',e:true},
+        {k:'startDate',l:'Start Date',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Files',e:false, type:'file'}
+      ],
+      materials: [
+        {k:'item',l:'Item',e:true},
+        {k:'qty',l:'Quantity',e:true},
+        {k:'unitPrice',l:'Unit Price',e:true},
+        {k:'total',l:'Total',e:false},
+        {k:'location',l:'Location',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Invoice',e:false, type:'file'}
+      ],
+      equipment: [
+        {k:'name',l:'Equipment',e:true},
+        {k:'model',l:'Model',e:true},
+        {k:'serial',l:'Serial',e:true},
+        {k:'status',l:'Status',e:true},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Docs',e:false, type:'file'}
+      ],
+      maintenance: [
+        {k:'date',l:'Date',e:true},
+        {k:'equipment',l:'Equipment',e:true},
+        {k:'issue',l:'Issue',e:true},
+        {k:'cost',l:'Cost',e:true},
+        {k:'status',l:'Status',e:true},
+        {k:'invoice',l:'Invoice',e:false, type:'file'}
+      ],
+      adminNotes: [
+        {k:'date',l:'Date',e:true},
+        {k:'title',l:'Title',e:true},
+        {k:'details',l:'Details',e:true},
+        {k:'author',l:'Author',e:true},
+        {k:'invoice',l:'Attachment',e:false, type:'file'}
+      ],
+      finance: [
+        {k:'type',l:'Type',e:true},
+        {k:'date',l:'Date',e:true},
+        {k:'quantity',l:'Quantity',e:true},
+        {k:'price',l:'Price',e:true},
+        {k:'total',l:'Total',e:false},
+        {k:'notes',l:'Notes',e:true},
+        {k:'invoice',l:'Invoice',e:false, type:'file'}
+      ]
+    };
+
+    const schema = schemas[page] || [{k:'col1',l:'Col 1',e:true}];
+
+    const tbl = el('table',{});
+    const thead = el('thead',{});
+    const headRow = el('tr',{});
+    schema.forEach(col=>{
+      headRow.appendChild(el('th',{}, col.l));
+    });
+    thead.appendChild(headRow);
+    tbl.appendChild(thead);
+
+    const tbody = el('tbody',{});
+    // render existing docs
+    (cache[page]||[]).forEach(doc=>{
+      tbody.appendChild(buildRow(page, schema, doc));
+    });
+    // always add an empty "new" row at bottom for adding inline
+    tbody.appendChild(buildRow(page, schema, {__new:true}));
+    tbl.appendChild(tbody);
+    return tbl;
+  }
+
+  // build a row (doc may contain id and fields); if __new -> empty editable row
+  function buildRow(page, schema, doc){
+    const tr = el('tr',{});
+    const isNew = !!doc.__new;
+    const id = doc.id || null;
+
+    schema.forEach(col=>{
+      const td = el('td',{});
+      if(col.type === 'file'){
+        // file column: show thumbnail if url present, and upload input
+        const imgWrap = el('div',{style:'display:flex;gap:8px;align-items:center;justify-content:flex-start'});
+        const thumb = el('img',{class:'thumbnail', src: doc[col.k] ? doc[col.k] : '', alt:''});
+        thumb.style.display = doc[col.k] ? 'inline-block' : 'none';
+        thumb.onclick = ()=> openModal(doc[col.k]);
+        imgWrap.appendChild(thumb);
+
+        // uploader small input (hidden) and visible label
+        const input = el('input',{type:'file', accept:'image/*', style:'display:none'});
+        input.onchange = async (ev)=>{
+          const f = ev.target.files[0];
+          if(!f) return;
+          const path = `${page}/${Date.now()}_${Math.random().toString(36).slice(2,6)}_${f.name.replace(/\s+/g,'_')}`;
+          const ref = storage.ref(path);
+          await ref.put(f);
+          const url = await ref.getDownloadURL();
+          // update doc: if new row -> create; else update
+          if(isNew){
+            // collect other fields in this new row
+            const rowObj = collectRowData(tr, schema);
+            rowObj[col.k] = url;
+            rowObj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            const added = await db.collection(pageCollections[page]).add(rowObj);
+            // refresh handled by snapshot listener, but directly update thumb
+            input.value = '';
+          } else {
+            await db.collection(pageCollections[page]).doc(id).update({ [col.k]: url });
+          }
+        };
+
+        const label = el('label',{class:'file-uploader'}, 'رفع صورة');
+        label.onclick = ()=> input.click();
+        imgWrap.appendChild(input);
+        imgWrap.appendChild(label);
+        td.appendChild(imgWrap);
+      } else if(col.e){
+        // editable cell
+        const initial = isNew ? '' : (doc[col.k] !== undefined ? doc[col.k] : '');
+        const div = el('div',{contenteditable:true, 'data-key':col.k, 'data-id': id || '', style:'min-width:100px;'}, initial);
+        // save on blur
+        div.addEventListener('blur', async (ev)=>{
+          const val = ev.target.textContent.trim();
+          // if new row: create document with values (only if any field filled)
+          if(isNew){
+            // collect row object from all editable cells
+            const rowData = collectRowData(tr, schema);
+            // check if at least one non-empty (besides invoice)
+            const has = Object.keys(rowData).some(k=> rowData[k] !== '' && rowData[k] !== null && rowData[k] !== undefined);
+            if(has){
+              rowData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+              // for computed fields like total: compute here if schema has qty & price
+              if(page==='finance'){
+                const qv = parseFloat(rowData['quantity']||0) || 0;
+                const pv = parseFloat(rowData['price']||0) || 0;
+                rowData['total'] = (qv*pv).toFixed(2);
+              }
+              await db.collection(pageCollections[page]).add(rowData);
+              // after adding, snapshot will re-render table
+            }
+          } else {
+            // update single field
+            const updateObj = {};
+            updateObj[col.k] = val;
+            // if finance and quantity/price changed => update total
+            if(page==='finance' && (col.k === 'quantity' || col.k === 'price')){
+              const docCache = cache[page].find(x=> x.id === id) || {};
+              const other = (col.k==='quantity') ? parseFloat(val||0) : parseFloat(docCache['quantity']||0);
+              const other2 = (col.k==='price') ? parseFloat(val||0) : parseFloat(docCache['price']||0);
+              updateObj['total'] = ( (col.k==='quantity'?other:parseFloat(docCache['quantity']||0)) * (col.k==='price'?other2:parseFloat(docCache['price']||0)) ).toFixed(2);
+            }
+            await db.collection(pageCollections[page]).doc(id).update(updateObj);
+            // if user cleared all editable fields -> delete doc
+            const updated = await db.collection(pageCollections[page]).doc(id).get();
+            const data = updated.data() || {};
+            const keys = schema.filter(c=>c.e).map(c=>c.k);
+            const allEmpty = keys.every(k=> (data[k] === '' || data[k] === null || data[k] === undefined) );
+            if(allEmpty){
+              await db.collection(pageCollections[page]).doc(id).delete();
+            }
+          }
+        });
+        // press Enter to finish edit
+        div.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); div.blur(); } });
+        td.appendChild(div);
+      } else {
+        // non-editable display (computed or plain)
+        if(!isNew){
+          if(col.k === 'total' && page==='materials'){
+            // compute total if missing
+            const qty = parseFloat(doc['qty']||0)||0;
+            const price = parseFloat(doc['unitPrice']||0)||0;
+            td.appendChild(document.createTextNode( (qty*price).toFixed(2) ));
+          } else if(col.k === 'total' && page==='finance'){
+            const total = doc['total'] !== undefined ? doc['total'] : ((parseFloat(doc['quantity']||0)||0)*(parseFloat(doc['price']||0)||0)).toFixed(2);
+            td.appendChild(document.createTextNode(total));
+          } else {
+            td.appendChild(document.createTextNode(doc[col.k] || ''));
+          }
+        } else {
+          td.appendChild(document.createTextNode(''));
+        }
+      }
+      tr.appendChild(td);
+    });
+
+    return tr;
+  }
+
+  // collect current row's editable values into object (used when creating new doc)
+  function collectRowData(tr, schema){
+    const obj = {};
+    const cells = Array.from(tr.children);
+    schema.forEach((col, i)=>{
+      if(col.type === 'file') {
+        // file will be handled separately
+      } else if(col.e){
+        const div = cells[i].querySelector('[contenteditable]');
+        obj[col.k] = div ? div.textContent.trim() : '';
+      } else {
+        // non-editable: leave empty (or compute after)
+      }
+    });
+    // compute totals for finance or materials
+    if(schema.some(s=>s.k==='total') && schema.some(s=>s.k==='quantity') && schema.some(s=>s.k==='price')){
+      const qv = parseFloat(obj['quantity']||0)||0;
+      const pv = parseFloat(obj['price']||0)||0;
+      obj['total'] = (qv*pv).toFixed(2);
+    }
+    return obj;
+  }
+
+  // ================== Sidebar actions ==================
+  document.querySelectorAll('.side-btn').forEach(b=>{
+    b.addEventListener('click', ()=> {
+      document.querySelectorAll('.side-btn').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      currentPage = b.dataset.page;
+      renderCurrent();
+    });
   });
-  table.appendChild(thead);
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  return wrap;
-}
-
-async function openAddClient(){
-  const clientNo = prompt('Client No:'); if(!clientNo) return;
-  const name = prompt('Name:'); if(!name) return;
-  const nationality = prompt('Nationality:'); 
-  const idNumber = prompt('ID Number:'); 
-  const email = prompt('Email:'); 
-  const location = prompt('Location:'); 
-  const building = prompt('Building Name:'); 
-  const unitType = prompt('Unit Type:'); 
-  const propertyNo = prompt('Property No:'); 
-  const comments = prompt('Comments:'); 
-  await db.collection('clients').add({clientNo, name, nationality, idNumber, email, location, building, unitType, propertyNo, comments, createdAt:new Date().toISOString()});
-  alert('Client added!');
-}
-
-// Attendance table
-function buildAttendanceTable(){
-  const wrap = el('div',{class:'card'});
-  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},'Attendance'),
-    el('button',{class:'btn', onclick:openAddAttendance},'Add Attendance')
-  ));
-  const table = el('table');
-  const thead = el('thead',{}, el('tr',{},
-    el('th',{},'Date'),
-    el('th',{},'Full Name'),
-    el('th',{},'Job Title'),
-    el('th',{},'Department'),
-    el('th',{},'Check In'),
-    el('th',{},'Check Out'),
-    el('th',{},'Hours'),
-    el('th',{},'Extra Hours'),
-    el('th',{},'Late Hours'),
-    el('th',{},'Admin Notes'),
-    el('th',{},'Comments'),
-    el('th',{},'Delete')
-  ));
-  const tbody = el('tbody');
-  state.attendance.forEach(a=>{
-    const tr = el('tr',{},
-      el('td',{},editableCell(a,'date','attendance')),
-      el('td',{},editableCell(a,'fullName','attendance')),
-      el('td',{},editableCell(a,'jobTitle','attendance')),
-      el('td',{},editableCell(a,'department','attendance')),
-      el('td',{},editableCell(a,'checkIn','attendance')),
-      el('td',{},editableCell(a,'checkOut','attendance')),
-      el('td',{},editableCell(a,'hours','attendance')),
-      el('td',{},editableCell(a,'extraHours','attendance')),
-      el('td',{},editableCell(a,'lateHours','attendance')),
-      el('td',{},editableCell(a,'adminNotes','attendance')),
-      el('td',{},editableCell(a,'comments','attendance')),
-      el('td',{},deleteBtn(a.id,'attendance'))
-    );
-    tbody.appendChild(tr);
+  q('#logoutBtn').addEventListener('click', ()=>{
+    if(confirm('Logout?')){ user=null; q('#userInfo').textContent=''; showLoginPrompt(); }
   });
-  table.appendChild(thead);
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  return wrap;
-}
 
-async function openAddAttendance(){
-  const date = prompt('Date:'); if(!date) return;
-  const fullName = prompt('Full Name:'); if(!fullName) return;
-  const jobTitle = prompt('Job Title:'); 
-  const department = prompt('Department:'); 
-  const checkIn = prompt('Check In:'); 
-  const checkOut = prompt('Check Out:'); 
-  const hours = prompt('Hours:'); 
-  const extraHours = prompt('Extra Hours:'); 
-  const lateHours = prompt('Late Hours:'); 
-  const adminNotes = prompt('Admin Notes:'); 
-  const comments = prompt('Comments:'); 
-  await db.collection('attendance').add({date, fullName, jobTitle, department, checkIn, checkOut, hours, extraHours, lateHours, adminNotes, comments, createdAt:new Date().toISOString()});
-  alert('Attendance added!');
-}
+  // search box behavior: will be assigned when rendering page
 
-// Costs table
-function buildCostsTable(){
-  const wrap = el('div',{class:'card'});
-  wrap.appendChild(el('div',{style:'display:flex;justify-content:space-between;align-items:center;margin-bottom:8px'},
-    el('h3',{},'Costs'),
-    el('button',{class:'btn', onclick:openAddCost},'Add Cost')
-  ));
-  const table = el('table');
-  const thead = el('thead',{}, el('tr',{},
-    el('th',{},'Main Section'),
-    el('th',{},'Sub Item'),
-    el('th',{},'Description'),
-    el('th',{},'Quantity'),
-    el('th',{},'Unit Price'),
-    el('th',{},'Total'),
-    el('th',{},'Payment Method'),
-    el('th',{},'Invoice No'),
-    el('th',{},'Purchase Date'),
-    el('th',{},'Comments'),
-    el('th',{},'Delete')
-  ));
-  const tbody = el('tbody');
-  state.costs.forEach(c=>{
-    const tr = el('tr',{},
-      el('td',{},editableCell(c,'mainSection','costs')),
-      el('td',{},editableCell(c,'subItem','costs')),
-      el('td',{},editableCell(c,'description','costs')),
-      el('td',{},editableCell(c,'quantity','costs')),
-      el('td',{},editableCell(c,'unitPrice','costs')),
-      el('td',{},editableCell(c,'total','costs')),
-      el('td',{},editableCell(c,'paymentMethod','costs')),
-      el('td',{},editableCell(c,'invoiceNo','costs')),
-      el('td',{},editableCell(c,'purchaseDate','costs')),
-      el('td',{},editableCell(c,'comments','costs')),
-      el('td',{},deleteBtn(c.id,'costs'))
-    );
-    tbody.appendChild(tr);
-  });
-  table.appendChild(thead);
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  return wrap;
-}
+  // ================== Start ==================
+  // start login and listeners
+  showLoginPrompt();
 
-async function openAddCost(){
-  const mainSection = prompt('Main Section:'); if(!mainSection) return;
-  const subItem = prompt('Sub Item:'); 
-  const description = prompt('Description:'); 
-  const quantity = prompt('Quantity:'); 
-  const unitPrice = prompt('Unit Price:'); 
-  const total = prompt('Total:'); 
-  const paymentMethod = prompt('Payment Method:'); 
-  const invoiceNo = prompt('Invoice No:'); 
-  const purchaseDate = prompt('Purchase Date:'); 
-  const comments = prompt('Comments:'); 
-  await db.collection('costs').add({mainSection, subItem, description, quantity, unitPrice, total, paymentMethod, invoiceNo, purchaseDate, comments, createdAt:new Date().toISOString()});
-  alert('Cost added!');
-}
-
-// Initial render
-renderLogin();
-</script>
+  </script>
 </body>
 </html>
