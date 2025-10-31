@@ -1,109 +1,166 @@
 <!doctype html>
-<html lang="ar">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOP VIEW — Admin Dashboard</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>TopView — Admin System</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --accent:#d4af37; /* دهبي */
-      --blue:#007bff;
-      --bg:#f4f6fa;
-      --card:#ffffff;
+      --bg:#f5f7fb;
+      --panel:#ffffff;
+      --muted:#6b7280;
+      --accent:#d4af37;
+      --primary:#0b63d6;
+      --text:#0f172a;
+    }
+    [data-theme="dark"]{
+      --bg:#0b1220; --panel:#0f172a; --muted:#9aa3b2; --text:#e6eef8;
     }
     *{box-sizing:border-box}
-    body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#0b1220; direction:rtl}
-    header{height:64px; display:flex; align-items:center; gap:12px; padding:0 18px; background:var(--card); border-bottom:1px solid #e9eef6}
-    .brand{font-weight:800;color:var(--blue); font-size:18px}
-    .layout{display:flex; min-height:calc(100vh - 64px)}
-    .sidebar{width:260px; background:#fff; border-left:1px solid #eef2f7; padding:18px; display:flex; flex-direction:column; gap:10px}
-    .sidebar h4{margin:0;text-align:center;color:var(--blue)}
-    .side-btn{background:transparent;border:0;text-align:right;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600}
-    .side-btn.active{background:#f1f6ff;color:var(--blue)}
-    main{flex:1;padding:18px}
-    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+    body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
+    /* Header */
+    header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06)}
+    .brand{font-weight:800;color:var(--primary); font-size:20px}
+    .header-controls{margin-left:auto; display:flex; gap:10px; align-items:center}
+    .lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer}
+    .user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03)}
+    /* Layout */
+    .layout{display:flex; min-height:calc(100vh - 72px)}
+    .sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px}
+    .sidebar h3{margin:0;color:var(--primary)}
+    .menu-btn{display:block;text-align:right;padding:12px;border-radius:8px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text)}
+    .menu-btn.active{background:rgba(11,99,214,0.08); color:var(--primary)}
+    main{flex:1;padding:20px}
     .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .search{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ef; width:320px}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:8px;border-bottom:1px solid #f3f6fa;text-align:right;vertical-align:middle}
-    th{background:#fafbff;color:#6b7280;font-weight:700}
-    td div[contenteditable]{min-width:80px;outline:none;padding:6px;border-radius:6px}
-    tr:hover td{background:#fbfcff}
-    .thumbnail{width:44px;height:32px;object-fit:cover;border-radius:6px;border:1px solid #eef4ff;cursor:pointer}
-    .file-uploader{font-size:13px;padding:6px;border-radius:6px;border:1px dashed #e3e8f1;background:#fbfdff;cursor:pointer}
-    .small{font-size:13px;color:#6b7280}
-    .actions{display:flex;gap:6px;justify-content:flex-start}
-    .btn{background:var(--blue);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
-    .btn.ghost{background:transparent;border:1px solid #e6e9ef;color:#333}
-    .note{font-size:13px;color:#6b7280;margin-top:6px}
+    .search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px}
+    .card{background:var(--panel);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+    /* table (excel-like) */
+    .table-wrap{overflow:auto;border-radius:10px}
+    table{width:100%;border-collapse:collapse;font-size:14px;min-width:900px}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:right}
+    td, th{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle}
+    td div[contenteditable]{min-width:120px;outline:none;padding:8px;border-radius:6px}
+    tr:hover td{background:rgba(11,99,214,0.02)}
+    .thumbnail{width:56px;height:40px;object-fit:cover;border-radius:6px;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+    .file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:13px}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06)}
+    .export{background:linear-gradient(90deg,var(--accent),var(--primary));}
+    .page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04)}
+    .attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px}
+    .divider{height:2px;background:rgba(0,0,0,0.06);margin:14px 0;border-radius:4px}
+    .small{font-size:13px;color:var(--muted)}
+    /* login */
+    #loginScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#00000077;z-index:9999}
+    .login-card{width:540px;max-width:94%;background:var(--panel);padding:22px;border-radius:14px;box-shadow:0 12px 40px rgba(2,6,23,0.3);display:flex;gap:18px;align-items:center;direction:ltr}
+    .login-info{flex:1}
+    .login-inputs{flex:1;display:flex;flex-direction:column;gap:12px}
+    .login-inputs input{padding:12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)}
+    .hero-img{width:200px;height:120px;border-radius:10px;background-image:url('https://images.unsplash.com/photo-1528909514045-2fa4ac7a08ba?q=80&w=1400&auto=format&fit=crop');background-size:cover;background-position:center}
+    .lang-small{font-size:13px;color:var(--muted)}
     /* modal */
     .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:60}
-    .modal .box{background:#fff;padding:12px;border-radius:10px;max-width:90%;max-height:90%;display:flex;flex-direction:column;gap:8px}
+    .modal .box{background:var(--panel);padding:12px;border-radius:10px;max-width:95%;max-height:95%;display:flex;flex-direction:column;gap:8px}
     .modal img{max-width:100%;max-height:70vh;border-radius:6px}
-    /* responsive */
-    @media (max-width:900px){ .sidebar{display:none} main{margin-left:0;padding:12px} header{padding:0 10px} }
+    @media (max-width:900px){ .sidebar{display:none} .login-card{width:94%} .search{width:100%} table{min-width:700px} }
   </style>
 </head>
-<body>
+<body data-theme="light">
+
+  <!-- Login Screen -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <div class="login-info">
+        <h2 style="margin:0 0 6px 0">TopView — Management</h2>
+        <p class="small">Sign in to access the admin system (English / Arabic supported).</p>
+        <div style="height:8px"></div>
+        <div class="lang-small">Use: <strong>admin@topview.com</strong> / <strong>123456</strong></div>
+        <div style="height:10px"></div>
+        <div class="small">If you don't have an account, press "Demo" to generate sample data.</div>
+      </div>
+      <div class="login-inputs">
+        <input id="loginEmail" type="email" placeholder="Email" value="admin@topview.com">
+        <input id="loginPass" type="password" placeholder="Password" value="123456">
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="btnLogin">Login</button>
+          <button class="btn ghost" id="btnDemo">Demo</button>
+        </div>
+      </div>
+      <div class="hero-img" title="Dubai"></div>
+    </div>
+  </div>
+
+  <!-- header -->
   <header>
-    <div class="brand">TOP VIEW — النظام الإداري</div>
-    <div class="small">Dashboard</div>
-    <div style="margin-left:auto" id="userInfo" class="small"></div>
+    <div class="brand">TOP VIEW</div>
+    <div class="small">Interior Fit-out — Admin</div>
+    <div class="header-controls">
+      <select id="langSelect" class="lang-toggle" title="Language">
+        <option value="en">English</option>
+        <option value="ar">العربية</option>
+      </select>
+      <button id="themeToggle" class="theme-toggle">Dark</button>
+      <div class="user-box" id="userBox">Not signed</div>
+    </div>
   </header>
 
   <div class="layout">
     <aside class="sidebar" id="sidebar">
-      <h4>قوائم المصنع</h4>
-      <!-- القوائم المستخرجة من الاكسل (حسب طلبك) -->
-      <button class="side-btn" data-page="employees">بيانات الموظفين</button>
-      <button class="side-btn" data-page="attendance">الحضور والانصراف</button>
-      <button class="side-btn" data-page="dailyTasks">المهام اليومية</button>
-      <button class="side-btn" data-page="projects">متابعة المشاريع</button>
-      <button class="side-btn" data-page="materials">المواد والمخزون</button>
-      <button class="side-btn" data-page="equipment">المعدات</button>
-      <button class="side-btn" data-page="maintenance">الصيانة</button>
-      <button class="side-btn" data-page="adminNotes">ملاحظات إدارية</button>
-      <button class="side-btn" data-page="finance">الإيرادات والمصروفات</button>
+      <h3>Dashboard</h3>
+      <!-- requested pages -->
+      <button class="menu-btn active" data-page="generalAccounts">General Client Accounts</button>
+      <button class="menu-btn" data-page="attendanceLog">Attendance Log</button>
+      <button class="menu-btn" data-page="employeeRecords">Employee Records</button>
+      <button class="menu-btn" data-page="salariesBonuses">Salaries & Bonuses</button>
+      <button class="menu-btn" data-page="costRecords">Cost Records</button>
+
       <div style="flex:1"></div>
-      <button class="side-btn" id="logoutBtn">تسجيل خروج</button>
-      <div class="note">اضغط على أي صفحة لعرض الجدول الخاص بها. التعديل مباشر — اكتب واغمض الخلية للحفظ.</div>
+      <div class="small">Upload page files (Excel/Word/PDF) and attachments per row.</div>
+      <div style="height:8px"></div>
+      <button id="signOutBtn" class="menu-btn">Sign out</button>
     </aside>
 
     <main>
       <div class="topbar">
-        <div>
-          <input id="searchBox" class="search" placeholder="بحث في الصفحة الحالية..." />
+        <input id="globalSearch" class="search" placeholder="Search current page...">
+        <div class="controls">
+          <button class="btn export" id="exportCsvBtn">Export CSV</button>
+          <label class="btn ghost" style="cursor:pointer">
+            Upload page file
+            <input id="pageFileInput" type="file" accept=".xlsx,.xls,.csv,.doc,.docx,.pdf" style="display:none">
+          </label>
         </div>
-        <div class="small">الصفحة: <span id="pageTitle">—</span></div>
       </div>
 
-      <div id="content"></div>
+      <div id="pageContent"></div>
+      <div id="pageAttachments" class="page-attachments"></div>
     </main>
   </div>
 
   <!-- image modal -->
-  <div id="imgModal" class="modal" onclick="closeModal()">
+  <div id="imageModal" class="modal" onclick="closeImageModal()">
     <div class="box" onclick="event.stopPropagation()">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="small">صورة الفاتورة</div>
+        <div class="small">Invoice / Attachment</div>
         <div>
-          <a id="downloadLink" class="btn" href="#" download>تحميل</a>
-          <button onclick="closeModal()" class="btn ghost">إغلاق</button>
+          <a id="downloadAttachment" class="btn" href="#" download>Download</a>
+          <button onclick="closeImageModal()" class="btn ghost">Close</button>
         </div>
       </div>
-      <img id="modalImage" src="" alt="invoice"/>
+      <img id="modalImg" src="" alt="attachment">
     </div>
   </div>
 
-  <!-- Firebase compat -->
+  <!-- Firebase compat libraries -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
   <script>
-  // ================== CONFIG ==================
+  // ================= CONFIG =================
   const firebaseConfig = {
     apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
     authDomain: "topview-system.firebaseapp.com",
@@ -114,376 +171,417 @@
     measurementId: "G-EPVZGH6Y2G"
   };
   firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
   const db = firebase.firestore();
   const storage = firebase.storage();
 
-  // ================== state ==================
-  let currentPage = 'employees';
-  const pageCollections = {
-    employees: 'employees',
-    attendance: 'attendance',
-    dailyTasks: 'daily_tasks',
-    projects: 'projects',
-    materials: 'materials',
-    equipment: 'equipment',
-    maintenance: 'maintenance',
-    adminNotes: 'admin_notes',
-    finance: 'finance'
+  // ================= state =================
+  let currentPage = 'generalAccounts';
+  const pageMap = {
+    generalAccounts: {col:'general_accounts', label:{en:'General Client Accounts', ar:'الحسابات العامة للعميل'}},
+    attendanceLog: {col:'attendance_log', label:{en:'Attendance Log', ar:'سجل الدوام'}},
+    employeeRecords: {col:'employee_records', label:{en:'Employee Records', ar:'سجل الموظفين'}},
+    salariesBonuses: {col:'salaries_bonuses', label:{en:'Salaries & Bonuses', ar:'الرواتب والمكافآت'}},
+    costRecords: {col:'cost_records', label:{en:'Cost Records', ar:'سجل التكاليف'}}
   };
+  const cache = {}; Object.keys(pageMap).forEach(k=>cache[k]=[]);
+  let currentLang = 'en';
+  let darkMode = false;
 
-  // keep local cache of docs per page
-  const cache = {};
-  Object.keys(pageCollections).forEach(k=> cache[k]=[]);
-
-  // initial user info (simple admin login used before)
-  let user = null;
-
-  // ================== helpers ==================
-  function q(sel, root=document) { return root.querySelector(sel); }
+  // ================= UI helpers =================
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
   function el(tag, attrs={}, ...kids){ const e=document.createElement(tag); for(const k in attrs){ if(k.startsWith('on')) e.addEventListener(k.substring(2), attrs[k]); else e.setAttribute(k, attrs[k]); } kids.forEach(c=> typeof c==='string' ? e.appendChild(document.createTextNode(c)) : c && e.appendChild(c)); return e; }
 
-  function showPageTitle(name){ q('#pageTitle').textContent = name; }
+  // ================= Translations =================
+  const T = {
+    en:{search:'Search current page...',export:'Export CSV',upload:'Upload page file',signout:'Sign out',uploadRow:'Upload file',download:'Download'},
+    ar:{search:'بحث في الصفحة...',export:'تصدير CSV',upload:'رفع ملف للصفحة',signout:'تسجيل خروج',uploadRow:'رفع ملف',download:'تحميل'}
+  };
 
-  // ================== modal ==================
-  function openModal(url){
-    q('#modalImage').src = url;
-    q('#downloadLink').href = url;
-    q('#imgModal').style.display = 'flex';
-  }
-  function closeModal(){ q('#imgModal').style.display = 'none'; q('#modalImage').src=''; q('#downloadLink').href='#'; }
+  function t(k){ return (T[currentLang] && T[currentLang][k]) || k; }
 
-  // ================== Auth (simple) ==================
-  function showLoginPrompt(){
-    // simple prompt login (keeps same UX you had)
-    const email = prompt('Email:','admin@topview.com');
-    const pass = prompt('Password:','123456');
-    if(email === 'admin@topview.com' && pass === '123456'){
-      user = {email};
-      q('#userInfo').textContent = email;
+  // ================= Login & demo =================
+  $('#btnLogin').addEventListener('click', ()=> {
+    const em = $('#loginEmail').value.trim();
+    const pw = $('#loginPass').value.trim();
+    if(em === 'admin@topview.com' && pw === '123456'){
+      $('#loginScreen').style.display = 'none';
+      $('#userBox').textContent = em;
       // attach listeners
-      attachAllListeners();
-      renderCurrent();
+      attachListeners();
+      renderPage();
     } else {
-      alert('خطأ فى بيانات الدخول');
-      showLoginPrompt();
+      alert('Invalid credentials');
+    }
+  });
+  // demo: create small seed if empty
+  $('#btnDemo').addEventListener('click', async ()=> {
+    // seed small data for each collection if empty
+    for(const key of Object.keys(pageMap)){
+      const col = pageMap[key].col;
+      const snap = await db.collection(col).limit(1).get();
+      if(snap.empty){
+        // add 2 sample docs depending on page
+        const sample = sampleFor(key);
+        sample.forEach(async r => { await db.collection(col).add({...r, createdAt: firebase.firestore.FieldValue.serverTimestamp()}); });
+      }
+    }
+    alert('Demo data created (may take a second to appear).');
+  });
+
+  function sampleFor(key){
+    switch(key){
+      case 'generalAccounts': return [{clientName:'Ahmed Ali',accountNo:'AC-001',balance:'12000',lastInvoice:'2025-10-01',notes:'VIP'},{clientName:'Sara Noor',accountNo:'AC-002',balance:'5200',lastInvoice:'2025-10-12',notes:''}];
+      case 'attendanceLog': return [{empName:'Ibrahim',date:'2025-10-30',checkIn:'08:00',checkOut:'16:30',notes:''},{empName:'Mohamed',date:'2025-10-30',checkIn:'08:10',checkOut:'17:00',notes:'OT'}];
+      case 'employeeRecords': return [{empId:'E001',name:'Ibrahim',role:'Worker',phone:'050000000',email:'ibrahim@topview.local',startDate:'2024-01-15',salary:'3500',notes:''}];
+      case 'salariesBonuses': return [{empName:'Ibrahim',month:'2025-10',gross:'3800',payments:'3500',bonus:'300',notes:''}];
+      case 'costRecords': return [{date:'2025-10-20',category:'Materials',description:'Tiles',quantity:'100',unitPrice:'10',total:'1000',notes:''}];
+      default: return [{}];
     }
   }
 
-  // ================== Attach realtime listeners ==================
-  function attachAllListeners(){
-    Object.keys(pageCollections).forEach(page=>{
-      const col = pageCollections[page];
+  // ================= Attach listeners (realtime) =================
+  function attachListeners(){
+    Object.keys(pageMap).forEach(key=>{
+      const col = pageMap[key].col;
       db.collection(col).orderBy('createdAt','asc').onSnapshot(snap=>{
-        cache[page] = snap.docs.map(d=> ({ id: d.id, ...d.data() }) );
-        if(page===currentPage) renderCurrent();
+        cache[key] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if(currentPage === key) renderPage();
       });
     });
   }
 
-  // ================== Renderers ==================
-  // renders table for page with columns based on page
-  function renderCurrent(){
-    showPageTitle(getPageLabel(currentPage));
-    q('#searchBox').value = '';
-    q('#content').innerHTML = '';
-    const container = el('div',{class:'card'});
-    container.appendChild(el('h3',{}, getPageLabel(currentPage)));
-    // search handler
-    q('#searchBox').oninput = ()=> filterTable(q('table.table-page'));
+  // ================= Render page =================
+  // sidebar buttons
+  $$('.menu-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> {
+      $$('.menu-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPage = btn.dataset.page;
+      renderPage();
+    });
+  });
+  $('#signOutBtn').addEventListener('click', ()=> location.reload());
 
-    // build table based on page
-    const table = buildTableFor(currentPage);
-    table.classList.add('table-page');
-    container.appendChild(table);
-    q('#content').appendChild(container);
+  // language toggle
+  $('#langSelect').addEventListener('change', (e)=> {
+    currentLang = e.target.value;
+    // change labels
+    $('#globalSearch').placeholder = t('search');
+    $('#exportCsvBtn').textContent = t('export');
+    // page attachments upload label
+    // rerender
+    renderPage();
+  });
+
+  // theme toggle
+  $('#themeToggle').addEventListener('click', ()=>{
+    darkMode = !darkMode;
+    document.body.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    $('#themeToggle').textContent = darkMode ? 'Light' : 'Dark';
+  });
+
+  // page file upload
+  $('#pageFileInput').addEventListener('change', async (ev)=>{
+    const file = ev.target.files[0];
+    if(!file) return;
+    const col = pageMap[currentPage].col;
+    const path = `${col}/page_files/${Date.now()}_${file.name.replace(/\s+/g,'_')}`;
+    const ref = storage.ref(path);
+    await ref.put(file);
+    const url = await ref.getDownloadURL();
+    // save attachment record in a special collection pageFiles_<col>
+    await db.collection(`${col}_page_files`).add({ filename:file.name, url, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+    ev.target.value = '';
+    renderPageAttachments();
+  });
+
+  async function renderPageAttachments(){
+    const col = pageMap[currentPage].col;
+    const attWrap = $('#pageAttachments');
+    attWrap.innerHTML = '';
+    attWrap.appendChild(el('div',{class:'small'}, 'Page attachments (uploaded Excel/Word/PDF)'));
+    const snap = await db.collection(`${col}_page_files`).orderBy('createdAt','asc').get();
+    if(snap.empty) return;
+    attWrap.appendChild(el('div',{class:'divider'}));
+    snap.forEach(d=>{
+      const data = d.data();
+      const item = el('div',{class:'attach-item'},
+        el('div',{}, el('a',{href:data.url,target:'_blank'}, data.filename || 'file')),
+        el('div',{}, el('button',{class:'btn ghost', onclick: async ()=> {
+          // delete action
+          if(!confirm('Delete this page file?')) return;
+          await db.collection(`${col}_page_files`).doc(d.id).delete();
+          renderPageAttachments();
+        }}, 'Delete'))
+      );
+      attWrap.appendChild(item);
+    });
   }
 
-  function getPageLabel(key){
-    const labels = {
-      employees: 'بيانات الموظفين',
-      attendance: 'الحضور والانصراف',
-      dailyTasks: 'المهام اليومية',
-      projects: 'متابعة المشاريع',
-      materials: 'المواد والمخزون',
-      equipment: 'المعدات',
-      maintenance: 'الصيانة',
-      adminNotes: 'ملاحظات إدارية',
-      finance: 'الإيرادات والمصروفات'
-    };
-    return labels[key] || key;
-  }
+  // export CSV for current page
+  $('#exportCsvBtn').addEventListener('click', ()=> {
+    const rows = cache[currentPage] || [];
+    if(!rows.length){ alert('No data to export'); return; }
+    // build header from schema keys
+    const schema = schemaFor(currentPage);
+    const headers = schema.map(s=>s.l);
+    const keys = schema.map(s=>s.k);
+    const csv = [headers.join(',')];
+    rows.forEach(r=>{
+      const line = keys.map(k=>{
+        let v = r[k] !== undefined && r[k] !== null ? String(r[k]) : '';
+        // escape quotes
+        if(v.includes(',') || v.includes('"')) v = `"${v.replace(/"/g,'""')}"`;
+        return v;
+      }).join(',');
+      csv.push(line);
+    });
+    const blob = new Blob([csv.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `${currentPage}_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  });
 
-  // filter rows by search input
-  function filterTable(table){
-    const qv = q('#searchBox').value.trim().toLowerCase();
+  // search
+  $('#globalSearch').addEventListener('input', ()=> {
+    const v = $('#globalSearch').value.trim().toLowerCase();
+    const table = document.querySelector('.table-wrap table');
     if(!table) return;
     Array.from(table.tBodies[0].rows).forEach(row=>{
-      row.style.display = row.innerText.toLowerCase().includes(qv) ? '' : 'none';
+      row.style.display = row.innerText.toLowerCase().includes(v) ? '' : 'none';
     });
+  });
+
+  // render current page
+  function renderPage(){
+    const meta = pageMap[currentPage];
+    $('#pageContent').innerHTML = '';
+    const card = el('div',{class:'card'});
+    card.appendChild(el('h3',{}, meta.label[currentLang] || meta.label.en));
+    // table area
+    const tableWrap = el('div',{class:'table-wrap', style:'margin-top:12px'});
+    const table = buildTable(currentPage);
+    tableWrap.appendChild(table);
+    card.appendChild(tableWrap);
+    $('#pageContent').appendChild(card);
+    renderPageAttachments();
   }
 
-  // build table with columns according to page schema
-  function buildTableFor(page){
-    // define schema per page: array of {key,label,editable, type}
-    const schemas = {
-      employees: [
-        {k:'empId',l:'ID',e:true},
-        {k:'name',l:'Name',e:true},
-        {k:'role',l:'Role',e:true},
-        {k:'phone',l:'Phone',e:true},
-        {k:'salary',l:'Salary',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Invoice',e:false, type:'file'}
-      ],
-      attendance: [
-        {k:'empName',l:'Employee',e:true},
-        {k:'date',l:'Date',e:true},
-        {k:'checkIn',l:'Check In',e:true},
-        {k:'checkOut',l:'Check Out',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Attachment',e:false, type:'file'}
-      ],
-      dailyTasks: [
-        {k:'date',l:'Date',e:true},
-        {k:'task',l:'Task',e:true},
-        {k:'assignedTo',l:'Assigned To',e:true},
-        {k:'status',l:'Status',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Attachment',e:false, type:'file'}
-      ],
-      projects: [
-        {k:'projectName',l:'Project',e:true},
-        {k:'client',l:'Client',e:true},
-        {k:'status',l:'Status',e:true},
-        {k:'budget',l:'Budget',e:true},
-        {k:'startDate',l:'Start Date',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Files',e:false, type:'file'}
-      ],
-      materials: [
-        {k:'item',l:'Item',e:true},
-        {k:'qty',l:'Quantity',e:true},
-        {k:'unitPrice',l:'Unit Price',e:true},
-        {k:'total',l:'Total',e:false},
-        {k:'location',l:'Location',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Invoice',e:false, type:'file'}
-      ],
-      equipment: [
-        {k:'name',l:'Equipment',e:true},
-        {k:'model',l:'Model',e:true},
-        {k:'serial',l:'Serial',e:true},
-        {k:'status',l:'Status',e:true},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Docs',e:false, type:'file'}
-      ],
-      maintenance: [
-        {k:'date',l:'Date',e:true},
-        {k:'equipment',l:'Equipment',e:true},
-        {k:'issue',l:'Issue',e:true},
-        {k:'cost',l:'Cost',e:true},
-        {k:'status',l:'Status',e:true},
-        {k:'invoice',l:'Invoice',e:false, type:'file'}
-      ],
-      adminNotes: [
-        {k:'date',l:'Date',e:true},
-        {k:'title',l:'Title',e:true},
-        {k:'details',l:'Details',e:true},
-        {k:'author',l:'Author',e:true},
-        {k:'invoice',l:'Attachment',e:false, type:'file'}
-      ],
-      finance: [
-        {k:'type',l:'Type',e:true},
-        {k:'date',l:'Date',e:true},
-        {k:'quantity',l:'Quantity',e:true},
-        {k:'price',l:'Price',e:true},
-        {k:'total',l:'Total',e:false},
-        {k:'notes',l:'Notes',e:true},
-        {k:'invoice',l:'Invoice',e:false, type:'file'}
-      ]
-    };
-
-    const schema = schemas[page] || [{k:'col1',l:'Col 1',e:true}];
-
-    const tbl = el('table',{});
-    const thead = el('thead',{});
-    const headRow = el('tr',{});
-    schema.forEach(col=>{
-      headRow.appendChild(el('th',{}, col.l));
-    });
-    thead.appendChild(headRow);
-    tbl.appendChild(thead);
-
-    const tbody = el('tbody',{});
-    // render existing docs
-    (cache[page]||[]).forEach(doc=>{
-      tbody.appendChild(buildRow(page, schema, doc));
-    });
-    // always add an empty "new" row at bottom for adding inline
-    tbody.appendChild(buildRow(page, schema, {__new:true}));
-    tbl.appendChild(tbody);
-    return tbl;
+  // schema generator per page
+  function schemaFor(page){
+    switch(page){
+      case 'generalAccounts': return [
+        {k:'clientName',l: currentLang==='ar' ? 'اسم العميل' : 'Client Name', e:true},
+        {k:'accountNo',l: currentLang==='ar' ? 'رقم الحساب' : 'Account No', e:true},
+        {k:'balance',l: currentLang==='ar' ? 'الرصيد' : 'Balance', e:true},
+        {k:'lastInvoice',l: currentLang==='ar' ? 'آخر فاتورة' : 'Last Invoice', e:true},
+        {k:'notes',l: currentLang==='ar' ? 'ملاحظات' : 'Notes', e:true},
+        {k:'invoice',l: currentLang==='ar' ? 'فاتورة' : 'Invoice', e:false, type:'file'}
+      ];
+      case 'attendanceLog': return [
+        {k:'empName',l: currentLang==='ar' ? 'الموظف' : 'Employee', e:true},
+        {k:'date',l: currentLang==='ar' ? 'التاريخ' : 'Date', e:true},
+        {k:'checkIn',l: currentLang==='ar' ? 'وقت الحضور' : 'Check In', e:true},
+        {k:'checkOut',l: currentLang==='ar' ? 'وقت الانصراف' : 'Check Out', e:true},
+        {k:'notes',l: currentLang==='ar' ? 'ملاحظات' : 'Notes', e:true},
+        {k:'invoice',l: currentLang==='ar' ? 'مرفق' : 'Attachment', e:false, type:'file'}
+      ];
+      case 'employeeRecords': return [
+        {k:'empId',l: currentLang==='ar' ? 'الكود' : 'ID', e:true},
+        {k:'name',l: currentLang==='ar' ? 'الاسم' : 'Name', e:true},
+        {k:'role',l: currentLang==='ar' ? 'الوظيفة' : 'Role', e:true},
+        {k:'phone',l: currentLang==='ar' ? 'الهاتف' : 'Phone', e:true},
+        {k:'email',l: 'Email', e:true},
+        {k:'startDate',l: currentLang==='ar' ? 'تاريخ التعيين' : 'Start Date', e:true},
+        {k:'salary',l: currentLang==='ar' ? 'الراتب' : 'Salary', e:true},
+        {k:'notes',l: currentLang==='ar' ? 'ملاحظات' : 'Notes', e:true},
+        {k:'invoice',l: currentLang==='ar' ? 'مرفق' : 'Attachment', e:false, type:'file'}
+      ];
+      case 'salariesBonuses': return [
+        {k:'empName',l: currentLang==='ar' ? 'الموظف' : 'Employee', e:true},
+        {k:'month',l: currentLang==='ar' ? 'الشهر' : 'Month', e:true},
+        {k:'gross',l: currentLang==='ar' ? 'إجمالي' : 'Gross', e:true},
+        {k:'payments',l: currentLang==='ar' ? 'المدفوع' : 'Payments', e:true},
+        {k:'bonus',l: currentLang==='ar' ? 'المكافأة' : 'Bonus', e:true},
+        {k:'notes',l: currentLang==='ar' ? 'ملاحظات' : 'Notes', e:true},
+        {k:'invoice',l: currentLang==='ar' ? 'مرفق' : 'Attachment', e:false, type:'file'}
+      ];
+      case 'costRecords': return [
+        {k:'date',l: currentLang==='ar' ? 'التاريخ' : 'Date', e:true},
+        {k:'category',l: currentLang==='ar' ? 'البند' : 'Category', e:true},
+        {k:'description',l: currentLang==='ar' ? 'الوصف' : 'Description', e:true},
+        {k:'quantity',l: currentLang==='ar' ? 'الكمية' : 'Quantity', e:true},
+        {k:'unitPrice',l: currentLang==='ar' ? 'سعر الوحدة' : 'Unit Price', e:true},
+        {k:'total',l: currentLang==='ar' ? 'الإجمالي' : 'Total', e:false},
+        {k:'notes',l: currentLang==='ar' ? 'ملاحظات' : 'Notes', e:true},
+        {k:'invoice',l: currentLang==='ar' ? 'فاتورة' : 'Invoice', e:false, type:'file'}
+      ];
+      default: return [{k:'col1',l:'Col 1',e:true}];
+    }
   }
 
-  // build a row (doc may contain id and fields); if __new -> empty editable row
-  function buildRow(page, schema, doc){
-    const tr = el('tr',{});
+  // build table
+  function buildTable(pageKey){
+    const schema = schemaFor(pageKey);
+    const rows = cache[pageKey] || [];
+    const table = el('table', {});
+    const thead = el('thead', {});
+    const headTr = el('tr', {});
+    schema.forEach(col => headTr.appendChild(el('th', {}, col.l)));
+    thead.appendChild(headTr);
+    table.appendChild(thead);
+    const tbody = el('tbody', {});
+    // existing rows
+    rows.forEach(r => tbody.appendChild(buildRow(pageKey, schema, r)));
+    // new empty row
+    tbody.appendChild(buildRow(pageKey, schema, {__new:true}));
+    table.appendChild(tbody);
+    return table;
+  }
+
+  // build single row
+  function buildRow(pageKey, schema, doc){
+    const tr = el('tr', {});
     const isNew = !!doc.__new;
     const id = doc.id || null;
-
     schema.forEach(col=>{
-      const td = el('td',{});
+      const td = el('td', {});
       if(col.type === 'file'){
-        // file column: show thumbnail if url present, and upload input
-        const imgWrap = el('div',{style:'display:flex;gap:8px;align-items:center;justify-content:flex-start'});
-        const thumb = el('img',{class:'thumbnail', src: doc[col.k] ? doc[col.k] : '', alt:''});
-        thumb.style.display = doc[col.k] ? 'inline-block' : 'none';
-        thumb.onclick = ()=> openModal(doc[col.k]);
-        imgWrap.appendChild(thumb);
-
-        // uploader small input (hidden) and visible label
-        const input = el('input',{type:'file', accept:'image/*', style:'display:none'});
-        input.onchange = async (ev)=>{
-          const f = ev.target.files[0];
-          if(!f) return;
-          const path = `${page}/${Date.now()}_${Math.random().toString(36).slice(2,6)}_${f.name.replace(/\s+/g,'_')}`;
+        // thumbnail + uploader
+        const img = el('img', {class:'thumbnail', src: (doc[col.k]||''), alt:''});
+        img.style.display = doc[col.k] ? 'inline-block' : 'none';
+        img.addEventListener('click', ()=> openImageModal(doc[col.k]));
+        const fileInput = el('input', {type:'file', accept:'image/*,.pdf,.doc,.docx', style:'display:none'});
+        fileInput.addEventListener('change', async (e)=>{
+          const f = e.target.files[0]; if(!f) return;
+          const path = `${pageMap[pageKey].col}/${Date.now()}_${Math.random().toString(36).slice(2,6)}_${f.name.replace(/\s+/g,'_')}`;
           const ref = storage.ref(path);
           await ref.put(f);
           const url = await ref.getDownloadURL();
-          // update doc: if new row -> create; else update
           if(isNew){
-            // collect other fields in this new row
-            const rowObj = collectRowData(tr, schema);
-            rowObj[col.k] = url;
-            rowObj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-            const added = await db.collection(pageCollections[page]).add(rowObj);
-            // refresh handled by snapshot listener, but directly update thumb
-            input.value = '';
+            const rowData = collectRow(tr, schema);
+            rowData[col.k] = url; rowData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            await db.collection(pageMap[pageKey].col).add(rowData);
           } else {
-            await db.collection(pageCollections[page]).doc(id).update({ [col.k]: url });
-          }
-        };
-
-        const label = el('label',{class:'file-uploader'}, 'رفع صورة');
-        label.onclick = ()=> input.click();
-        imgWrap.appendChild(input);
-        imgWrap.appendChild(label);
-        td.appendChild(imgWrap);
-      } else if(col.e){
-        // editable cell
-        const initial = isNew ? '' : (doc[col.k] !== undefined ? doc[col.k] : '');
-        const div = el('div',{contenteditable:true, 'data-key':col.k, 'data-id': id || '', style:'min-width:100px;'}, initial);
-        // save on blur
-        div.addEventListener('blur', async (ev)=>{
-          const val = ev.target.textContent.trim();
-          // if new row: create document with values (only if any field filled)
-          if(isNew){
-            // collect row object from all editable cells
-            const rowData = collectRowData(tr, schema);
-            // check if at least one non-empty (besides invoice)
-            const has = Object.keys(rowData).some(k=> rowData[k] !== '' && rowData[k] !== null && rowData[k] !== undefined);
-            if(has){
-              rowData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-              // for computed fields like total: compute here if schema has qty & price
-              if(page==='finance'){
-                const qv = parseFloat(rowData['quantity']||0) || 0;
-                const pv = parseFloat(rowData['price']||0) || 0;
-                rowData['total'] = (qv*pv).toFixed(2);
-              }
-              await db.collection(pageCollections[page]).add(rowData);
-              // after adding, snapshot will re-render table
-            }
-          } else {
-            // update single field
-            const updateObj = {};
-            updateObj[col.k] = val;
-            // if finance and quantity/price changed => update total
-            if(page==='finance' && (col.k === 'quantity' || col.k === 'price')){
-              const docCache = cache[page].find(x=> x.id === id) || {};
-              const other = (col.k==='quantity') ? parseFloat(val||0) : parseFloat(docCache['quantity']||0);
-              const other2 = (col.k==='price') ? parseFloat(val||0) : parseFloat(docCache['price']||0);
-              updateObj['total'] = ( (col.k==='quantity'?other:parseFloat(docCache['quantity']||0)) * (col.k==='price'?other2:parseFloat(docCache['price']||0)) ).toFixed(2);
-            }
-            await db.collection(pageCollections[page]).doc(id).update(updateObj);
-            // if user cleared all editable fields -> delete doc
-            const updated = await db.collection(pageCollections[page]).doc(id).get();
-            const data = updated.data() || {};
-            const keys = schema.filter(c=>c.e).map(c=>c.k);
-            const allEmpty = keys.every(k=> (data[k] === '' || data[k] === null || data[k] === undefined) );
-            if(allEmpty){
-              await db.collection(pageCollections[page]).doc(id).delete();
-            }
+            await db.collection(pageMap[pageKey].col).doc(id).update({ [col.k]: url });
           }
         });
-        // press Enter to finish edit
-        div.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); div.blur(); } });
+        const uploadLabel = el('label', {class:'file-uploader', onclick: ()=> fileInput.click()}, t('uploadRow'));
+        td.appendChild(img); td.appendChild(fileInput); td.appendChild(uploadLabel);
+      } else if(col.e){
+        const initial = isNew ? '' : (doc[col.k] !== undefined ? doc[col.k] : '');
+        const div = el('div', {contenteditable:true, 'data-key':col.k, 'data-id': id || ''}, initial);
+        div.addEventListener('blur', async (ev)=> {
+          const val = ev.target.textContent.trim();
+          if(isNew){
+            // create new if any field filled
+            const obj = collectRow(tr, schema);
+            const has = Object.keys(obj).some(k=> obj[k] !== '' && obj[k] !== null && obj[k] !== undefined);
+            if(has){
+              obj.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+              // compute totals if finance/costs
+              if(pageKey === 'costRecords'){
+                const qv = parseFloat(obj['quantity']||0)||0; const pv = parseFloat(obj['unitPrice']||0)||0;
+                obj['total'] = (qv*pv).toFixed(2);
+              }
+              await db.collection(pageMap[pageKey].col).add(obj);
+            }
+          } else {
+            const upd = {}; upd[col.k] = val;
+            // if costRecords quantity/price changed => update total
+            if(pageKey === 'costRecords' && (col.k === 'quantity' || col.k === 'unitPrice')){
+              const snap = await db.collection(pageMap[pageKey].col).doc(id).get();
+              const data = snap.data() || {};
+              const otherQty = col.k === 'quantity' ? parseFloat(val||0) : parseFloat(data.quantity||0);
+              const otherPrice = col.k === 'unitPrice' ? parseFloat(val||0) : parseFloat(data.unitPrice||0);
+              upd['total'] = (otherQty * otherPrice).toFixed(2);
+            }
+            await db.collection(pageMap[pageKey].col).doc(id).update(upd);
+            // if all editable fields empty => delete
+            const snap2 = await db.collection(pageMap[pageKey].col).doc(id).get();
+            const data2 = snap2.data() || {};
+            const keys = schema.filter(c=>c.e).map(c=>c.k);
+            const allEmpty = keys.every(k=> (data2[k] === '' || data2[k] === null || data2[k] === undefined));
+            if(allEmpty) await db.collection(pageMap[pageKey].col).doc(id).delete();
+          }
+        });
+        div.addEventListener('keydown', e=>{ if(e.key === 'Enter'){ e.preventDefault(); div.blur(); }});
         td.appendChild(div);
       } else {
-        // non-editable display (computed or plain)
+        // non-editable computed/display
         if(!isNew){
-          if(col.k === 'total' && page==='materials'){
-            // compute total if missing
-            const qty = parseFloat(doc['qty']||0)||0;
-            const price = parseFloat(doc['unitPrice']||0)||0;
-            td.appendChild(document.createTextNode( (qty*price).toFixed(2) ));
-          } else if(col.k === 'total' && page==='finance'){
-            const total = doc['total'] !== undefined ? doc['total'] : ((parseFloat(doc['quantity']||0)||0)*(parseFloat(doc['price']||0)||0)).toFixed(2);
-            td.appendChild(document.createTextNode(total));
-          } else {
-            td.appendChild(document.createTextNode(doc[col.k] || ''));
-          }
-        } else {
-          td.appendChild(document.createTextNode(''));
-        }
+          if(col.k === 'total'){
+            if(pageKey === 'costRecords'){
+              const qv = parseFloat(doc['quantity']||0)||0; const pv = parseFloat(doc['unitPrice']||0)||0;
+              td.appendChild(document.createTextNode( (doc['total'] !== undefined) ? doc['total'] : (qv*pv).toFixed(2) ));
+            } else {
+              td.appendChild(document.createTextNode(doc[col.k] || ''));
+            }
+          } else td.appendChild(document.createTextNode(doc[col.k] || ''));
+        } else td.appendChild(document.createTextNode(''));
       }
       tr.appendChild(td);
     });
-
     return tr;
   }
 
-  // collect current row's editable values into object (used when creating new doc)
-  function collectRowData(tr, schema){
+  function collectRow(tr, schema){
     const obj = {};
     const cells = Array.from(tr.children);
     schema.forEach((col, i)=>{
-      if(col.type === 'file') {
-        // file will be handled separately
-      } else if(col.e){
+      if(col.type === 'file') return;
+      if(col.e){
         const div = cells[i].querySelector('[contenteditable]');
         obj[col.k] = div ? div.textContent.trim() : '';
       } else {
-        // non-editable: leave empty (or compute after)
+        // skip
       }
     });
-    // compute totals for finance or materials
-    if(schema.some(s=>s.k==='total') && schema.some(s=>s.k==='quantity') && schema.some(s=>s.k==='price')){
-      const qv = parseFloat(obj['quantity']||0)||0;
-      const pv = parseFloat(obj['price']||0)||0;
+    // compute total for costRecords
+    if(schema.some(s=>s.k === 'total') && schema.some(s=>s.k === 'quantity') && schema.some(s=>s.k === 'unitPrice')){
+      const qv = parseFloat(obj['quantity']||0)||0; const pv = parseFloat(obj['unitPrice']||0)||0;
       obj['total'] = (qv*pv).toFixed(2);
     }
     return obj;
   }
 
-  // ================== Sidebar actions ==================
-  document.querySelectorAll('.side-btn').forEach(b=>{
-    b.addEventListener('click', ()=> {
-      document.querySelectorAll('.side-btn').forEach(x=> x.classList.remove('active'));
-      b.classList.add('active');
-      currentPage = b.dataset.page;
-      renderCurrent();
-    });
-  });
-  q('#logoutBtn').addEventListener('click', ()=>{
-    if(confirm('Logout?')){ user=null; q('#userInfo').textContent=''; showLoginPrompt(); }
-  });
+  // image modal
+  function openImageModal(url){
+    if(!url) return;
+    $('#modalImg').src = url;
+    $('#downloadAttachment').href = url;
+    $('#imageModal').style.display = 'flex';
+  }
+  function closeImageModal(){ $('#imageModal').style.display = 'none'; $('#modalImg').src = ''; $('#downloadAttachment').href = '#'; }
 
-  // search box behavior: will be assigned when rendering page
+  // initial attach snapshot listeners
+  // (listeners attached after login via attachListeners)
 
-  // ================== Start ==================
-  // start login and listeners
-  showLoginPrompt();
+  // render first page after demo/login or attachListeners call
+  function initialRenderAfterLogin(){
+    // activate corresponding sidebar button
+    $$('.menu-btn').forEach(b=> b.classList.toggle('active', b.dataset.page === currentPage));
+    renderPage();
+  }
+
+  // If user manually closes login with correct creds, attach listeners and render
+  // attachListeners called on successful login earlier
+
+  // expose modal close globally
+  window.openImageModal = openImageModal;
+  window.closeImageModal = closeImageModal;
+
+  // If user refreshes and login was done manually before, need to re-attach
+  // For simplicity, we require login each time (since we used simple prompt-based auth)
+
+  // After attaching listeners, ensure first render
+  // attachListeners called in login flow above; for safety, call renderPage if cache has data
+  setTimeout(()=> {
+    // if demo used quickly might have data
+    initialRenderAfterLogin();
+  }, 800);
 
   </script>
 </body>
