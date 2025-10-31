@@ -1,234 +1,247 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>TopView — Admin System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#f5f7fb;--panel:#ffffff;--muted:#6b7280;--accent:#d4af37;--primary:#0b63d6;--text:#0f172a;}
-    [data-theme="dark"]{--bg:#0b1220;--panel:#0f172a;--muted:#9aa3b2;--text:#e6eef8;}
-    *{box-sizing:border-box}
-    body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
-    header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06)}
-    .brand{font-weight:800;color:var(--primary); font-size:20px}
-    .header-controls{margin-left:auto; display:flex; gap:10px; align-items:center}
-    .lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer}
-    .user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03)}
-    .layout{display:flex; min-height:calc(100vh - 72px)}
-    .sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px}
-    .sidebar h3{margin:0;color:var(--primary)}
-    .menu-btn{display:block;text-align:right;padding:12px;border-radius:8px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text)}
-    .menu-btn.active{background:rgba(11,99,214,0.08); color:var(--primary)}
-    main{flex:1;padding:20px}
-    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px}
-    .card{background:var(--panel);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04); font-size:16px}
-    .table-wrap{overflow:auto;border-radius:10px}
-    table{width:100%;border-collapse:collapse;font-size:16px; min-width:600px}
-    thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:right}
-    td, th{padding:12px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle}
-    td div[contenteditable]{min-width:140px;outline:none;padding:8px;border-radius:6px}
-    tr:hover td{background:rgba(11,99,214,0.02)}
-    .file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:14px}
-    .controls{display:flex;gap:8px;align-items:center}
-    .btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
-    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06)}
-    .export{background:linear-gradient(90deg,var(--accent),var(--primary));}
-    .page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04)}
-    .attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px}
-    .divider{height:2px;background:rgba(0,0,0,0.06);margin:14px 0;border-radius:4px}
-    .small{font-size:13px;color:var(--muted)}
-    #loginScreen{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover; z-index:9999;}
-    .login-box{position: relative; background-color: rgba(255, 255, 255, 0.9); padding:40px 30px; border-radius:15px; width:90%; max-width:400px; box-shadow:0 5px 20px rgba(0,0,0,0.2); text-align:center; font-family:'Poppins', sans-serif;}
-    .login-box h2{ margin-bottom:25px; color:#333; }
-    .login-box input{ width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:16px; }
-    .login-box button{ width:100%; padding:12px; background-color:#0070f3; color:white; font-size:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
-    .login-box button:hover{ background-color:#005bb5; }
-    .login-box p{ margin-top:20px; color:#333; font-weight:500; }
-    @media (max-width:900px){ .sidebar{display:none} table{min-width:500px} }
-    @media (max-width:480px){ .login-box{ padding:25px 20px; } }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TopView — Admin System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f7fb; --panel:#ffffff; --muted:#6b7280;
+  --accent:#d4af37; --primary:#0b63d6; --text:#0f172a;
+}
+[data-theme="dark"]{
+  --bg:#0b1220; --panel:#0f172a; --muted:#9aa3b2; --text:#e6eef8;
+}
+*{box-sizing:border-box}
+body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;}
+header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06)}
+.brand{font-weight:800;color:var(--primary); font-size:20px}
+.header-controls{margin-left:auto; display:flex; gap:10px; align-items:center}
+.lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer}
+.user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03)}
+.layout{display:flex; min-height:calc(100vh - 72px)}
+.sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px}
+.sidebar h3{margin:0;color:var(--primary)}
+.menu-btn{display:block;text-align:right;padding:14px;border-radius:8px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text); font-size:16px}
+.menu-btn.active{background:rgba(11,99,214,0.08); color:var(--primary)}
+main{flex:1;padding:20px}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px}
+.card{background:var(--panel);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04)}
+.table-wrap{overflow:auto;border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:16px;min-width:700px}
+thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:12px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:center}
+td, th{padding:12px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;text-align:center}
+.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:14px}
+.controls{display:flex;gap:8px;align-items:center}
+.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06)}
+.export{background:linear-gradient(90deg,var(--accent),var(--primary));}
+.page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04)}
+.attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px}
+.small{font-size:13px;color:var(--muted)}
+#loginScreen{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+  z-index:9999;
+}
+.login-box{position: relative;background-color: rgba(255, 255, 255, 0.9);padding:40px 30px;border-radius:15px;width:90%;max-width:400px;box-shadow:0 5px 20px rgba(0,0,0,0.2);text-align:center;}
+.login-box h2{ margin-bottom:25px; color:#333; }
+.login-box input{ width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:16px; }
+.login-box button{ width:100%; padding:12px; background-color:#0070f3; color:white; font-size:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
+.login-box button:hover{ background-color:#005bb5; }
+.login-box p{ margin-top:20px; color:#333; font-weight:500; }
+@media (max-width:900px){ .sidebar{display:none} table{min-width:600px} }
+@media (max-width:480px){ .login-box{ padding:25px 20px; } }
+</style>
 </head>
 <body data-theme="light">
 
-  <!-- Login Screen -->
-  <div id="loginScreen">
-    <div class="login-box">
-      <h2>Welcome to Top View</h2>
-      <form>
-        <input type="text" id="loginEmail" placeholder="Username" value="" required>
-        <input type="text" id="loginPass" placeholder="Password" value="" required>
-        <button type="button" id="btnLogin">Login</button>
-      </form>
-      <p>Top View —  Interior design</p>
-    </div>
+<div id="loginScreen">
+  <div class="login-box">
+    <h2>Welcome to Top View</h2>
+    <form>
+      <input type="text" id="loginEmail" placeholder="Username" value="" required>
+      <input type="password" id="loginPass" placeholder="Password" value="" required>
+      <button type="button" id="btnLogin">Login</button>
+    </form>
+    <p>Top View —  Interior design</p>
   </div>
+</div>
 
-  <!-- header -->
-  <header>
-    <div class="brand">TOP VIEW</div>
-    <div class="small">Interior design — Admin</div>
-    <div class="header-controls">
-      <select id="langSelect" class="lang-toggle" title="Language">
-        <option value="en">English</option>
-        <option value="ar">العربية</option>
-      </select>
-      <button id="themeToggle" class="theme-toggle">Dark</button>
-      <div class="user-box" id="userBox">Not signed</div>
-    </div>
-  </header>
+<header>
+  <div class="brand">TOP VIEW</div>
+  <div class="small">Interior design — Admin</div>
+  <div class="header-controls">
+    <select id="langSelect" class="lang-toggle" title="Language">
+      <option value="en">English</option>
+      <option value="ar">العربية</option>
+    </select>
+    <button id="themeToggle" class="theme-toggle">Dark</button>
+    <div class="user-box" id="userBox">Not signed</div>
+  </div>
+</header>
 
-  <div class="layout">
-    <aside class="sidebar" id="sidebar">
-      <h3>Dashboard</h3>
-      <button class="menu-btn active" data-page="generalAccounts">General Client Accounts</button>
-      <button class="menu-btn" data-page="attendanceLog">Attendance Log</button>
-      <button class="menu-btn" data-page="employeeRecords">Employee Records</button>
-      <button class="menu-btn" data-page="salariesBonuses">Salaries & Bonuses</button>
-      <button class="menu-btn" data-page="costRecords">Cost Records</button>
-      <div style="flex:1"></div>
-      <div class="small">Upload Excel files per page and work on them.</div>
-      <div style="height:8px"></div>
-      <button id="signOutBtn" class="menu-btn">Sign out</button>
-    </aside>
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <h3>Dashboard</h3>
+    <button class="menu-btn active" data-page="generalAccounts">General Client Accounts</button>
+    <button class="menu-btn" data-page="attendanceLog">Attendance Log</button>
+    <button class="menu-btn" data-page="employeeRecords">Employee Records</button>
+    <button class="menu-btn" data-page="salariesBonuses">Salaries & Bonuses</button>
+    <button class="menu-btn" data-page="costRecords">Cost Records</button>
+    <div style="flex:1"></div>
+    <div class="small">Upload page files (Excel/Word/PDF) and attachments per row.</div>
+    <div style="height:8px"></div>
+    <button id="signOutBtn" class="menu-btn">Sign out</button>
+  </aside>
 
-    <main>
-      <div class="topbar">
-        <input id="globalSearch" class="search" placeholder="Search current page...">
-        <div class="controls">
-          <button class="btn export" id="exportExcelBtn">Export Excel</button>
-          <label class="btn ghost" style="cursor:pointer">
-            Upload Excel
-            <input id="pageFileInput" type="file" accept=".xlsx,.xls,.csv" style="display:none">
-          </label>
-        </div>
+  <main>
+    <div class="topbar">
+      <input id="globalSearch" class="search" placeholder="Search current page...">
+      <div class="controls">
+        <button class="btn export" id="exportCsvBtn">Export CSV</button>
+        <button class="btn export" id="exportExcelBtn">Export Excel</button>
+        <label class="btn ghost" style="cursor:pointer">
+          Upload page file
+          <input id="pageFileInput" type="file" accept=".xlsx,.xls,.csv" style="display:none">
+        </label>
       </div>
+    </div>
+    <div id="pageContent"></div>
+    <div id="pageAttachments" class="page-attachments"></div>
+  </main>
+</div>
 
-      <div id="pageContent"></div>
-      <div id="pageAttachments" class="page-attachments"></div>
-    </main>
-  </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
+  authDomain: "topview-system.firebaseapp.com",
+  projectId: "topview-system",
+  storageBucket: "topview-system.appspot.com",
+  messagingSenderId: "1073945877413",
+  appId: "1:1073945877413:web:d516e451e543f7a9db664c",
+};
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-  <script>
-    // ================= CONFIG =================
-    const firebaseConfig = {
-      apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
-      authDomain: "topview-system.firebaseapp.com",
-      projectId: "topview-system",
-      storageBucket: "topview-system.appspot.com",
-      messagingSenderId: "1073945877413",
-      appId: "1:1073945877413:web:ba54d1e013d4c7f8f3a6b3"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+// LOGIN
+const loginScreen = document.getElementById('loginScreen');
+const userBox = document.getElementById('userBox');
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  const em = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPass').value.trim();
+  if(em==='admin@topview.com' && pw==='123456'){
+    loginScreen.style.display='none';
+    userBox.textContent=em;
+    attachListeners();
+    renderPage('generalAccounts');
+  }else alert('Invalid credentials');
+});
 
-    const loginScreen = document.getElementById('loginScreen');
-    const userBox = document.getElementById('userBox');
-
-    document.getElementById('btnLogin').addEventListener('click', ()=>{
-      const em = document.getElementById('loginEmail').value.trim();
-      const pw = document.getElementById('loginPass').value.trim();
-      if(em === 'admin@topview.com' && pw === '123456'){
-        loginScreen.style.display = 'none';
-        userBox.textContent = em;
-        attachListeners();
-        renderPage('generalAccounts');
-      } else {
-        alert('Invalid credentials');
-      }
+// MENU
+function attachListeners(){
+  const menuBtns = document.querySelectorAll('.menu-btn[data-page]');
+  menuBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      menuBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPage(btn.dataset.page);
     });
+  });
+  document.getElementById('signOutBtn').addEventListener('click',()=>location.reload());
+}
 
-    function attachListeners(){
-      const menuBtns = document.querySelectorAll('.menu-btn[data-page]');
-      menuBtns.forEach(btn=>{
-        btn.addEventListener('click',()=>{
-          menuBtns.forEach(b=>b.classList.remove('active'));
-          btn.classList.add('active');
-          renderPage(btn.dataset.page);
-        });
-      });
-      document.getElementById('signOutBtn').addEventListener('click',()=>location.reload());
-    }
+// RENDER PAGES
+async function renderPage(page){
+  const container = document.getElementById('pageContent');
+  container.innerHTML='';
+  const card = document.createElement('div');
+  card.className='card';
+  card.innerHTML = `<h3>${page}</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>File Name</th><th>Action</th></tr></thead>
+        <tbody id="${page}TableBody"></tbody>
+      </table>
+    </div>`;
+  container.appendChild(card);
 
-    function renderPage(page='generalAccounts'){
-      const container = document.getElementById('pageContent');
-      container.innerHTML = '';
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `<h3>${page}</h3>`;
-      container.appendChild(card);
-
-      // Load existing files from Firebase Storage
-      const attachmentsDiv = document.getElementById('pageAttachments');
-      attachmentsDiv.innerHTML = '';
-      const listRef = storage.ref(page+'/');
-      listRef.listAll().then(res=>{
-        res.items.forEach(fileRef=>{
-          const itemDiv = document.createElement('div');
-          itemDiv.className='attach-item';
-          const link = document.createElement('a');
-          link.href='#';
-          link.textContent=fileRef.name;
-          link.addEventListener('click', ()=>{
-            fileRef.getDownloadURL().then(url=>window.open(url,'_blank'));
-          });
-          itemDiv.appendChild(link);
-          attachmentsDiv.appendChild(itemDiv);
-        });
-      });
-    }
-
-    const fileInput = document.getElementById('pageFileInput');
-    fileInput.addEventListener('change', async e=>{
-      const page = document.querySelector('.menu-btn.active').dataset.page;
-      const file = e.target.files[0];
-      if(!file) return;
-      const storageRef = storage.ref(page+'/'+file.name);
-      await storageRef.put(file);
-      renderPage(page);
+  // load existing files from Firestore
+  const pageDoc = doc(db,'pages',page);
+  const docSnap = await getDoc(pageDoc);
+  const tbody = document.getElementById(`${page}TableBody`);
+  if(docSnap.exists()){
+    const files = docSnap.data().files||[];
+    files.forEach(f=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML=`<td>${f.name}</td><td><a href="${f.url}" target="_blank" class="btn">Open</a></td>`;
+      tbody.appendChild(tr);
     });
+  }
+}
 
-    document.getElementById('exportExcelBtn').addEventListener('click', ()=>{
-      const page = document.querySelector('.menu-btn.active').dataset.page;
-      const listRef = storage.ref(page+'/');
-      listRef.listAll().then(res=>{
-        res.items.forEach(fileRef=>{
-          fileRef.getDownloadURL().then(url=>{
-            fetch(url).then(resp=>resp.arrayBuffer()).then(data=>{
-              const wb = XLSX.read(data, {type:'array'});
-              XLSX.writeFile(wb, page+'_export.xlsx');
-            });
-          });
-        });
-      });
-    });
+// UPLOAD FILE
+document.getElementById('pageFileInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0];
+  const page = document.querySelector('.menu-btn.active').dataset.page;
+  const storageRef = ref(storage, `${page}/${file.name}`);
+  await uploadBytes(storageRef,file);
+  const url = await getDownloadURL(storageRef);
+  const pageDoc = doc(db,'pages',page);
+  await setDoc(pageDoc,{files: arrayUnion({name:file.name,url})},{merge:true});
+  renderPage(page);
+});
 
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', ()=>{
-      const body = document.body;
-      if(body.dataset.theme==='light'){
-        body.dataset.theme='dark';
-        themeToggle.textContent='Light';
-      }else{
-        body.dataset.theme='light';
-        themeToggle.textContent='Dark';
-      }
-    });
+// EXPORT CSV
+document.getElementById('exportCsvBtn').addEventListener('click', async ()=>{
+  const page = document.querySelector('.menu-btn.active').dataset.page;
+  const pageDoc = doc(db,'pages',page);
+  const docSnap = await getDoc(pageDoc);
+  const files = docSnap.exists()?docSnap.data().files: [];
+  let csv = 'File Name,URL\n';
+  files.forEach(f=> csv+=`${f.name},${f.url}\n`);
+  const blob = new Blob([csv],{type:'text/csv'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${page}.csv`;
+  link.click();
+});
 
-    const langSelect = document.getElementById('langSelect');
-    langSelect.addEventListener('change', ()=>{
-      alert('Language switching demo only');
-    });
-  </script>
+// EXPORT EXCEL
+document.getElementById('exportExcelBtn').addEventListener('click', async ()=>{
+  const page = document.querySelector('.menu-btn.active').dataset.page;
+  const pageDoc = doc(db,'pages',page);
+  const docSnap = await getDoc(pageDoc);
+  const files = docSnap.exists()?docSnap.data().files: [];
+  let content='File Name\tURL\n';
+  files.forEach(f=> content+=`${f.name}\t${f.url}\n`);
+  const blob = new Blob([content],{type:'application/vnd.ms-excel'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `${page}.xls`;
+  link.click();
+});
+
+// THEME TOGGLE
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  const body = document.body;
+  if(body.dataset.theme==='light'){body.dataset.theme='dark'; themeToggle.textContent='Light'}
+  else{body.dataset.theme='light'; themeToggle.textContent='Dark'}
+});
+
+// LANGUAGE
+document.getElementById('langSelect').addEventListener('change', ()=>{
+  alert('Language switch ready, can implement translations here.');
+});
+
+</script>
 </body>
 </html>
