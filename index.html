@@ -61,8 +61,8 @@ tr:hover td{background:rgba(11,99,214,0.02);}
   <div class="login-box">
     <h2>Welcome to Top View</h2>
     <form>
-      <input type="text" id="loginEmail" placeholder="Username" value="" required>
-      <input type="text" id="loginPass" placeholder="Password" value="" required>
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPass" placeholder="Password" required>
       <button type="button" id="btnLogin">Login</button>
     </form>
     <p>Top View — Interior design</p>
@@ -115,14 +115,13 @@ tr:hover td{background:rgba(11,99,214,0.02);}
 </div>
 
 <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-<script>
-// ====== Firebase config ======
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
   authDomain: "topview-system.firebaseapp.com",
@@ -131,22 +130,27 @@ const firebaseConfig = {
   messagingSenderId: "1073945877413",
   appId: "1:1073945877413:web:ba54d1e013d4c7f8f3a6b3"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
 // ====== LOGIN ======
 const loginScreen = document.getElementById('loginScreen');
 const userBox = document.getElementById('userBox');
-document.getElementById('btnLogin').addEventListener('click', ()=>{
+document.getElementById('btnLogin').addEventListener('click', async ()=>{
   const em = document.getElementById('loginEmail').value.trim();
   const pw = document.getElementById('loginPass').value.trim();
-  if(em==='admin@topview.com' && pw==='123456'){
+  try{
+    await signInWithEmailAndPassword(auth, em, pw);
     loginScreen.style.display='none';
     userBox.textContent=em;
     attachListeners();
     renderPage('generalAccounts');
-  }else{ alert('Invalid credentials'); }
+  }catch(err){
+    alert('خطأ في تسجيل الدخول: '+err.message);
+  }
 });
 
 // ====== MENU ======
@@ -182,14 +186,13 @@ function renderPage(page){
 }
 
 // ====== LOAD DATA ======
-function loadPageData(page){
+async function loadPageData(page){
   const tbody = document.querySelector(`#${page}Table tbody`);
   tbody.innerHTML='';
-  db.collection(page).get().then(snapshot=>{
-    snapshot.forEach(doc=>{
-      const data = doc.data();
-      addRowToTable(page,data,doc.id);
-    });
+  const snapshot = await getDocs(collection(db, page));
+  snapshot.forEach(docSnap=>{
+    const data = docSnap.data();
+    addRowToTable(page,data,docSnap.id);
   });
 }
 
@@ -198,38 +201,46 @@ function addRow(page,data={},id=null){
   const tbody = document.querySelector(`#${page}Table tbody`);
   const tr = document.createElement('tr');
   const cols = pagesColumns[page];
-  tr.innerHTML=cols.map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')+`<td><label class="file-uploader">Attach<input type="file" style="display:none" onchange="uploadFile(event,'${page}','${id||''}',this)"></label></td><td><button class="btn ghost" onclick="saveRow('${page}',this,${id?`'${id}'`:null})">Save</button></td>`;
+  tr.innerHTML=cols.map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')+
+                 `<td><label class="file-uploader">Attach<input type="file" style="display:none" onchange="uploadFile(event,'${page}','${id||''}',this)"></label></td>`+
+                 `<td><button class="btn ghost" onclick="saveRow('${page}',this,${id?`'${id}'`:null})">Save</button></td>`;
   tbody.appendChild(tr);
 }
 
+// ====== ADD ROW TO TABLE (for loading) ======
+function addRowToTable(page,data,id){
+  addRow(page,data,id);
+}
+
 // ====== SAVE ROW ======
-function saveRow(page,btn,id){
+async function saveRow(page,btn,id){
   const tr = btn.closest('tr');
   const data={};
   const cols=pagesColumns[page];
   tr.querySelectorAll('td div[contenteditable]').forEach((td,i)=>data[cols[i]]=td.innerText);
   if(id){
-    db.collection(page).doc(id).set(data).then(()=>alert('Updated!'));
+    await setDoc(doc(db,page,id),data);
+    alert('Updated!');
   }else{
-    db.collection(page).add(data).then(docRef=>{
-      alert('Saved!'); btn.setAttribute('onclick',`saveRow('${page}',this,'${docRef.id}')`);
-    });
+    const docRef = await addDoc(collection(db,page),data);
+    alert('Saved!');
+    btn.setAttribute('onclick',`saveRow('${page}',this,'${docRef.id}')`);
   }
 }
 
 // ====== UPLOAD FILE ======
-function uploadFile(e,page,id,input){
+async function uploadFile(e,page,id,input){
   const file = e.target.files[0];
   if(!file) return;
   const filename = `${page}/${Date.now()}_${file.name}`;
-  const uploadTask = storage.ref(filename).put(file);
-  uploadTask.on('state_changed',null,err=>alert(err.message),()=>{
-    uploadTask.snapshot.ref.getDownloadURL().then(url=>{
-      const tr=input.closest('tr'); let attachments=tr.dataset.attachments?JSON.parse(tr.dataset.attachments):[];
-      attachments.push({name:file.name,url}); tr.dataset.attachments=JSON.stringify(attachments);
-      alert('File uploaded!');
-    });
-  });
+  const fileRef = ref(storage, filename);
+  await uploadBytes(fileRef, file);
+  const url = await getDownloadURL(fileRef);
+  const tr=input.closest('tr'); 
+  let attachments=tr.dataset.attachments?JSON.parse(tr.dataset.attachments):[];
+  attachments.push({name:file.name,url});
+  tr.dataset.attachments=JSON.stringify(attachments);
+  alert('File uploaded!');
 }
 
 // ====== ADD ROW BUTTON ======
@@ -276,5 +287,6 @@ document.getElementById('globalSearch').addEventListener('input', e=>{
 document.getElementById('langSelect').addEventListener('change', ()=>alert('Language change not implemented yet.'));
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
