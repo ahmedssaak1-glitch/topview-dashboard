@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TopView — Admin System</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f5f7fb; --panel:#ffffff; --muted:#6b7280; --accent:#d4af37; --primary:#0b63d6; --text:#0f172a;
@@ -15,34 +15,35 @@
 *{box-sizing:border-box;}
 body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text);}
 header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06);}
-.brand{font-weight:800;color:var(--primary); font-size:20px;}
+.brand{font-weight:800;color:var(--primary); font-size:24px;}
 .header-controls{margin-left:auto; display:flex; gap:10px; align-items:center;}
 .lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer;}
 .user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03);}
 .layout{display:flex; min-height:calc(100vh - 72px);}
 .sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px;}
-.sidebar h3{margin:0;color:var(--primary);}
-.menu-btn{display:block;text-align:right;padding:12px;border-radius:8px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);}
-.menu-btn.active{background:rgba(11,99,214,0.08); color:var(--primary);}
+.sidebar h3{margin:0;color:var(--primary); font-size:28px; letter-spacing:1px;}
+.menu-btn{display:block;text-align:right;padding:16px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);font-size:20px;transition:0.2s;}
+.menu-btn.active{background:rgba(11,99,214,0.10); color:var(--primary);}
 main{flex:1;padding:20px;}
 .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px;}
-.card{background:var(--panel);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
+.search{padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px; font-size:18px;}
+.card{background:var(--panel);padding:18px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
 .table-wrap{overflow:auto;border-radius:10px;}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:900px;}
-thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:right;}
-td, th{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;}
-td div[contenteditable]{min-width:120px;outline:none;padding:8px;border-radius:6px;}
-tr:hover td{background:rgba(11,99,214,0.02);}
-.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:13px;}
+table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:18px;min-width:900px;}
+thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:14px 10px;border-bottom:2px solid rgba(0,0,0,0.10);text-align:right;font-size:20px;}
+td, th{padding:14px 10px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;}
+td{background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.04);}
+td div[contenteditable]{min-width:120px;outline:none;padding:10px 8px;border-radius:8px;white-space:pre-wrap;word-break:break-word;min-height:40px;font-size:18px;line-height:1.6;}
+tr:hover td{background:rgba(11,99,214,0.04);}
+.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:15px;}
 .controls{display:flex;gap:8px;align-items:center;}
-.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700;}
+.btn{background:var(--primary);color:#fff;padding:10px 18px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:18px;}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);}
 .export{background:linear-gradient(90deg,var(--accent),var(--primary));}
 .page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04);}
 .attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px;}
 .divider{height:2px;background:rgba(0,0,0,0.06);margin:14px 0;border-radius:4px;}
-.small{font-size:13px;color:var(--muted);}
+.small{font-size:15px;color:var(--muted);}
 #loginScreen{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover; z-index:9999;}
 .login-box{position: relative; background-color: rgba(255, 255, 255, 0.9); padding:40px 30px; border-radius:15px; width:90%; max-width:400px; box-shadow:0 5px 20px rgba(0,0,0,0.2); text-align:center; font-family:'Poppins', sans-serif;}
 .login-box h2{ margin-bottom:25px; color:#333; }
@@ -84,14 +85,14 @@ tr:hover td{background:rgba(11,99,214,0.02);}
 
 <div class="layout">
 <aside class="sidebar" id="sidebar">
-<h3>Dashboard</h3>
-<button class="menu-btn active" data-page="generalAccounts">General Accounts</button>
-<button class="menu-btn" data-page="attendanceLog">Attendance Log</button>
-<button class="menu-btn" data-page="employeeRecords">Employee Records</button>
-<button class="menu-btn" data-page="salariesBonuses">Salaries & Bonuses</button>
-<button class="menu-btn" data-page="costRecords">Cost Records</button>
+<h3 id="dashboardTitle">Dashboard</h3>
+<button class="menu-btn active" data-page="generalAccounts"></button>
+<button class="menu-btn" data-page="attendanceLog"></button>
+<button class="menu-btn" data-page="employeeRecords"></button>
+<button class="menu-btn" data-page="salariesBonuses"></button>
+<button class="menu-btn" data-page="costRecords"></button>
 <div style="flex:1"></div>
-<div class="small">Upload page files (Excel/Word/PDF) and attachments per row.</div>
+<div class="small" id="uploadNote"></div>
 <div style="height:8px"></div>
 <button id="signOutBtn" class="menu-btn">Sign out</button>
 </aside>
@@ -116,7 +117,7 @@ Upload page file
 <!-- Firebase Modular SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, setDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
 // Firebase config
@@ -133,50 +134,106 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// ====== LOGIN ======
-const loginScreen = document.getElementById('loginScreen');
-const userBox = document.getElementById('userBox');
-document.getElementById('btnLogin').addEventListener('click', ()=>{
-  const em = document.getElementById('loginEmail').value.trim();
-  const pw = document.getElementById('loginPass').value.trim();
-  if(em==='admin@topview.com' && pw==='123456'){
-    loginScreen.style.display='none';
-    userBox.textContent=em;
-    attachListeners();
-    renderPage('generalAccounts');
-  }else{ alert('Invalid credentials'); }
-});
-
-// ====== MENU ======
-function attachListeners(){
-  const menuBtns = document.querySelectorAll('.menu-btn[data-page]');
-  menuBtns.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      menuBtns.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      renderPage(btn.dataset.page);
-    });
-  });
-  document.getElementById('signOutBtn').addEventListener('click',()=>location.reload());
-}
-
-// ====== PAGES DATA ======
-const pagesColumns = {
-  generalAccounts:["Client Number","Client Name","Nationality","ID Number","Email","Location","Building Name","Unit Type","Property No","Comments"],
-  attendanceLog:["Date","Full Name","Job Title","Section","Attendance Time","Check-out Time","Number of Working Hours","Extra Hours","Delay Hours","Admin Notes","Comments"],
-  employeeRecords:["Full Name","Job Title","Nationality","Residence Number","Residence Expiry","Passport Number","Phone","Hire Date","Contract Type","Basic Salary","Housing","Bank","Account Number","Residence Status","Comments"],
-  salariesBonuses:["Full Name","Job Title","Section","Nationality","Hire Date","Basic Salary","Incentives","Bonuses","Attendance Rate","Total Due","Advances","Deductions","Penalties","Net Salary After Deduction","Payment Method","Bank","Account Number","Payment Date","Comments"],
-  costRecords:["Date","Item","Expense Type","Amount","Comments"]
+// ====== LANG DATA ======
+const langs = {
+  en: {
+    dashboard: "Dashboard",
+    menu: [
+      "General Accounts",
+      "Attendance Log",
+      "Employee Records",
+      "Salaries & Bonuses",
+      "Cost Records"
+    ],
+    uploadNote: "Upload page files (Excel/Word/PDF) and attachments per row.",
+    addRow: "Add Row",
+    exportCsv: "Export CSV",
+    exportExcel: "Export Excel",
+    search: "Search current page...",
+    signOut: "Sign out",
+    save: "Save",
+    attach: "Attach",
+    actions: "Actions",
+    attachments: "Attachments"
+  },
+  ar: {
+    dashboard: "لوحة القيادة",
+    menu: [
+      "الحسابات العامة",
+      "سجل الحضور",
+      "سجلات الموظفين",
+      "الرواتب والمكافآت",
+      "سجلات التكلفة"
+    ],
+    uploadNote: "ارفع ملفات الصفحة (اكسل/وورد/بي دي اف) أو مرفقات لكل صف.",
+    addRow: "إضافة صف",
+    exportCsv: "تصدير CSV",
+    exportExcel: "تصدير Excel",
+    search: "بحث في الصفحة الحالية...",
+    signOut: "تسجيل الخروج",
+    save: "حفظ",
+    attach: "إرفاق",
+    actions: "إجراءات",
+    attachments: "مرفقات"
+  }
 };
 
+const pagesColumns = {
+  generalAccounts: {
+    en: ["Client Number","Client Name","Nationality","ID Number","Email","Location","Building Name","Unit Type","Property No","Comments"],
+    ar: ["رقم العميل","اسم العميل","الجنسية","رقم الهوية","البريد الإلكتروني","الموقع","اسم المبنى","نوع الوحدة","رقم العقار","ملاحظات"]
+  },
+  attendanceLog: {
+    en: ["Date","Full Name","Job Title","Section","Attendance Time","Check-out Time","Number of Working Hours","Extra Hours","Delay Hours","Admin Notes","Comments"],
+    ar: ["التاريخ","الاسم الكامل","المسمى الوظيفي","القسم","وقت الحضور","وقت الانصراف","عدد ساعات العمل","ساعات إضافية","ساعات تأخير","ملاحظات المشرف","ملاحظات"]
+  },
+  employeeRecords: {
+    en: ["Full Name","Job Title","Nationality","Residence Number","Residence Expiry","Passport Number","Phone","Hire Date","Contract Type","Basic Salary","Housing","Bank","Account Number","Residence Status","Comments"],
+    ar: ["الاسم الكامل","المسمى الوظيفي","الجنسية","رقم الإقامة","تاريخ انتهاء الإقامة","رقم الجواز","الهاتف","تاريخ التعيين","نوع العقد","الراتب الأساسي","سكن","البنك","رقم الحساب","حالة الإقامة","ملاحظات"]
+  },
+  salariesBonuses: {
+    en: ["Full Name","Job Title","Section","Nationality","Hire Date","Basic Salary","Incentives","Bonuses","Attendance Rate","Total Due","Advances","Deductions","Penalties","Net Salary After Deduction","Payment Method","Bank","Account Number","Payment Date","Comments"],
+    ar: ["الاسم الكامل","المسمى الوظيفي","القسم","الجنسية","تاريخ التعيين","الراتب الأساسي","الحوافز","المكافآت","نسبة الحضور والانضباط","إجمالي المستحق","السلف","الخصومات","الجزاءات","صافي الراتب بعد الخصم","طريقة الدفع","البنك","رقم الحساب","تاريخ الصرف","ملاحظات"]
+  },
+  costRecords: {
+    en: ["Date","Item","Expense Type","Amount","Comments"],
+    ar: ["التاريخ","البند","نوع المصروف","المبلغ","ملاحظات"]
+  }
+};
+
+let currentLang = "en";
+let currentPage = "generalAccounts";
+
+// ====== LANG RENDER ======
+function renderLang(){
+  document.getElementById('dashboardTitle').textContent = langs[currentLang].dashboard;
+  document.querySelectorAll('.menu-btn[data-page]').forEach((btn,i)=>{
+    btn.textContent = langs[currentLang].menu[i];
+    btn.style.fontSize = "20px";
+    btn.style.fontWeight = "bold";
+    btn.style.letterSpacing = "0.5px";
+  });
+  document.getElementById('uploadNote').textContent = langs[currentLang].uploadNote;
+  document.getElementById('addRowBtn') && (document.getElementById('addRowBtn').textContent = langs[currentLang].addRow);
+  document.getElementById('exportCsvBtn').textContent = langs[currentLang].exportCsv;
+  document.getElementById('exportExcelBtn').textContent = langs[currentLang].exportExcel;
+  document.getElementById('globalSearch').placeholder = langs[currentLang].search;
+  document.getElementById('signOutBtn').textContent = langs[currentLang].signOut;
+  renderPage(currentPage, true);
+}
+
 // ====== RENDER PAGE ======
-function renderPage(page){
+function renderPage(page, langOnly=false){
+  currentPage = page;
   const container = document.getElementById('pageContent');
   container.innerHTML='';
   const card = document.createElement('div'); card.className='card';
-  card.innerHTML=`<h3>${page}</h3><div class="table-wrap"><table id="${page}Table"><thead><tr>${pagesColumns[page].map(c=>`<th>${c}</th>`).join('')}<th>Attachments</th><th>Actions</th></tr></thead><tbody></tbody></table></div><button class="btn" id="addRowBtn">Add Row</button>`;
+  const cols = pagesColumns[page][currentLang];
+  card.innerHTML=`<h3 style="font-size:26px;letter-spacing:1px;margin-bottom:18px;">${langs[currentLang].menu[Object.keys(pagesColumns).indexOf(page)]}</h3>
+  <div class="table-wrap"><table id="${page}Table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>${langs[currentLang].attachments}</th><th>${langs[currentLang].actions}</th></tr></thead><tbody></tbody></table></div>
+  <button class="btn" id="addRowBtn">${langs[currentLang].addRow}</button>`;
   container.appendChild(card);
-  loadPageData(page);
+  if(!langOnly) loadPageData(page);
   document.getElementById('addRowBtn').onclick = ()=>addRow(page);
 }
 
@@ -195,11 +252,11 @@ async function loadPageData(page){
 // ====== ADD ROW TO TABLE ======
 function addRowToTable(page, data={}, id=null){
   const tbody = document.querySelector(`#${page}Table tbody`);
+  const cols = pagesColumns[page][currentLang];
   const tr = document.createElement('tr');
-  const cols = pagesColumns[page];
   tr.innerHTML = cols.map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')
-    + `<td><label class="file-uploader">Attach<input type="file" style="display:none" onchange="window.uploadFile(event,'${page}','${id||''}',this)"></label></td>`
-    + `<td><button class="btn ghost" onclick="window.saveRow('${page}',this,${id?`'${id}'`:null})">Save</button></td>`;
+    + `<td><label class="file-uploader">${langs[currentLang].attach}<input type="file" style="display:none" onchange="window.uploadFile(event,'${page}','${id||''}',this)"></label></td>`
+    + `<td><button class="btn ghost" onclick="window.saveRow('${page}',this,${id?`'${id}'`:null})">${langs[currentLang].save}</button></td>`;
   tbody.appendChild(tr);
 }
 
@@ -212,7 +269,7 @@ window.addRow = function(page){
 window.saveRow = async function(page,btn,id){
   const tr = btn.closest('tr');
   const data={};
-  const cols=pagesColumns[page];
+  const cols=pagesColumns[page][currentLang];
   tr.querySelectorAll('td div[contenteditable]').forEach((td,i)=>data[cols[i]]=td.innerText);
   if(id){
     await setDoc(doc(db, page, id), data);
@@ -233,7 +290,6 @@ window.uploadFile = async function(e,page,id,input){
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
   alert('File uploaded! URL: ' + url);
-  // You can save the URL to Firestore if you want
 };
 
 // ====== EXPORT CSV ======
@@ -270,7 +326,38 @@ document.getElementById('globalSearch').addEventListener('input', e=>{
 });
 
 // ====== LANGUAGE ======
-document.getElementById('langSelect').addEventListener('change', ()=>alert('Language change not implemented yet.'));
+document.getElementById('langSelect').addEventListener('change', (e)=>{
+  currentLang = e.target.value;
+  renderLang();
+});
+
+// ====== LOGIN ======
+const loginScreen = document.getElementById('loginScreen');
+const userBox = document.getElementById('userBox');
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  const em = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPass').value.trim();
+  if(em==='admin@topview.com' && pw==='123456'){
+    loginScreen.style.display='none';
+    userBox.textContent=em;
+    attachListeners();
+    renderLang();
+    renderPage(currentPage);
+  }else{ alert('Invalid credentials'); }
+});
+
+// ====== MENU ======
+function attachListeners(){
+  const menuBtns = document.querySelectorAll('.menu-btn[data-page]');
+  menuBtns.forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      menuBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      renderPage(btn.dataset.page);
+    });
+  });
+  document.getElementById('signOutBtn').addEventListener('click',()=>location.reload());
+}
 </script>
 </body>
 </html>
