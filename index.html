@@ -1,172 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TopView — Admin System</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Top View — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-:root{
-  --bg:#f5f7fb; --panel:#ffffff; --muted:#6b7280; --accent:#d4af37; --primary:#0b63d6; --text:#0f172a;
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  background: url('https://images.unsplash.com/photo-1526481280695-3c720685208b?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-[data-theme="dark"]{
-  --bg:#0b1220; --panel:#0f172a; --muted:#9aa3b2; --text:#e6eef8;
+#overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 }
-*{box-sizing:border-box;}
-body{font-family:Inter, system-ui, Arial; margin:0; background:var(--bg); color:var(--text);}
-header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; background:var(--panel); border-bottom:1px solid rgba(0,0,0,0.06);}
-.brand{font-weight:800;color:var(--primary); font-size:20px;}
-.header-controls{margin-left:auto; display:flex; gap:10px; align-items:center;}
-.lang-toggle, .theme-toggle {padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06); background:transparent; cursor:pointer;}
-.user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03);}
-.layout{display:flex; min-height:calc(100vh - 72px);}
-.sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px;}
-.sidebar h3{margin:0;color:var(--primary);}
-.menu-btn{display:block;text-align:right;padding:12px;border-radius:8px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);}
-.menu-btn.active{background:rgba(11,99,214,0.08); color:var(--primary);}
-main{flex:1;padding:20px;}
-.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px;}
-.card{background:var(--panel);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
-.table-wrap{overflow:auto;border-radius:10px;}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:900px;}
-thead th{position:sticky;top:0;background:linear-gradient(180deg,var(--panel),rgba(0,0,0,0.02));padding:10px;border-bottom:1px solid rgba(0,0,0,0.06);text-align:right;}
-td, th{padding:10px;border-bottom:1px solid rgba(0,0,0,0.04);vertical-align:middle;}
-td div[contenteditable]{min-width:120px;outline:none;padding:8px;border-radius:6px;}
-tr:hover td{background:rgba(11,99,214,0.02);}
-.file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:13px;}
-.controls{display:flex;gap:8px;align-items:center;}
-.btn{background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700;}
-.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);}
-.export{background:linear-gradient(90deg,var(--accent),var(--primary));}
-.page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04);}
-.attach-item{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(0,0,0,0.02);margin-bottom:8px;}
-.divider{height:2px;background:rgba(0,0,0,0.06);margin:14px 0;border-radius:4px;}
-.small{font-size:13px;color:var(--muted);}
-#loginScreen{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background: url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover; z-index:9999;}
-.login-box{position: relative; background-color: rgba(255, 255, 255, 0.9); padding:40px 30px; border-radius:15px; width:90%; max-width:400px; box-shadow:0 5px 20px rgba(0,0,0,0.2); text-align:center; font-family:'Poppins', sans-serif;}
-.login-box h2{ margin-bottom:25px; color:#333; }
-.login-box input{ width:100%; padding:12px; margin:10px 0; border:1px solid #ccc; border-radius:8px; font-size:16px; }
-.login-box button{ width:100%; padding:12px; background-color:#0070f3; color:white; font-size:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
-.login-box button:hover{ background-color:#005bb5; }
-.login-box p{ margin-top:20px; color:#333; font-weight:500; }
-@media (max-width:900px){ .sidebar{display:none} table{min-width:700px} }
-@media (max-width:480px){ .login-box{ padding:25px 20px; } }
+#login, #dashboard {
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  color: #fff;
+  width: 90%;
+  max-width: 1000px;
+}
+input {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+}
+button {
+  background: #ffcc00;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: rgba(255,255,255,0.8);
+  color:#000;
+}
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+td div[contenteditable] {
+  min-width: 100px;
+  outline: none;
+}
+.file-uploader {
+  display:inline-block;
+  padding:6px 8px;
+  border-radius:8px;
+  border:1px dashed #ccc;
+  cursor:pointer;
+}
 </style>
 </head>
-<body data-theme="light">
+<body>
+<div id="overlay"></div>
 
-<!-- Login Screen -->
-<div id="loginScreen">
-  <div class="login-box">
-    <h2>Welcome to Top View</h2>
-    <form>
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPass" placeholder="Password" required>
-      <button type="button" id="btnLogin">Login</button>
-    </form>
-    <p>Top View — Interior design</p>
-  </div>
+<!-- Login -->
+<div id="login">
+  <h2>Top View Login</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
 </div>
 
-<header>
-  <div class="brand">TOP VIEW</div>
-  <div class="small">Interior design — Admin</div>
-  <div class="header-controls">
-    <select id="langSelect" class="lang-toggle" title="Language">
-      <option value="en">English</option>
-      <option value="ar">العربية</option>
-    </select>
-    <button id="themeToggle" class="theme-toggle">Dark</button>
-    <div class="user-box" id="userBox">Not signed</div>
-  </div>
-</header>
+<!-- Dashboard -->
+<div id="dashboard" style="display:none;">
+  <h2>Dashboard</h2>
+  <button onclick="logout()">Logout</button>
 
-<div class="layout">
-<aside class="sidebar" id="sidebar">
-  <h3>Dashboard</h3>
-  <button class="menu-btn active" data-page="generalAccounts">حسابات العملاء العامة</button>
-  <button class="menu-btn" data-page="attendanceLog">سجل الحضور</button>
-  <button class="menu-btn" data-page="employeeRecords">سجلات الموظفين</button>
-  <button class="menu-btn" data-page="salariesBonuses">الرواتب والمكافآت</button>
-  <button class="menu-btn" data-page="costRecords">سجلات التكلفة</button>
-
-  <div style="flex:1"></div>
-  <div class="small">Upload page files (Excel/Word/PDF) and attachments per row.</div>
-  <div style="height:8px"></div>
-  <button id="signOutBtn" class="menu-btn">Sign out</button>
-</aside>
-
-<main>
-  <div class="topbar">
-    <input id="globalSearch" class="search" placeholder="Search current page...">
-    <div class="controls">
-      <button class="btn export" id="exportCsvBtn">Export CSV</button>
-      <button class="btn export" id="exportExcelBtn">Export Excel</button>
-      <label class="btn ghost" style="cursor:pointer">
-        Upload page file
-        <input id="pageFileInput" type="file" accept=".xlsx,.xls,.csv,.doc,.docx,.pdf" style="display:none">
-      </label>
-    </div>
-  </div>
-  <div id="pageContent"></div>
-  <div id="pageAttachments" class="page-attachments"></div>
-</main>
+  <div id="tablesContainer"></div>
 </div>
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, setDoc, doc, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
 
-// Firebase Config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyCEpRw7F829fqzPZAphqJ2wOe3xUDJWLtw",
   authDomain: "topview-system.firebaseapp.com",
   projectId: "topview-system",
   storageBucket: "topview-system.appspot.com",
   messagingSenderId: "1073945877413",
-  appId: "1:1073945877413:web:ba54d1e013d4c7f8f3a6b3"
+  appId: "1:1073945877413:web:d516e451e543f7a9db664c"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-// ====== LOGIN ======
-const loginScreen = document.getElementById('loginScreen');
-const userBox = document.getElementById('userBox');
-document.getElementById('btnLogin').addEventListener('click', async ()=>{
-  const em = document.getElementById('loginEmail').value.trim();
-  const pw = document.getElementById('loginPass').value.trim();
-  try{
-    await signInWithEmailAndPassword(auth, em, pw);
-    loginScreen.style.display='none';
-    userBox.textContent=em;
-    attachListeners();
-    renderPage('generalAccounts');
-  }catch(err){
-    alert('خطأ في تسجيل الدخول: '+err.message);
-  }
-});
-
-// ====== MENU ======
-function attachListeners(){
-  const menuBtns = document.querySelectorAll('.menu-btn[data-page]');
-  menuBtns.forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      menuBtns.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      renderPage(btn.dataset.page);
-    });
-  });
-  document.getElementById('signOutBtn').addEventListener('click',()=>location.reload());
-}
-
-// ====== PAGES DATA ======
+// ===== Columns for each table =====
 const pagesColumns = {
   generalAccounts:["رقم العميل","اسم العميل","الجنسيه","رقم الهويه","البريد الالكتروني","الموقع","اسم المبنى","نوع الوحدة","رقم العقار","ملاحظات"],
   attendanceLog:["التاريخ","الاسم الكامل","المسمى الوظيفي","القسم","وقت الحضور","وقت الانصراف","عدد ساعات العمل","ساعات إضافية","ساعات تأخير","ملاحظات المشرف","ملاحظات"],
@@ -175,118 +124,121 @@ const pagesColumns = {
   costRecords:["التاريخ","البند","نوع المصروف","المبلغ","ملاحظات"]
 };
 
-// ====== RENDER PAGE ======
-function renderPage(page){
-  const container = document.getElementById('pageContent');
-  container.innerHTML='';
-  const card = document.createElement('div'); card.className='card';
-  card.innerHTML=`<h3>${page}</h3><div class="table-wrap"><table id="${page}Table"><thead><tr>${pagesColumns[page].map(c=>`<th>${c}</th>`).join('')}<th>Attachments</th><th>Actions</th></tr></thead><tbody></tbody></table></div><button class="btn" onclick="addRow('${page}')">Add Row</button>`;
-  container.appendChild(card);
-  loadPageData(page);
+// ===== Login =====
+async function login(){
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth,email,password);
+    document.getElementById("login").style.display="none";
+    document.getElementById("dashboard").style.display="block";
+    renderAllTables();
+  } catch(err){
+    alert("خطأ في تسجيل الدخول: "+err.message);
+  }
 }
 
-// ====== LOAD DATA ======
-async function loadPageData(page){
-  const tbody = document.querySelector(`#${page}Table tbody`);
-  tbody.innerHTML='';
-  const snapshot = await getDocs(collection(db, page));
-  snapshot.forEach(docSnap=>{
-    const data = docSnap.data();
-    addRowToTable(page,data,docSnap.id);
+// Logout
+function logout(){
+  signOut(auth).then(()=>{
+    document.getElementById("dashboard").style.display="none";
+    document.getElementById("login").style.display="block";
   });
 }
 
-// ====== ADD ROW ======
+// ===== Render Tables =====
+function renderAllTables(){
+  const container = document.getElementById("tablesContainer");
+  container.innerHTML="";
+  for(const page in pagesColumns){
+    const card = document.createElement('div');
+    card.style.marginBottom="30px";
+    card.innerHTML = `
+      <h3>${page}</h3>
+      <button onclick="addRow('${page}')">Add Row</button>
+      <table id="${page}Table">
+        <thead>
+          <tr>
+            ${pagesColumns[page].map(c=>`<th>${c}</th>`).join('')}
+            <th>Attachments</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    `;
+    container.appendChild(card);
+    loadTableData(page);
+  }
+}
+
+// ===== Load Table Data =====
+async function loadTableData(page){
+  const tbody = document.querySelector(`#${page}Table tbody`);
+  tbody.innerHTML="";
+  const snapshot = await getDocs(collection(db,page));
+  snapshot.forEach(docSnap=>{
+    addRowToTable(page,docSnap.data(),docSnap.id);
+  });
+}
+
+// ===== Add Row =====
 function addRow(page,data={},id=null){
   const tbody = document.querySelector(`#${page}Table tbody`);
   const tr = document.createElement('tr');
-  const cols = pagesColumns[page];
-  tr.innerHTML=cols.map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')+
-                 `<td><label class="file-uploader">Attach<input type="file" style="display:none" onchange="uploadFile(event,'${page}','${id||''}',this)"></label></td>`+
-                 `<td><button class="btn ghost" onclick="saveRow('${page}',this,${id?`'${id}'`:null})">Save</button></td>`;
+  tr.innerHTML = pagesColumns[page].map(col=>`<td><div contenteditable>${data[col]||''}</div></td>`).join('')+
+    `<td><label class="file-uploader">Attach<input type="file" style="display:none" onchange="uploadFile(event,'${page}','${id||''}',this)"></label></td>`+
+    `<td><button onclick="saveRow('${page}',this,'${id||''}')">Save</button></td>`;
   tbody.appendChild(tr);
 }
 
-// ====== ADD ROW TO TABLE (for loading) ======
+// ===== Add Row To Table =====
 function addRowToTable(page,data,id){
   addRow(page,data,id);
 }
 
-// ====== SAVE ROW ======
+// ===== Save Row =====
 async function saveRow(page,btn,id){
   const tr = btn.closest('tr');
-  const data={};
-  const cols=pagesColumns[page];
-  tr.querySelectorAll('td div[contenteditable]').forEach((td,i)=>data[cols[i]]=td.innerText);
-  if(id){
-    await setDoc(doc(db,page,id),data);
-    alert('Updated!');
-  }else{
-    const docRef = await addDoc(collection(db,page),data);
-    alert('Saved!');
-    btn.setAttribute('onclick',`saveRow('${page}',this,'${docRef.id}')`);
+  const data = {};
+  pagesColumns[page].forEach((col,i)=>{
+    data[col] = tr.children[i].innerText;
+  });
+  try{
+    if(id){
+      await setDoc(doc(db,page,id),data);
+    } else {
+      const docRef = await addDoc(collection(db,page),data);
+      btn.setAttribute("onclick",`saveRow('${page}',this,'${docRef.id}')`);
+    }
+    alert("Saved!");
+  }catch(err){
+    alert("Error: "+err.message);
   }
 }
 
-// ====== UPLOAD FILE ======
+// ===== Upload File =====
 async function uploadFile(e,page,id,input){
   const file = e.target.files[0];
   if(!file) return;
   const filename = `${page}/${Date.now()}_${file.name}`;
   const fileRef = ref(storage, filename);
-  await uploadBytes(fileRef, file);
-  const url = await getDownloadURL(fileRef);
-  const tr=input.closest('tr'); 
-  let attachments=tr.dataset.attachments?JSON.parse(tr.dataset.attachments):[];
-  attachments.push({name:file.name,url});
-  tr.dataset.attachments=JSON.stringify(attachments);
-  alert('File uploaded!');
+  try{
+    await uploadBytes(fileRef,file);
+    const url = await getDownloadURL(fileRef);
+    alert("File uploaded!");
+    console.log("File URL:",url);
+  }catch(err){
+    alert("Upload error: "+err.message);
+  }
 }
 
-// ====== ADD ROW BUTTON ======
+window.login = login;
 window.addRow = addRow;
-
-// ====== EXPORT CSV ======
-document.getElementById('exportCsvBtn').addEventListener('click',()=>{
-  const table=document.querySelector('table');
-  let csv=[];
-  table.querySelectorAll('tr').forEach(tr=>{
-    const cells=Array.from(tr.querySelectorAll('th, td'));
-    csv.push(cells.map(c=>`"${c.innerText}"`).join(','));
-  });
-  const blob=new Blob([csv.join('\n')],{type:'text/csv'});
-  const link=document.createElement('a'); link.href=URL.createObjectURL(blob); link.download='page-data.csv'; link.click();
-});
-
-// ====== EXPORT EXCEL ======
-document.getElementById('exportExcelBtn').addEventListener('click',()=>{
-  const table=document.querySelector('table');
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.table_to_sheet(table);
-  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');
-  XLSX.writeFile(wb,'page-data.xlsx');
-});
-
-// ====== THEME ======
-const themeToggle = document.getElementById('themeToggle');
-themeToggle.addEventListener('click', ()=>{
-  const body=document.body;
-  if(body.dataset.theme==='light'){ body.dataset.theme='dark'; themeToggle.textContent='Light';}
-  else{ body.dataset.theme='light'; themeToggle.textContent='Dark';}
-});
-
-// ====== SEARCH ======
-document.getElementById('globalSearch').addEventListener('input', e=>{
-  const term = e.target.value.toLowerCase();
-  document.querySelectorAll('tbody tr').forEach(tr=>{
-    tr.style.display = Array.from(tr.cells).some(td=>td.innerText.toLowerCase().includes(term))?'':'none';
-  });
-});
-
-// ====== LANGUAGE ======
-document.getElementById('langSelect').addEventListener('change', ()=>alert('Language change not implemented yet.'));
+window.saveRow = saveRow;
+window.uploadFile = uploadFile;
+window.logout = logout;
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </body>
 </html>
