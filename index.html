@@ -21,23 +21,26 @@ header{height:72px; display:flex; align-items:center; gap:14px; padding:0 20px; 
 .user-box{padding:6px 10px;border-radius:8px;background:rgba(0,0,0,0.03);}
 .layout{display:flex; min-height:calc(100vh - 72px);}
 .sidebar{width:300px; background:var(--panel); border-right:1px solid rgba(0,0,0,0.06); padding:18px; display:flex; flex-direction:column; gap:10px;}
-.sidebar h3{margin:0 0 24px 0;color:var(--primary); font-size:24px; letter-spacing:1px;}
+.sidebar h3{margin:0 0 32px 0;color:var(--primary); font-size:24px; letter-spacing:1px;}
 .menu-btn{display:block;text-align:right;padding:14px 12px;border-radius:10px;border:0;background:transparent;cursor:pointer;font-weight:700;color:var(--text);font-size:17px;transition:0.2s;}
 .menu-btn.active{background:rgba(11,99,214,0.10); color:var(--primary);}
 main{flex:1;padding:20px;}
 .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .search{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06); width:420px; font-size:16px;}
-.card{background:var(--panel);padding:18px 14px 24px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
-.stacked-table-wrap{display:flex;flex-wrap:wrap;gap:18px;}
-.stacked-record{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:18px 16px;min-width:260px;max-width:340px;flex:1 1 320px;display:flex;flex-direction:column;gap:10px;}
-.stacked-row{display:flex;flex-direction:column;gap:2px;}
-.stacked-label{font-size:15px;color:var(--primary);font-weight:600;margin-bottom:2px;}
-.stacked-value{font-size:16px;color:var(--text);background:#f5f7fb;border-radius:7px;padding:7px 8px;min-height:28px;outline:none;white-space:pre-wrap;word-break:break-word;}
-.stacked-value[contenteditable]{transition:background 0.2s;}
-.stacked-value[contenteditable]:focus{background:#e6f0ff;}
-.stacked-actions{display:flex;gap:8px;margin-top:10px;}
+.card{background:var(--panel);padding:24px 14px 24px 14px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.04);}
+.table-wrap{overflow:auto;border-radius:10px;}
+table{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:15px;min-width:900px;}
+tr{background:#fff;}
+th, td{padding:0 10px 18px 10px;vertical-align:top;text-align:center;}
+th{font-size:14px;color:var(--primary);font-weight:700;padding-bottom:2px;background:transparent;border:none;}
+.cell-container{display:flex;flex-direction:column;align-items:center;}
+.cell-label{font-size:13px;color:var(--primary);font-weight:600;margin-bottom:2px;}
+.cell-value{font-size:15px;color:var(--text);background:#f5f7fb;border-radius:7px;padding:7px 8px;min-height:28px;outline:none;white-space:pre-wrap;word-break:break-word;width:100%;max-width:180px;}
+.cell-value[contenteditable]{transition:background 0.2s;}
+.cell-value[contenteditable]:focus{background:#e6f0ff;}
+.actions-cell{vertical-align:middle;}
 .file-uploader{display:inline-block;padding:6px 8px;border-radius:8px;border:1px dashed rgba(0,0,0,0.08);cursor:pointer;font-size:14px;}
-.btn{background:var(--primary);color:#fff;padding:8px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:16px;}
+.btn{background:var(--primary);color:#fff;padding:8px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:15px;}
 .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(0,0,0,0.06);}
 .export{background:linear-gradient(90deg,var(--accent),var(--primary));}
 .page-attachments{margin-top:12px;padding-top:12px;border-top:2px solid rgba(0,0,0,0.04);}
@@ -51,7 +54,7 @@ main{flex:1;padding:20px;}
 .login-box button{ width:100%; padding:12px; background-color:#0070f3; color:white; font-size:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
 .login-box button:hover{ background-color:#005bb5; }
 .login-box p{ margin-top:20px; color:#333; font-weight:500; }
-@media (max-width:900px){ .sidebar{display:none} .stacked-table-wrap{flex-direction:column;} }
+@media (max-width:900px){ .sidebar{display:none} table{min-width:700px} }
 @media (max-width:480px){ .login-box{ padding:25px 20px; } }
 </style>
 </head>
@@ -230,7 +233,7 @@ function renderPage(page, langOnly=false){
   const card = document.createElement('div'); card.className='card';
   const cols = pagesColumns[page][currentLang];
   card.innerHTML=`<h3 style="font-size:22px;letter-spacing:1px;margin-bottom:28px;">${langs[currentLang].menu[Object.keys(pagesColumns).indexOf(page)]}</h3>
-  <div class="stacked-table-wrap" id="stackedTable"></div>
+  <div class="table-wrap"><table id="${page}Table"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}<th>${langs[currentLang].attachments}</th><th>${langs[currentLang].actions}</th></tr></thead><tbody></tbody></table></div>
   <button class="btn" id="addRowBtn" style="margin-top:18px">${langs[currentLang].addRow}</button>`;
   container.appendChild(card);
   if(!langOnly) loadPageData(page);
@@ -239,56 +242,54 @@ function renderPage(page, langOnly=false){
 
 // ====== LOAD DATA ======
 async function loadPageData(page){
-  const wrap = document.getElementById('stackedTable');
-  wrap.innerHTML='';
+  const tbody = document.querySelector(`#${page}Table tbody`);
+  tbody.innerHTML='';
   const colRef = collection(db, page);
   const snapshot = await getDocs(colRef);
   snapshot.forEach(docSnap=>{
     const data = docSnap.data();
-    addStackedRecord(page, data, docSnap.id);
+    addRowToTable(page, data, docSnap.id);
   });
 }
 
-// ====== ADD STACKED RECORD ======
-function addStackedRecord(page, data={}, id=null){
-  const wrap = document.getElementById('stackedTable');
+// ====== ADD ROW TO TABLE ======
+function addRowToTable(page, data={}, id=null){
+  const tbody = document.querySelector(`#${page}Table tbody`);
   const cols = pagesColumns[page][currentLang];
-  const record = document.createElement('div');
-  record.className = 'stacked-record';
-  record.innerHTML = cols.map(col=>`
-    <div class="stacked-row">
-      <div class="stacked-label">${col}</div>
-      <div class="stacked-value" contenteditable>${data[col]||''}</div>
-    </div>
-  `).join('') + `
-    <div class="stacked-actions">
-      <label class="file-uploader">${langs[currentLang].attach}
+  const tr = document.createElement('tr');
+  tr.innerHTML = cols.map(col=>`
+    <td>
+      <div class="cell-container">
+        <div class="cell-label">${col}</div>
+        <div class="cell-value" contenteditable>${data[col]||''}</div>
+      </div>
+    </td>
+  `).join('')
+    + `<td class="actions-cell"><label class="file-uploader">${langs[currentLang].attach}
         <input type="file" style="display:none" onchange="window.uploadFile(event,'${page}','${id||''}',this)">
-      </label>
-      <button class="btn ghost" onclick="window.saveStackedRecord('${page}',this,${id?`'${id}'`:null})">${langs[currentLang].save}</button>
-    </div>
-  `;
-  wrap.appendChild(record);
+      </label></td>
+      <td class="actions-cell"><button class="btn ghost" onclick="window.saveRow('${page}',this,${id?`'${id}'`:null})">${langs[currentLang].save}</button></td>`;
+  tbody.appendChild(tr);
 }
 
 // ====== ADD ROW BUTTON ======
 window.addRow = function(page){
-  addStackedRecord(page);
+  addRowToTable(page);
 };
 
-// ====== SAVE STACKED RECORD ======
-window.saveStackedRecord = async function(page,btn,id){
-  const record = btn.closest('.stacked-record');
+// ====== SAVE ROW ======
+window.saveRow = async function(page,btn,id){
+  const tr = btn.closest('tr');
   const data={};
   const cols=pagesColumns[page][currentLang];
-  record.querySelectorAll('.stacked-value').forEach((div,i)=>data[cols[i]]=div.innerText);
+  tr.querySelectorAll('.cell-value').forEach((div,i)=>data[cols[i]]=div.innerText);
   if(id){
     await setDoc(doc(db, page, id), data);
     alert('Updated!');
   }else{
     const docRef = await addDoc(collection(db, page), data);
     alert('Saved!');
-    btn.setAttribute('onclick',`window.saveStackedRecord('${page}',this,'${docRef.id}')`);
+    btn.setAttribute('onclick',`window.saveRow('${page}',this,'${docRef.id}')`);
   }
 };
 
@@ -305,12 +306,12 @@ window.uploadFile = async function(e,page,id,input){
 
 // ====== EXPORT CSV ======
 document.getElementById('exportCsvBtn').addEventListener('click',()=>{
-  const records = document.querySelectorAll('.stacked-record');
-  if(!records.length) return;
+  const trs = document.querySelectorAll('tbody tr');
+  if(!trs.length) return;
   const cols = pagesColumns[currentPage][currentLang];
   let csv = [cols.join(',')];
-  records.forEach(rec=>{
-    const vals = Array.from(rec.querySelectorAll('.stacked-value')).map(div=>`"${div.innerText.replace(/"/g,'""')}"`);
+  trs.forEach(tr=>{
+    const vals = Array.from(tr.querySelectorAll('.cell-value')).map(div=>`"${div.innerText.replace(/"/g,'""')}"`);
     csv.push(vals.join(','));
   });
   const blob=new Blob([csv.join('\n')],{type:'text/csv'});
@@ -333,8 +334,8 @@ themeToggle.addEventListener('click', ()=>{
 // ====== SEARCH ======
 document.getElementById('globalSearch').addEventListener('input', e=>{
   const term = e.target.value.toLowerCase();
-  document.querySelectorAll('.stacked-record').forEach(rec=>{
-    rec.style.display = Array.from(rec.querySelectorAll('.stacked-value')).some(div=>div.innerText.toLowerCase().includes(term))?'':'none';
+  document.querySelectorAll('tbody tr').forEach(tr=>{
+    tr.style.display = Array.from(tr.querySelectorAll('.cell-value')).some(div=>div.innerText.toLowerCase().includes(term))?'':'none';
   });
 });
 
